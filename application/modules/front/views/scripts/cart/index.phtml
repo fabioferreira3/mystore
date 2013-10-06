@@ -1,0 +1,15 @@
+<h1>Carrinho de Compras</h1>
+<?php 
+    if ($this->produtos != ''){
+    	foreach($this->produtos as $produto){
+    		echo '<p>ID:' . $produto->product_id . '</p>';
+    		echo '<p>Nome:' . $produto->name . '</p>';
+    		echo '<p>Valor Unit:' . $produto->price . '</p>';
+    		echo '<p>Quantidade:' . $produto->qty . '</p>';
+    	}
+    }else{
+		echo '<p>Seu carrinho está vazio!</p>';
+	}
+	
+	
+?>
