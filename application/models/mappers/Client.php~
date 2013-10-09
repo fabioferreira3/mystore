@@ -1,0 +1,98 @@
+<?php
+
+
+
+use Doctrine\Mapping as ORM;
+
+/**
+ * Client
+ *
+ * @Table(name="client")
+ * @Entity
+ */
+class Client
+{
+    /**
+     * @var integer $id
+     *
+     * @Column(name="id", type="integer", nullable=false)
+     * @Id
+     * @GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string $firstName
+     *
+     * @Column(name="first_name", type="string", length=100, nullable=false)
+     */
+    private $firstName;
+
+    /**
+     * @var string $lastName
+     *
+     * @Column(name="last_name", type="string", length=100, nullable=false)
+     */
+    private $lastName;
+
+    /**
+     * @var datetime $dateBirth
+     *
+     * @Column(name="date_birth", type="datetime", nullable=false)
+     */
+    private $dateBirth;
+
+    /**
+     * @var integer $clientType
+     *
+     * @Column(name="client_type", type="integer", nullable=false)
+     */
+    private $clientType;
+
+    /**
+     * @var string $cpf
+     *
+     * @Column(name="cpf", type="string", length=11, nullable=true)
+     */
+    private $cpf;
+
+    /**
+     * @var string $cnpj
+     *
+     * @Column(name="cnpj", type="string", length=14, nullable=true)
+     */
+    private $cnpj;
+
+    /**
+     * @var boolean $gender
+     *
+     * @Column(name="gender", type="boolean", nullable=false)
+     */
+    private $gender;
+
+    /**
+     * @var datetime $dateCreate
+     *
+     * @Column(name="date_create", type="datetime", nullable=false)
+     */
+    private $dateCreate;
+
+    /**
+     * @var datetime $dateUpd
+     *
+     * @Column(name="date_upd", type="datetime", nullable=true)
+     */
+    private $dateUpd;
+
+    /**
+     * @var Store
+     *
+     * @ManyToOne(targetEntity="Store")
+     * @JoinColumns({
+     *   @JoinColumn(name="store_id", referencedColumnName="id")
+     * })
+     */
+    private $store;
+
+
+}

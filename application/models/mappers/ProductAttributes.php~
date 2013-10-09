@@ -1,0 +1,32 @@
+<?php
+
+
+
+use Doctrine\Mapping as ORM;
+
+/**
+ * ProductAttributes
+ *
+ * @Table(name="product_attributes")
+ * @Entity
+ */
+class ProductAttributes
+{
+    /**
+     * @var integer $id
+     *
+     * @Column(name="id", type="integer", nullable=false)
+     * @Id
+     * @GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string $name
+     *
+     * @Column(name="name", type="string", length=200, nullable=false)
+     */
+    private $name;
+
+
+}

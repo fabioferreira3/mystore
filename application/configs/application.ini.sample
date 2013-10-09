@@ -33,7 +33,7 @@ resources.db.params.password = ""
 resources.db.params.dbname = ""
 resources.db.params.charset = utf8
 
-doctrine.conn.host = '127.0.0.1'
+doctrine.conn.host = ''
 doctrine.conn.user = ''
 doctrine.conn.pass = ''
 doctrine.conn.driv = 'pdo_mysql'

@@ -114,7 +114,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 				APPLICATION_PATH . '/../library/'
 		);
 		$classLoader->register();
-	
+			
 		// create the Doctrine configuration
 		$config = new \Doctrine\ORM\Configuration();
 	
@@ -154,6 +154,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 				$registry->entitymanager = $entityManager;
 	
 				return $entityManager;
+	}
+	
+	protected function _initCustomHelpers(){		 
+		Zend_Controller_Action_HelperBroker::addPath(
+		APPLICATION_PATH . '/controllers/helpers');
 	}
 
 }
