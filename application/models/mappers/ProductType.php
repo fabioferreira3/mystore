@@ -2,7 +2,7 @@
 
 
 
-use Doctrine\Mapping as ORM;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * ProductType
@@ -10,7 +10,7 @@ use Doctrine\Mapping as ORM;
  * @Table(name="product_type")
  * @Entity
  */
-class ProductType
+class DB_ProductType
 {
     /**
      * @var integer $id

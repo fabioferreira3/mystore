@@ -2,7 +2,7 @@
 
 
 
-use Doctrine\Mapping as ORM;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * AddressType
@@ -10,7 +10,7 @@ use Doctrine\Mapping as ORM;
  * @Table(name="address_type")
  * @Entity
  */
-class AddressType
+class DB_AddressType
 {
     /**
      * @var integer $id

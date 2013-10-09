@@ -2,7 +2,7 @@
 
 
 
-use Doctrine\Mapping as ORM;
+use Application\Models\Mappers as ORM;
 
 /**
  * Address
@@ -10,7 +10,7 @@ use Doctrine\Mapping as ORM;
  * @Table(name="address")
  * @Entity
  */
-class Address
+class DB_Address
 {
     /**
      * @var integer $id
@@ -80,7 +80,7 @@ class Address
     /**
      * @var Country
      *
-     * @ManyToOne(targetEntity="Country")
+     * @ManyToOne(targetEntity="DB_Country")
      * @JoinColumns({
      *   @JoinColumn(name="country_id", referencedColumnName="id")
      * })
@@ -90,7 +90,7 @@ class Address
     /**
      * @var Client
      *
-     * @ManyToOne(targetEntity="Client")
+     * @ManyToOne(targetEntity="DB_Client")
      * @JoinColumns({
      *   @JoinColumn(name="client_id", referencedColumnName="id")
      * })
@@ -288,10 +288,10 @@ class Address
     /**
      * Set country
      *
-     * @param Country $country
+     * @param DB_Country $country
      * @return Address
      */
-    public function setCountry(\Country $country = null)
+    public function setCountry(\DB_Country $country = null)
     {
         $this->country = $country;
         return $this;
@@ -300,7 +300,7 @@ class Address
     /**
      * Get country
      *
-     * @return Country 
+     * @return DB_Country 
      */
     public function getCountry()
     {
@@ -310,10 +310,10 @@ class Address
     /**
      * Set client
      *
-     * @param Client $client
+     * @param DB_Client $client
      * @return Address
      */
-    public function setClient(\Client $client = null)
+    public function setClient(\DB_Client $client = null)
     {
         $this->client = $client;
         return $this;
@@ -322,7 +322,7 @@ class Address
     /**
      * Get client
      *
-     * @return Client 
+     * @return DB_Client 
      */
     public function getClient()
     {

@@ -2,7 +2,7 @@
 
 
 
-use Doctrine\Mapping as ORM;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Country
@@ -10,7 +10,7 @@ use Doctrine\Mapping as ORM;
  * @Table(name="country")
  * @Entity
  */
-class Country
+class DB_Country
 {
     /**
      * @var integer $id

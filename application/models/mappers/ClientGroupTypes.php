@@ -2,15 +2,15 @@
 
 
 
-use Doctrine\Mapping as ORM;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * GroupClients
+ * ClientGroupTypes
  *
- * @Table(name="group_clients")
+ * @Table(name="client_group_types")
  * @Entity
  */
-class GroupClients
+class DB_ClientGroupTypes
 {
     /**
      * @var integer $id
@@ -42,6 +42,16 @@ class GroupClients
      */
     private $dateUpd;
 
+    /**
+     * @var Store
+     *
+     * @ManyToOne(targetEntity="DB_Store")
+     * @JoinColumns({
+     *   @JoinColumn(name="store_id", referencedColumnName="id")
+     * })
+     */
+    private $store;
+
 
 
     /**
@@ -58,7 +68,7 @@ class GroupClients
      * Set name
      *
      * @param string $name
-     * @return GroupClients
+     * @return ClientGroupTypes
      */
     public function setName($name)
     {
@@ -80,7 +90,7 @@ class GroupClients
      * Set dateCreate
      *
      * @param datetime $dateCreate
-     * @return GroupClients
+     * @return ClientGroupTypes
      */
     public function setDateCreate($dateCreate)
     {
@@ -102,7 +112,7 @@ class GroupClients
      * Set dateUpd
      *
      * @param datetime $dateUpd
-     * @return GroupClients
+     * @return ClientGroupTypes
      */
     public function setDateUpd($dateUpd)
     {
@@ -118,5 +128,27 @@ class GroupClients
     public function getDateUpd()
     {
         return $this->dateUpd;
+    }
+
+    /**
+     * Set store
+     *
+     * @param DB_Store $store
+     * @return ClientGroupTypes
+     */
+    public function setStore(\DB_Store $store = null)
+    {
+        $this->store = $store;
+        return $this;
+    }
+
+    /**
+     * Get store
+     *
+     * @return DB_Store 
+     */
+    public function getStore()
+    {
+        return $this->store;
     }
 }

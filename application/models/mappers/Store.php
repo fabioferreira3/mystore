@@ -2,7 +2,7 @@
 
 
 
-use Doctrine\Mapping as ORM;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Store
@@ -10,7 +10,7 @@ use Doctrine\Mapping as ORM;
  * @Table(name="store")
  * @Entity
  */
-class Store
+class DB_Store
 {
     /**
      * @var integer $id

@@ -2,7 +2,7 @@
 
 
 
-use Doctrine\Mapping as ORM;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Client
@@ -10,7 +10,7 @@ use Doctrine\Mapping as ORM;
  * @Table(name="client")
  * @Entity
  */
-class Client
+class DB_Client
 {
     /**
      * @var integer $id
@@ -85,9 +85,16 @@ class Client
     private $dateUpd;
 
     /**
+     * @var datetime $lastLogin
+     *
+     * @Column(name="last_login", type="datetime", nullable=true)
+     */
+    private $lastLogin;
+
+    /**
      * @var Store
      *
-     * @ManyToOne(targetEntity="Store")
+     * @ManyToOne(targetEntity="DB_Store")
      * @JoinColumns({
      *   @JoinColumn(name="store_id", referencedColumnName="id")
      * })
@@ -305,12 +312,34 @@ class Client
     }
 
     /**
-     * Set store
+     * Set lastLogin
      *
-     * @param Store $store
+     * @param datetime $lastLogin
      * @return Client
      */
-    public function setStore(\Store $store = null)
+    public function setLastLogin($lastLogin)
+    {
+        $this->lastLogin = $lastLogin;
+        return $this;
+    }
+
+    /**
+     * Get lastLogin
+     *
+     * @return datetime 
+     */
+    public function getLastLogin()
+    {
+        return $this->lastLogin;
+    }
+
+    /**
+     * Set store
+     *
+     * @param DB_Store $store
+     * @return Client
+     */
+    public function setStore(\DB_Store $store = null)
     {
         $this->store = $store;
         return $this;
@@ -319,7 +348,7 @@ class Client
     /**
      * Get store
      *
-     * @return Store 
+     * @return DB_Store 
      */
     public function getStore()
     {

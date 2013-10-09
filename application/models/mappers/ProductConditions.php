@@ -5,12 +5,12 @@
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ProductAttributes
+ * ProductConditions
  *
- * @Table(name="product_attributes")
+ * @Table(name="product_conditions")
  * @Entity
  */
-class DB_ProductAttributes
+class DB_ProductConditions
 {
     /**
      * @var integer $id
@@ -24,7 +24,7 @@ class DB_ProductAttributes
     /**
      * @var string $name
      *
-     * @Column(name="name", type="string", length=200, nullable=false)
+     * @Column(name="name", type="string", length=50, nullable=true)
      */
     private $name;
 
@@ -44,7 +44,7 @@ class DB_ProductAttributes
      * Set name
      *
      * @param string $name
-     * @return ProductAttributes
+     * @return ProductConditions
      */
     public function setName($name)
     {

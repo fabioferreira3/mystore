@@ -2,7 +2,7 @@
 
 
 
-use Doctrine\Mapping as ORM;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * ProductGroupPrices
@@ -10,7 +10,7 @@ use Doctrine\Mapping as ORM;
  * @Table(name="product_group_prices")
  * @Entity
  */
-class ProductGroupPrices
+class DB_ProductGroupPrices
 {
     /**
      * @var integer $id
@@ -52,7 +52,7 @@ class ProductGroupPrices
     /**
      * @var ProductPrices
      *
-     * @ManyToOne(targetEntity="ProductPrices")
+     * @ManyToOne(targetEntity="DB_ProductPrices")
      * @JoinColumns({
      *   @JoinColumn(name="price_id", referencedColumnName="id")
      * })
@@ -60,9 +60,9 @@ class ProductGroupPrices
     private $price;
 
     /**
-     * @var GroupClients
+     * @var ClientGroupTypes
      *
-     * @ManyToOne(targetEntity="GroupClients")
+     * @ManyToOne(targetEntity="DB_ClientGroupTypes")
      * @JoinColumns({
      *   @JoinColumn(name="group_client_id", referencedColumnName="id")
      * })
@@ -172,10 +172,10 @@ class ProductGroupPrices
     /**
      * Set price
      *
-     * @param ProductPrices $price
+     * @param DB_ProductPrices $price
      * @return ProductGroupPrices
      */
-    public function setPrice(\ProductPrices $price = null)
+    public function setPrice(\DB_ProductPrices $price = null)
     {
         $this->price = $price;
         return $this;
@@ -184,7 +184,7 @@ class ProductGroupPrices
     /**
      * Get price
      *
-     * @return ProductPrices 
+     * @return DB_ProductPrices 
      */
     public function getPrice()
     {
@@ -194,10 +194,10 @@ class ProductGroupPrices
     /**
      * Set groupClient
      *
-     * @param GroupClients $groupClient
+     * @param DB_ClientGroupTypes $groupClient
      * @return ProductGroupPrices
      */
-    public function setGroupClient(\GroupClients $groupClient = null)
+    public function setGroupClient(\DB_ClientGroupTypes $groupClient = null)
     {
         $this->groupClient = $groupClient;
         return $this;
@@ -206,7 +206,7 @@ class ProductGroupPrices
     /**
      * Get groupClient
      *
-     * @return GroupClients 
+     * @return DB_ClientGroupTypes 
      */
     public function getGroupClient()
     {

@@ -2,15 +2,15 @@
 
 
 
-use Doctrine\Mapping as ORM;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Condition
+ * OrderStatus
  *
- * @Table(name="condition")
+ * @Table(name="order_status")
  * @Entity
  */
-class Condition
+class DB_OrderStatus
 {
     /**
      * @var integer $id
@@ -24,7 +24,7 @@ class Condition
     /**
      * @var string $name
      *
-     * @Column(name="name", type="string", length=50, nullable=true)
+     * @Column(name="name", type="string", length=100, nullable=false)
      */
     private $name;
 
@@ -44,7 +44,7 @@ class Condition
      * Set name
      *
      * @param string $name
-     * @return Condition
+     * @return OrderStatus
      */
     public function setName($name)
     {

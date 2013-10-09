@@ -5,12 +5,12 @@
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ProductAttributesValue
+ * ProductViews
  *
- * @Table(name="product_attributes_value")
+ * @Table(name="product_views")
  * @Entity
  */
-class DB_ProductAttributesValue
+class DB_ProductViews
 {
     /**
      * @var integer $id
@@ -22,21 +22,21 @@ class DB_ProductAttributesValue
     private $id;
 
     /**
-     * @var string $value
+     * @var string $views
      *
-     * @Column(name="value", type="string", length=50, nullable=false)
+     * @Column(name="views", type="string", length=255, nullable=false)
      */
-    private $value;
+    private $views;
 
     /**
-     * @var ProductAttributes
+     * @var Store
      *
-     * @ManyToOne(targetEntity="DB_ProductAttributes")
+     * @ManyToOne(targetEntity="DB_Store")
      * @JoinColumns({
-     *   @JoinColumn(name="product_attribute_id", referencedColumnName="id")
+     *   @JoinColumn(name="store_id", referencedColumnName="id")
      * })
      */
-    private $productAttribute;
+    private $store;
 
     /**
      * @var Product
@@ -61,54 +61,54 @@ class DB_ProductAttributesValue
     }
 
     /**
-     * Set value
+     * Set views
      *
-     * @param string $value
-     * @return ProductAttributesValue
+     * @param string $views
+     * @return ProductViews
      */
-    public function setValue($value)
+    public function setViews($views)
     {
-        $this->value = $value;
+        $this->views = $views;
         return $this;
     }
 
     /**
-     * Get value
+     * Get views
      *
      * @return string 
      */
-    public function getValue()
+    public function getViews()
     {
-        return $this->value;
+        return $this->views;
     }
 
     /**
-     * Set productAttribute
+     * Set store
      *
-     * @param DB_ProductAttributes $productAttribute
-     * @return ProductAttributesValue
+     * @param DB_Store $store
+     * @return ProductViews
      */
-    public function setProductAttribute(\DB_ProductAttributes $productAttribute = null)
+    public function setStore(\DB_Store $store = null)
     {
-        $this->productAttribute = $productAttribute;
+        $this->store = $store;
         return $this;
     }
 
     /**
-     * Get productAttribute
+     * Get store
      *
-     * @return DB_ProductAttributes 
+     * @return DB_Store 
      */
-    public function getProductAttribute()
+    public function getStore()
     {
-        return $this->productAttribute;
+        return $this->store;
     }
 
     /**
      * Set product
      *
      * @param DB_Product $product
-     * @return ProductAttributesValue
+     * @return ProductViews
      */
     public function setProduct(\DB_Product $product = null)
     {

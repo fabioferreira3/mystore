@@ -2,7 +2,7 @@
 
 
 
-use Doctrine\Mapping as ORM;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Product
@@ -10,7 +10,7 @@ use Doctrine\Mapping as ORM;
  * @Table(name="product")
  * @Entity
  */
-class Product
+class DB_Product
 {
     /**
      * @var integer $id
@@ -108,7 +108,7 @@ class Product
     /**
      * @var Store
      *
-     * @ManyToOne(targetEntity="Store")
+     * @ManyToOne(targetEntity="DB_Store")
      * @JoinColumns({
      *   @JoinColumn(name="store_id", referencedColumnName="id")
      * })
@@ -118,7 +118,7 @@ class Product
     /**
      * @var ProductType
      *
-     * @ManyToOne(targetEntity="ProductType")
+     * @ManyToOne(targetEntity="DB_ProductType")
      * @JoinColumns({
      *   @JoinColumn(name="product_type_id", referencedColumnName="id")
      * })
@@ -126,9 +126,9 @@ class Product
     private $productType;
 
     /**
-     * @var Condition
+     * @var ProductConditions
      *
-     * @ManyToOne(targetEntity="Condition")
+     * @ManyToOne(targetEntity="DB_ProductConditions")
      * @JoinColumns({
      *   @JoinColumn(name="condition_id", referencedColumnName="id")
      * })
@@ -414,10 +414,10 @@ class Product
     /**
      * Set store
      *
-     * @param Store $store
+     * @param DB_Store $store
      * @return Product
      */
-    public function setStore(\Store $store = null)
+    public function setStore(\DB_Store $store = null)
     {
         $this->store = $store;
         return $this;
@@ -426,7 +426,7 @@ class Product
     /**
      * Get store
      *
-     * @return Store 
+     * @return DB_Store 
      */
     public function getStore()
     {
@@ -436,10 +436,10 @@ class Product
     /**
      * Set productType
      *
-     * @param ProductType $productType
+     * @param DB_ProductType $productType
      * @return Product
      */
-    public function setProductType(\ProductType $productType = null)
+    public function setProductType(\DB_ProductType $productType = null)
     {
         $this->productType = $productType;
         return $this;
@@ -448,7 +448,7 @@ class Product
     /**
      * Get productType
      *
-     * @return ProductType 
+     * @return DB_ProductType 
      */
     public function getProductType()
     {
@@ -458,10 +458,10 @@ class Product
     /**
      * Set condition
      *
-     * @param Condition $condition
+     * @param DB_ProductConditions $condition
      * @return Product
      */
-    public function setCondition(\Condition $condition = null)
+    public function setCondition(\DB_ProductConditions $condition = null)
     {
         $this->condition = $condition;
         return $this;
@@ -470,7 +470,7 @@ class Product
     /**
      * Get condition
      *
-     * @return Condition 
+     * @return DB_ProductConditions 
      */
     public function getCondition()
     {

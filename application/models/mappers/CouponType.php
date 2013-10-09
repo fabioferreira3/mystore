@@ -5,12 +5,12 @@
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ProductAttributes
+ * CouponType
  *
- * @Table(name="product_attributes")
+ * @Table(name="coupon_type")
  * @Entity
  */
-class DB_ProductAttributes
+class DB_CouponType
 {
     /**
      * @var integer $id
@@ -24,9 +24,19 @@ class DB_ProductAttributes
     /**
      * @var string $name
      *
-     * @Column(name="name", type="string", length=200, nullable=false)
+     * @Column(name="name", type="string", length=50, nullable=false)
      */
     private $name;
+
+    /**
+     * @var Store
+     *
+     * @ManyToOne(targetEntity="DB_Store")
+     * @JoinColumns({
+     *   @JoinColumn(name="store_id", referencedColumnName="id")
+     * })
+     */
+    private $store;
 
 
 
@@ -44,7 +54,7 @@ class DB_ProductAttributes
      * Set name
      *
      * @param string $name
-     * @return ProductAttributes
+     * @return CouponType
      */
     public function setName($name)
     {
@@ -60,5 +70,27 @@ class DB_ProductAttributes
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set store
+     *
+     * @param DB_Store $store
+     * @return CouponType
+     */
+    public function setStore(\DB_Store $store = null)
+    {
+        $this->store = $store;
+        return $this;
+    }
+
+    /**
+     * Get store
+     *
+     * @return DB_Store 
+     */
+    public function getStore()
+    {
+        return $this->store;
     }
 }

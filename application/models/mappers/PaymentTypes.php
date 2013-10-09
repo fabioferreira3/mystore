@@ -5,12 +5,12 @@
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ProductPrices
+ * PaymentTypes
  *
- * @Table(name="product_prices")
+ * @Table(name="payment_types")
  * @Entity
  */
-class DB_ProductPrices
+class DB_PaymentTypes
 {
     /**
      * @var integer $id
@@ -20,6 +20,13 @@ class DB_ProductPrices
      * @GeneratedValue(strategy="IDENTITY")
      */
     private $id;
+
+    /**
+     * @var string $name
+     *
+     * @Column(name="name", type="string", length=50, nullable=false)
+     */
+    private $name;
 
     /**
      * @var datetime $dateCreate
@@ -36,14 +43,14 @@ class DB_ProductPrices
     private $dateUpd;
 
     /**
-     * @var Product
+     * @var Store
      *
-     * @ManyToOne(targetEntity="DB_Product")
+     * @ManyToOne(targetEntity="DB_Store")
      * @JoinColumns({
-     *   @JoinColumn(name="product_id", referencedColumnName="id")
+     *   @JoinColumn(name="store_id", referencedColumnName="id")
      * })
      */
-    private $product;
+    private $store;
 
 
 
@@ -58,10 +65,32 @@ class DB_ProductPrices
     }
 
     /**
+     * Set name
+     *
+     * @param string $name
+     * @return PaymentTypes
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string 
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
      * Set dateCreate
      *
      * @param datetime $dateCreate
-     * @return ProductPrices
+     * @return PaymentTypes
      */
     public function setDateCreate($dateCreate)
     {
@@ -83,7 +112,7 @@ class DB_ProductPrices
      * Set dateUpd
      *
      * @param datetime $dateUpd
-     * @return ProductPrices
+     * @return PaymentTypes
      */
     public function setDateUpd($dateUpd)
     {
@@ -102,24 +131,24 @@ class DB_ProductPrices
     }
 
     /**
-     * Set product
+     * Set store
      *
-     * @param DB_Product $product
-     * @return ProductPrices
+     * @param DB_Store $store
+     * @return PaymentTypes
      */
-    public function setProduct(\DB_Product $product = null)
+    public function setStore(\DB_Store $store = null)
     {
-        $this->product = $product;
+        $this->store = $store;
         return $this;
     }
 
     /**
-     * Get product
+     * Get store
      *
-     * @return DB_Product 
+     * @return DB_Store 
      */
-    public function getProduct()
+    public function getStore()
     {
-        return $this->product;
+        return $this->store;
     }
 }

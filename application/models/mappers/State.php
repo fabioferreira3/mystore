@@ -5,12 +5,12 @@
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ProductAttributes
+ * State
  *
- * @Table(name="product_attributes")
+ * @Table(name="state")
  * @Entity
  */
-class DB_ProductAttributes
+class DB_State
 {
     /**
      * @var integer $id
@@ -24,9 +24,19 @@ class DB_ProductAttributes
     /**
      * @var string $name
      *
-     * @Column(name="name", type="string", length=200, nullable=false)
+     * @Column(name="name", type="string", length=100, nullable=false)
      */
     private $name;
+
+    /**
+     * @var Country
+     *
+     * @ManyToOne(targetEntity="DB_Country")
+     * @JoinColumns({
+     *   @JoinColumn(name="country_id", referencedColumnName="id")
+     * })
+     */
+    private $country;
 
 
 
@@ -44,7 +54,7 @@ class DB_ProductAttributes
      * Set name
      *
      * @param string $name
-     * @return ProductAttributes
+     * @return State
      */
     public function setName($name)
     {
@@ -60,5 +70,27 @@ class DB_ProductAttributes
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set country
+     *
+     * @param DB_Country $country
+     * @return State
+     */
+    public function setCountry(\DB_Country $country = null)
+    {
+        $this->country = $country;
+        return $this;
+    }
+
+    /**
+     * Get country
+     *
+     * @return DB_Country 
+     */
+    public function getCountry()
+    {
+        return $this->country;
     }
 }
