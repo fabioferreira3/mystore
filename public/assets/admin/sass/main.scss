@@ -1,0 +1,94 @@
+/*------------------------------------------------------------------------
+    Global
+        $functions
+        $body
+        $helpers
+        $Streamers
+        $forms
+------------------------------------------------------------------------*/
+
+/*------------------------------------------------------------------------
+    Function
+------------------------------------------------------------------------*/
+@mixin bxsha( $param1, $param2, $param3){
+    box-shadow: $param1 $param1 $param2 $param3;
+    -o-box-shadow: $param1 $param1 $param2 $param3;
+    -ms-box-shadow: $param1 $param1 $param2 $param3;
+    -webkit-box-shadow: $param1 $param1 $param2 $param3;
+}
+
+/*------------------------------------------------------------------------
+ Globals   
+------------------------------------------------------------------------*/
+body{
+    font: {
+        family: serif;
+        weight: bold;
+        size: 12px;
+    }
+}
+
+/*------------------------------------------------------------------------
+    $streamers
+------------------------------------------------------------------------*/
+.rejected{
+    border-collapse: collapse;
+    tr{
+        background-color: rgb(250, 233, 233);    
+    }
+}
+.newly tr{
+    background-color: rgba(43, 235, 43, 0.1);   
+}
+
+/*------------------------------------------------------------------------
+    $helpers
+------------------------------------------------------------------------*/
+
+/*------------------------------------------------------------------------
+    $streamers
+------------------------------------------------------------------------*/
+
+/*------------------------------------------------------------------------
+    $forms
+------------------------------------------------------------------------*/
+.form-add{
+    margin: 0 auto;
+    width: 70%;
+    border:1px solid #aeaeae;
+    border-radius: 4px;
+    overflow: hidden;
+    background-color: #f5f5f5;
+    border: 1px solid #e3e3e3; 
+    @include bxsha(1px, 10px, #aeaeae);
+    legend{
+        font-size: 16px;
+        line-height: 16px;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid #dcdcdc;
+    }
+    fieldset{
+        padding: .5em;
+        .checkbox{
+            margin: -5px 10px 10px 10px;
+            margin-top: -5px;
+            width: 100%;
+        }
+        .w50{
+            width: 45%;
+            display: inline-block;
+        }
+    }
+    .list-jogos{
+        display: block;
+        label{
+            display: inline-block;
+        }
+        input[type='checkbox']{
+            display: inline-block;
+            margin-bottom: 5px;
+            margin: 10px;
+        }
+    }
+}

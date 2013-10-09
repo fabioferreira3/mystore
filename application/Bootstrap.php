@@ -2,6 +2,30 @@
 
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {
+	
+	/**
+	 * Inicializa o Local e Tradutor
+	 *
+	 * @return void
+	 */
+	public function _initLocale() {
+	
+		$localeValue = 'pt-BR';
+	
+		$locale = new Zend_Locale($localeValue);
+		Zend_Registry::set('Zend_Locale', $locale);
+		$config = $this->getOptions();
+		$langDir = $config['resources']['frontController']['langDirectory'];
+		$translationFile = $langDir . DIRECTORY_SEPARATOR . $localeValue . '.inc.php';
+	
+		$translate = new Zend_Translate('array', $translationFile, $localeValue);
+		Zend_Registry::set('Zend_Translate', $translate);
+	
+		$teste = $translate->getAdapter();
+	
+	}
+	
+	
 	public function _initRoute(){
 		$ctrl = Zend_Controller_Front::getInstance();
 		$router = $ctrl->getRouter();
@@ -73,6 +97,25 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 								'controller' => 'index'
 						))
 		);	
+	}
+	
+	/**
+	 * Inicializa as Variáveis de Sessão e Adaptador do Banco de Dados
+	 *
+	 * @return void
+	 */
+	protected function _initAccess(){
+	
+		$auth = Zend_Auth::getInstance();
+	
+		if ($auth->hasIdentity()) {
+	
+			$this->bootstrap('db');
+			$db = $this->getResource('db');
+	
+			$userInfo = Zend_Auth::getInstance()->getStorage()->read();
+	
+		}
 	}
 	
 	/**
