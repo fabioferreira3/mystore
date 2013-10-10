@@ -78,6 +78,16 @@ class DB_Order
      * })
      */
     private $client;
+    
+    /**
+     * @var PaymentType
+     *
+     * @ManyToOne(targetEntity="DB_PaymentTypes")
+     * @JoinColumns({
+     *   @JoinColumn(name="payment_type_id", referencedColumnName="id")
+     * })
+     */
+    private $paymentType;
 
 
 
@@ -243,5 +253,27 @@ class DB_Order
     public function getClient()
     {
         return $this->client;
+    }
+    
+    /**
+     * Set paymentType
+     *
+     * @param DB_PaymentTypes $paymentType
+     * @return 
+     */
+    public function setPaymentType(\DB_PaymentTypes $paymentType = null)
+    {
+        $this->paymentType = $paymentType;
+        return $this;
+    }
+
+    /**
+     * Get paymentType
+     *
+     * @return DB_PaymentTypes 
+     */
+    public function getPaymentType()
+    {
+        return $this->paymentType;
     }
 }

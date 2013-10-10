@@ -1,0 +1,105 @@
+
+<?php 
+
+if (isset($this->msgSuccess)){
+   
+    foreach ($this->msgSuccess as $message){?>
+        <div class="alert alert-success">
+            <a class="close" data-dismiss="alert">×</a>
+            <?php echo $message; ?>
+        </div>
+         
+<?php }
+    
+}?>
+
+<?php 
+
+if (isset($this->msgError)){
+   
+    foreach ($this->msgError as $message){?>
+        <div class="alert alert-error">
+            <a class="close" data-dismiss="alert">×</a>
+            <?php echo $message; ?>
+        </div>
+         
+<?php }
+    
+}?>
+
+<div class="row-fluid">
+    <div class="span12">
+        <h1 class="heading">Clientes<a href='/admin/customer/add' class='btn btn-add'>Adicionar</a></h1>
+        <table class="table table-bordered table-striped table_vam" >
+            <thead>
+                <tr>
+                    <th></th>
+                    <th><input type="text" class="span12" placeholder="Nome..."/></th>
+                    <th><input type="text" class="span12" placeholder="Email..."/></th>
+                    <th><input type="text" class="span12" placeholder="Estado..."/></th>
+                    <th><input type="text" class="span12" placeholder="País..."/></th>
+                    <th><input name="searchSince" type="text" class="span12" placeholder="Desde..."/></th>
+                    <th><input name="searchLastLogin" type="text" class="span12" placeholder="Ultimo Login..."/></th>
+                    <th><input type="text" class="span12" placeholder="Status..."/></th>
+                    <th><button class="btn btn-gebo">Buscar</button></th>
+                </tr>
+            </thead>
+            <thead>
+                <tr>
+                    <th class="table_checkbox"><input type="checkbox"
+                        name="select_rows" class="select_rows" data-tableid="dt_gal" /></th>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Estado</th>
+                    <th>País</th>
+                    <th>Desde</th>
+                    <th>Ultimo Login</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+            
+                <tr>
+                    <td><input type="checkbox" name="row_sel" class="row_sel" /></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><a href="/admin/customer/edit/id/" class="sepV_a" title="Editar"><i class="icon-pencil"></i>
+                    </a>
+                    
+                    <a href="/admin/customer/disable/id/" title="Desativar">
+                        <i class="splashy-okay"></i>                          
+                    </a>
+                               
+                    <a href="/admin/customer/enable/id/" title="Ativar">
+                        <i class="splashy-gem_remove"></i>                            
+                    </a>
+                   
+                    </td>
+                </tr>               
+           
+                
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+
+    $('[name=searchSince]').datepicker({
+        format: "dd/mm/yyyy"
+    });
+    $('[name=searchLastLogin]').datepicker({
+        format: "dd/mm/yyyy"
+    });
+    
+})
+    
+</script>

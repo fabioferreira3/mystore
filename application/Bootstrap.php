@@ -90,6 +90,20 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 								'controller' => 'index'
 						))
 		);
+        $router->addRoute(
+                'admin_controller',
+                new Zend_Controller_Router_Route('/admin238/:controller',
+                        array(  'module' => 'admin',
+                                'controller' => ':controller'
+                        ))
+        );
+        $router->addRoute(
+                'admin_action',
+                new Zend_Controller_Router_Route('/admin238/:controller/:action',
+                        array(  'module' => 'admin',
+                                'controller' => ':controller'
+                        ))
+        );
 		$router->addRoute(
 				'admin_security',
 				new Zend_Controller_Router_Route('/admin',
