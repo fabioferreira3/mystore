@@ -27,32 +27,32 @@ if (isset($this->msgError)){
 }?>
 
 
-<form method="post" action="add" id="addCustomer">
+<form method="post" action="/admin238/customer/add" id="addCustomer">
     <h1 class="heading">Cadastrar Cliente</h1>
     <div class="row-fluid">
         <div class="span6">
 
             <h3 class="heading">Dados Gerais</h3>
             <div class="row-fluid">
-                <div class="span6">
-                
+                <div class="span6">                
                     <label for="name">Nome: </label> 
-                    <input class="span12" type="text" value="" name="name" />
+                    <input class="span12" type="text" value="" name="name" required />
                 </div>
                 <div class="span6">
-                    <label for="lastname">Sobrenome: </label> <input class="span12"
-                        type="text" value="" name="lastname" />
+                	<label for="lastname">Sobrenome: </label> 
+                	<input class="span12" type="text" value="" name="lastname" required/>
                 </div>
             </div>
             <div class="row-fluid">
             <div class="span6">
             <label for="vat">CPF: </label> 
-            <input class="span7" type="text" value="" name="vat" /> <label for="birth">Data de Nascimento: </label>
-            <input class="span6" type="text" value="" name="birth" /> 
+            <input class="span7" type="text" value="" name="vat" required/> 
+            <label for="birth">Data de Nascimento: </label>
+            <input class="span6" type="text" value="" name="birth" required/> 
             </div>
             <div class="span6">
             <label for="gender">Sexo: </label> 
-            <select class="span7" name="gender">
+            <select class="span7" name="gender" required>
                 <option value="0">Masculino</option>
                 <option value="1">Feminino</option>
             </select>
@@ -62,35 +62,83 @@ if (isset($this->msgError)){
         <div class="span6">
             <h3 class="heading">Dados de Acesso</h3>
             <label for="email">Email: </label> 
-            <input type="text" value="" class="span8" name="email" />
+            <input type="text" value="" class="span8" name="email" required/>
             <label for="password">Senha: </label>
-            <input type="password" class="span4" value="" name="password" /> 
+            <input type="password" class="span4" value="" name="password" required/> 
             <label for="confirm">Confirme a Senha: </label>
-            <input type="password" class="span4" value="" name="confirm" />
+            <input type="password" class="span4" value="" name="confirm" required/>
         </div>
     </div>
     <div class="row-fluid">
         <div class="span12">
-            <h3 class="heading">Endereço</h3>
+            <h3 class="heading">Endereços</h3>
+			<div class="tabbable tabbable-bordered">
+				<ul class="nav nav-tabs">
+					<li class="active"><a data-toggle="tab" href="#tab_br1">Cobrança</a>
+					</li>
+					<li class=""><a data-toggle="tab" href="#tab_br2">Entrega</a></li>
+					
+				</ul>
+				<div class="tab-content">
+					<div id="tab_br1" class="tab-pane active">
+						<h4 class="heading">Endereço de Cobrança</h4>
+						
+						<label>Logradouro:</label> 
+							<input class="span6" type="text" name="billing-address" required /> 
+						<label>Número:</label>
+							<input class="span1" type="text" name="billing-number" /> 
+						<label>Complemento:</label> 
+							<input class="span2" type="text" name="billing-complement" /> 
+						<label>CEP:</label> 
+						<input class="span2" type="text" name="billing-zip" required/>
+						<label>País:</label> 
+							<select class="span2" name="billing-country" required>
+								<option value="0">Escolha</option>
+								<?php foreach ($this->countries as $country){?>
+								<option value="<?php echo $country->getId(); ?>">
+									<?php echo $country->getName(); ?>
+								</option>
+								<?php } ?>
+							</select>
+						<label>Estado:</label>
+							<select class="span2" type="text" name="billing-state" disabled="true" required>
+							</select>
+							 
+						<label>Cidade:</label>
+							<input class="span3" type="text" name="billing-city" required/> 
+						
+					</div>
+					<div id="tab_br2" class="tab-pane">
+						<h4 class="heading">Endereço de Entrega</h4>
+						<label class="checkbox"><input type="checkbox" name="same-address"/>Mesmo endereço de cobrança</label>						
+						<label for="address">Logradouro:</label> 
+							<input class="span6" type="text" name="shipping-address" required/> 
+						<label for="numer">Número:</label>
+							<input class="span1" type="text" name="shipping-number" required/> 
+						<label for="complement">Complemento:</label> 
+							<input class="span2" type="text" name="shipping-complement"/> 
+						<label for="zip">CEP:</label> 
+							<input class="span2" type="text" name="shipping-zip" required/> 
+						<label for="country">País:</label> 
+							<select class="span2" name="shipping-country" required>
+								<option value="0">Escolha</option>
+								<?php foreach ($this->countries as $country){?>
+								<option value="<?php echo $country->getId(); ?>">
+									<?php echo $country->getName(); ?>
+								</option>
+								<?php } ?>
+							</select>
+						<label>Estado:</label>
+							<select class="span2" type="text" name="shipping-state" disabled="true" required>
+							</select> 
+						<label for="city">Cidade:</label>
+							<input class="span3" type="text" name="shipping-city" required/> 
+					</div>					
+				</div>
+				<button onclick="formSend()" class="btn btn-gebo">Salvar</button>
+			</div>
 
-            <label for="address">Logradouro:</label> <input class="span6"
-                type="text" name="address" /> <label for="numer">Número:</label> <input
-                class="span1" type="text" name="number" /> <label for="complement">Complemento:</label>
-            <input class="span2" type="text" name="complement" /> <label
-                for="zip">CEP:</label> <input class="span2" type="text" name="zip" />
-            <label for="city">Cidade:</label> <input class="span3" type="text"
-                name="city" /> <label for="state">Estado:</label> <input
-                class="span2" type="text" name="state" /> <label for="country">País:</label>
-            <select class="span2" name="country">
-                <option value="0">Escolha</option>
-                <?php foreach ($this->countries as $country){?>
-                <option value="<?php echo $country->getId(); ?>">
-                    <?php echo $country->getName(); ?>
-                </option>
-                <?php } ?>
-            </select> 
-            <button type="submit" class="btn btn-gebo">Salvar</button>
-        </div>
+		</div>
     </div>
 </form>
 
@@ -100,7 +148,109 @@ $(document).ready(function(){
 
     $('[name=birth]').mask('00/00/0000');
     $('[name=vat]').mask('000.000.000-00');
+
+	// Preenche o endereço de entrega de acordo com o de cobrança
     
-})
+    $('[name=same-address]').click(function(){
+        $('input[name=shipping-address]').val($('input[name=billing-address]').val());
+        $('input[name=shipping-number]').val($('input[name=billing-number]').val());
+        $('input[name=shipping-complement]').val($('input[name=billing-complement]').val());
+        $('input[name=shipping-zip]').val($('input[name=billing-zip]').val());
+        $('input[name=shipping-city]').val($('input[name=billing-city]').val());
+        var country = $('select[name=billing-country] option:selected').html().trim();
+        $("select[name=shipping-country] option").each(function() { this.selected = (this.text == country); });
+        var state = $('select[name=billing-state] option:selected').html().trim();
+        $("select[name=shipping-state] option").each(function() { this.selected = (this.text == state); });
+
+    });
+	
+    $('[name=billing-country]').change(function(){ 
+        $.get("/admin238/customer/call-states",{country:$('[name=billing-country]').val()},function(data){
+        	$("select[name=billing-state]").html(data);
+        	$("select[name=billing-state]").prop('disabled',false);
+        	$("select[name=shipping-state]").html(data);
+        	$("select[name=shipping-state]").prop('disabled',false);
+        });
+    });
+
+    $('[name=shipping-country]').change(function(){ 
+        $.get("/admin238/customer/call-states",{country:$('[name=shipping-country]').val()},function(data){
+        	$("select[name=shipping-state]").html(data);
+        	$("select[name=shipping-state]").prop('disabled',false);
+        });
+    }); 
+
+   
+});
+
+	jQuery.validator.addMethod("notEqual", function(value, element, param) {
+		return this.optional(element) || value != param;
+	}, "Campo obrigatório");	
+
+ function formSend(){
+	
+   $('#addCustomer').validate({
+		rules:{
+			name:{
+				required:true
+			},
+			email:{
+				required:true,
+				email:true
+			},
+			password:{
+				required:true,
+				minlength:8,
+				maxlength:12
+			},
+			confirm:{
+				required:true,
+				equalTo:'[name=password]'
+			},
+			'billing-address':{
+				required:true
+			},
+			'billing-country':{
+				required:true,
+				notEqual:"0"		
+			},
+			'billing-state':{
+				required:true
+			},
+			'shipping-country':{
+				required:true,
+				notEqual:"0"
+			},
+			'shipping-state':{
+				required:true,
+				notEqual:""
+			},
+			'shipping-address':{
+				required:true
+			}	
+		},
+		messages:{
+            name:{
+                required: "O campo nome é obrigatorio."               
+            },
+            email:{
+                required: "O campo email é obrigatório.",
+                email: 'Digite um email válido'               
+            },
+            password:{
+                required: "O campo senha é obrigatorio.",
+                minlength: 'Senha deve ter no mínimo 8 caracteres',
+                maxlength: 'Senha deve ter no máximo 12 caracteres'              
+            },
+            confirm:{
+                required: 'Digite a senha novamente',
+                equalTo: 'Digite a senha novamente'
+            }			
+		}
+    });
+
+   
+   
+ }
     
 </script>

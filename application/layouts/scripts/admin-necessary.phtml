@@ -52,14 +52,9 @@
             <script src="<?php echo $this->baseUrl();?>/assets/admin/lib/datatables/jquery.dataTables.bootstrap.min.js"></script>
             <!-- tables functions -->
             <script src="<?php echo $this->baseUrl();?>/assets/admin/js/gebo_tables.js"></script>
-            
-            <!-- Includes JS Especificos da View -->
-            <?php
-                if ($this->jQueryValidation == true){ ?>
-                    <script src="<?php echo $this->baseUrl();?>/assets/admin/lib/validation/jquery.validate.min.js"></script>
-            <?php        
-                }
-            ?>
+            <!-- jquery validate -->
+            <script src="<?php echo $this->baseUrl();?>/assets/admin/lib/validation/jquery.validate.min.js"></script>
+           
     
             <script>
                 $(document).ready(function() {

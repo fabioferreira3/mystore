@@ -7,6 +7,7 @@ class Admin_IndexController extends Zend_Controller_Action
 	public function init(){
 		$this->layout = Zend_Layout::getMvcInstance();
 		$this->layout->setLayout('adminLayout');
+		
 	}
 	
 	public function indexAction(){

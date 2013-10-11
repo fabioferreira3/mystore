@@ -83,13 +83,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 								'controller' => 'product'
 						))
 		);
-		$router->addRoute(
-				'admin_root',
-				new Zend_Controller_Router_Route('/admin238',
-						array(	'module' => 'admin',
-								'controller' => 'index'
-						))
-		);
+		
         $router->addRoute(
                 'admin_controller',
                 new Zend_Controller_Router_Route('/admin238/:controller',
@@ -105,12 +99,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                         ))
         );
 		$router->addRoute(
-				'admin_security',
-				new Zend_Controller_Router_Route('/admin',
-						array(	'module' => 'front',
+				'admin_root',
+				new Zend_Controller_Router_Route('/admin238',
+						array(	'module' => 'admin',
 								'controller' => 'index'
 						))
-		);	
+		);
+		
 	}
 	
 	/**
@@ -219,4 +214,3 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 	}
 
 }
-
