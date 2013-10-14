@@ -34,6 +34,27 @@ class DB_Client
      * @Column(name="last_name", type="string", length=100, nullable=false)
      */
     private $lastName;
+    
+    /**
+     * @var string $email
+     *
+     * @Column(name="email", type="string", length=150, nullable=false)
+     */
+    private $email;
+    
+    /**
+     * @var string $password
+     *
+     * @Column(name="password", type="string", length=64, nullable=false)
+     */
+    private $password;
+    
+    /**
+     * @var string $keyConfirm
+     *
+     * @Column(name="key_confirm", type="string", length=32, nullable=false)
+     */
+    private $keyConfirm;
 
     /**
      * @var datetime $dateBirth
@@ -45,14 +66,14 @@ class DB_Client
     /**
      * @var integer $clientType
      *
-     * @Column(name="client_type", type="integer", nullable=false)
+     * @Column(name="client_type", type="integer", nullable=true)
      */
     private $clientType;
 
     /**
      * @var string $cpf
      *
-     * @Column(name="cpf", type="string", length=11, nullable=true)
+     * @Column(name="cpf", type="string", length=11, nullable=false)
      */
     private $cpf;
 
@@ -66,21 +87,21 @@ class DB_Client
     /**
      * @var boolean $gender
      *
-     * @Column(name="gender", type="boolean", nullable=false)
+     * @Column(name="gender", type="boolean", nullable=true)
      */
     private $gender;
 
     /**
      * @var datetime $dateCreate
      *
-     * @Column(name="date_create", type="datetime", nullable=false)
+     * @Column(name="date_create", type="datetime", nullable=true)
      */
     private $dateCreate;
 
     /**
      * @var datetime $dateUpd
      *
-     * @Column(name="date_upd", type="datetime", nullable=true)
+     * @Column(name="date_upd", type="datetime", nullable=false)
      */
     private $dateUpd;
 
@@ -90,6 +111,13 @@ class DB_Client
      * @Column(name="last_login", type="datetime", nullable=true)
      */
     private $lastLogin;
+    
+    /**
+     * @var integer $status
+     *
+     * @Column(name="status", type="integer", nullable=true)
+     */
+    private $status;
 
     /**
      * @var Store
@@ -156,6 +184,74 @@ class DB_Client
     {
         return $this->lastName;
     }
+    
+    
+    /**
+     * Set email
+     *
+     * @param string $email
+     * @return Client
+     */
+    public function setEmail($email)
+    {
+    	$this->email = $email;
+    	return $this;
+    }
+    
+    /**
+     * Get email
+     *
+     * @return string
+     */
+    public function getEmail()
+    {
+    	return $this->email;
+    }
+
+    /**
+     * Set password
+     *
+     * @param string $password
+     * @return Client
+     */
+    public function setPassword($password)
+    {
+    	$this->password = $password;
+    	return $this;
+    }
+    
+    /**
+     * Get password
+     *
+     * @return string
+     */
+    public function getPassword()
+    {
+    	return $this->password;
+    }
+    
+    /**
+     * Set key
+     *
+     * @param string $keyConfirm
+     * @return Client
+     */
+    public function setKeyConfirm($keyConfirm)
+    {
+    	$this->keyConfirm = $keyConfirm;
+    	return $this;
+    }
+    
+    /**
+     * Get keyConfirm
+     *
+     * @return string
+     */
+    public function getKeyConfirm()
+    {
+    	return $this->keyConfirm;
+    }
+    
 
     /**
      * Set dateBirth
@@ -331,6 +427,29 @@ class DB_Client
     public function getLastLogin()
     {
         return $this->lastLogin;
+    }
+    
+    
+    /**
+     * Set status
+     *
+     * @param string $status
+     * @return Client
+     */
+    public function setStatus($status)
+    {
+    	$this->status = $status;
+    	return $this;
+    }
+    
+    /**
+     * Get status
+     *
+     * @return string
+     */
+    public function getStatus()
+    {
+    	return $this->status;
     }
 
     /**
