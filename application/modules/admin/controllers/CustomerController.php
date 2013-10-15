@@ -22,7 +22,7 @@ class Admin_CustomerController extends Zend_Controller_Action
     
     public function indexAction(){
         try{
-         $tbClient = new DB_Client();         
+         $tbClient = new DB_Client();
          $this->view->clients = $tbClient->getDataAddress();
         }
         catch(Exception $e){echo $e->getMessage();exit;}
@@ -126,41 +126,41 @@ class Admin_CustomerController extends Zend_Controller_Action
     				// Insere no banco
                     $this->em->flush();  	                   
                     $this->_helper->flashMessenger->addMessage('Usuário Adicionado com Sucesso!','success');
-                    $this->getHelper('Redirector')->gotoUrl('/admin/customer/add');
+                    $this->getHelper('Redirector')->gotoUrl('/admin238/customer/add');
                 	
     			}else{
     				$this->_helper->flashMessenger->addMessage('Já existe um usuário com este Email e/ou CPF/CNPJ','error');
-    				$this->getHelper('Redirector')->gotoUrl('/admin/customer/add');
+    				$this->getHelper('Redirector')->gotoUrl('/admin238/customer/add');
     			}   			
     		}	
     	}
     	catch(Exception $e){    	    
     	    $this->_helper->flashMessenger->addMessage('Erro ao adicionar usuário!','error');
             $this->_helper->flashMessenger->addMessage($e->getMessage(),'error');
-            $this->getHelper('Redirector')->gotoUrl('/admin/customer/add');
+            $this->getHelper('Redirector')->gotoUrl('/admin238/customer/add');
         } 
     }
 
     public function enableAction(){
         
         $params = $this->getRequest()->getParams();
-        $clientId = $params['id'];
+        $clientId = $params['value'];
         $tbClient = $this->repo->db('Client')->find($clientId);
         $tbClient->setStatus(1);
         $this->em->flush();
         $this->_helper->flashMessenger->addMessage('Usuário Ativado','success');
-        $this->getHelper('Redirector')->gotoUrl('/admin/customer/');
+        $this->getHelper('Redirector')->gotoUrl('/admin238/customer/');
     }
 
     public function disableAction(){
         
         $params = $this->getRequest()->getParams();
-        $clientId = $params['id'];
+        $clientId = $params['value'];
         $tbClient = $this->repo->db('Client')->find($clientId);
         $tbClient->setStatus(0);
         $this->em->flush();
         $this->_helper->flashMessenger->addMessage('Usuário Desativado','success');
-        $this->getHelper('Redirector')->gotoUrl('/admin/customer/');
+        $this->getHelper('Redirector')->gotoUrl('/admin238/customer/');
     }
     
     public function editAction(){
@@ -168,6 +168,79 @@ class Admin_CustomerController extends Zend_Controller_Action
         $clientId = $params['value'];        
         $tbClient = new DB_Client();        
         $this->view->entity = $tbClient->getDataAddress($clientId);
+        $this->view->addresses = $tbClient->getAllAddresses($clientId);
+        $countries = $this->repo->db('Country')->findAll();
+        $this->view->countries = $countries;
+        try{
+        if ($this->getRequest()->isPost()){
+        	$postvars = $this->getRequest()->getPost();
+        	$clientEntity = $this->repo->db('Client')->find($clientId);
+        	$clientEntity->setFirstName($postvars['name']);
+        	$clientEntity->setLastName($postvars['lastname']);
+        	$clientEntity->setCpf($postvars['cpf']);
+        	$birth = new DateTime(str_replace('/', '-',$postvars['birth']));
+        	$clientEntity->setDateBirth($birth);
+        	$clientEntity->setGender($postvars['gender']);
+        	$clientEntity->setEmail($postvars['email']);
+        	if($postvars['password'] != ''){
+        		$clientEntity->setPassword(hash('sha256',$postvars['password']));
+        	}        	
+        	$billingAddress = $tbClient->getDataAddress($clientId,3);
+        	
+        	if($billingAddress != null){
+        		$billingAddress->setStreet($postvars['billing-address']);
+        		$billingAddress->setNumber($postvars['billing-number']);
+        		$billingAddress->setComplement($postvars['billing-complement']);
+        		$billingCountry = $this->repo->db('Country')->find($postvars['billing-country']);
+        		$billingAddress->setCountry($billingCountry);
+        		$billingState = $this->repo->db('State')->find($postvars['billing-state']);
+        		$billingAddress->setState($billingState);
+        		$billingAddress->setCity($postvars['billing-city']);
+        		$this->em->persist($billingAddress);
+        	}
+        	        	
+        	$shippingAddress = $tbClient->getDataAddress($clientId,2);
+        	
+        	if($shippingAddress != null){
+        		$shippingAddress->setStreet($postvars['shipping-address']);
+        		$shippingAddress->setNumber($postvars['shipping-number']);
+        		$shippingAddress->setComplement($postvars['shipping-complement']);
+        		$shippingCountry = $this->repo->db('Country')->find($postvars['shipping-country']);
+        		$shippingAddress->setCountry($billingCountry);
+        		$shippingState = $this->repo->db('State')->find($postvars['shipping-state']);
+        		$shippingAddress->setState($shippingState);
+        		$shippingAddress->setCity($postvars['shipping-city']);
+        		$this->em->persist($shippingAddress);
+        	}else{
+        		if(isset($postvars['shipping-address']) && $postvars['shipping-address'] != ''){
+        			$shippingAddress = new DB_Address();
+        			$shippingAddress->setStreet($postvars['shipping-address']);
+        			$shippingAddress->setNumber($postvars['shipping-number']);
+        			$shippingAddress->setComplement($postvars['shipping-complement']);
+        			$shippingAddress->setZip($postvars['shipping-zip']);
+        			$shippingCountry = $this->repo->db('Country')->find($postvars['shipping-country']);
+        			$shippingAddress->setCountry($shippingCountry);
+        			$shippingState = $this->repo->db('State')->find($postvars['shipping-state']);
+        			$shippingAddress->setState($shippingState);
+        			$shippingAddress->setCity($postvars['shipping-city']);
+        			$addressType = $this->repo->db('AddressType')->find(2);
+        			$shippingAddress->setAddressType($addressType);
+        			$shippingAddress->setClient($clientEntity);
+        			$dtNow = new DateTime();
+        			$shippingAddress->setDateCreate($dtNow);
+        			
+        			$this->em->persist($shippingAddress);
+        		}
+        	}
+        	        	
+        	$this->em->persist($clientEntity);        	
+        	
+        	$this->em->flush();
+        	
+        	$this->getHelper('Redirector')->gotoUrl('/admin238/customer/edit/id/' . $clientId);
+        }
+        }
+        catch(Exception $e){echo $e->getMessage();exit;}
     }
     
     public function callStatesAction(){
