@@ -20,6 +20,16 @@ class DB_Address
      * @GeneratedValue(strategy="IDENTITY")
      */
     private $id;
+    
+    /**
+     * @var $addressType
+     *
+     * @ManyToOne(targetEntity="DB_AddressType")
+     * @JoinColumns({
+     *   @JoinColumn(name="address_type_id", referencedColumnName="id")
+     * })
+     */
+    private $addressType;
 
     /**
      * @var string $street
@@ -107,6 +117,28 @@ class DB_Address
     public function getId()
     {
         return $this->id;
+    }
+    
+    /**
+     * Set address_type_id
+     *
+     * @param DB_Country $addressType
+     * @return Address
+     */
+    public function setAddressType(\DB_AddressType $addressType = null)
+    {
+    	$this->addressType = $addressType;
+    	return $this;
+    }
+    
+    /**
+     * Get address_type_id
+     *
+     * @return DB_AddressType
+     */
+    public function getAddressType()
+    {
+    	return $this->addressType;
     }
 
     /**

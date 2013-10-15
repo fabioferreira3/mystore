@@ -59,12 +59,12 @@ if (isset($this->msgError)){
                 </tr>
             </thead>
             <tbody>
-            
-                <tr>
+            	<?php foreach($this->clients as $client){ ?>
+            	<tr>
                     <td><input type="checkbox" name="row_sel" class="row_sel" /></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><?php echo $client->getFirstName() . ' ' . $client->getLastName();?></td>
+                    <td><?php echo $client->getEmail();?></td>
+                    <td><?php echo $client->getState()->getName();?></td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -81,7 +81,9 @@ if (isset($this->msgError)){
                     </a>
                    
                     </td>
-                </tr>               
+                </tr>  
+            	<?php }?>
+                             
            
                 
             </tbody>

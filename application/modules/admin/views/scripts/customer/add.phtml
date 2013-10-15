@@ -84,15 +84,15 @@ if (isset($this->msgError)){
 						<h4 class="heading">Endereço de Cobrança</h4>
 						
 						<label>Logradouro:</label> 
-							<input class="span6" type="text" name="billing-address" required /> 
+							<input class="span6" type="text" name="billing-address" /> 
 						<label>Número:</label>
 							<input class="span1" type="text" name="billing-number" /> 
 						<label>Complemento:</label> 
 							<input class="span2" type="text" name="billing-complement" /> 
 						<label>CEP:</label> 
-						<input class="span2" type="text" name="billing-zip" required/>
+						<input class="span2" type="text" name="billing-zip"/>
 						<label>País:</label> 
-							<select class="span2" name="billing-country" required>
+							<select class="span2" name="billing-country">
 								<option value="0">Escolha</option>
 								<?php foreach ($this->countries as $country){?>
 								<option value="<?php echo $country->getId(); ?>">
@@ -101,26 +101,26 @@ if (isset($this->msgError)){
 								<?php } ?>
 							</select>
 						<label>Estado:</label>
-							<select class="span2" type="text" name="billing-state" disabled="true" required>
+							<select class="span2" type="text" name="billing-state" disabled="true">
 							</select>
 							 
 						<label>Cidade:</label>
-							<input class="span3" type="text" name="billing-city" required/> 
+							<input class="span3" type="text" name="billing-city"  disabled="true"/> 
 						
 					</div>
 					<div id="tab_br2" class="tab-pane">
 						<h4 class="heading">Endereço de Entrega</h4>
 						<label class="checkbox"><input type="checkbox" name="same-address"/>Mesmo endereço de cobrança</label>						
 						<label for="address">Logradouro:</label> 
-							<input class="span6" type="text" name="shipping-address" required/> 
+							<input class="span6" type="text" name="shipping-address"/> 
 						<label for="numer">Número:</label>
-							<input class="span1" type="text" name="shipping-number" required/> 
+							<input class="span1" type="text" name="shipping-number" /> 
 						<label for="complement">Complemento:</label> 
 							<input class="span2" type="text" name="shipping-complement"/> 
 						<label for="zip">CEP:</label> 
-							<input class="span2" type="text" name="shipping-zip" required/> 
+							<input class="span2" type="text" name="shipping-zip" /> 
 						<label for="country">País:</label> 
-							<select class="span2" name="shipping-country" required>
+							<select class="span2" name="shipping-country" >
 								<option value="0">Escolha</option>
 								<?php foreach ($this->countries as $country){?>
 								<option value="<?php echo $country->getId(); ?>">
@@ -129,10 +129,10 @@ if (isset($this->msgError)){
 								<?php } ?>
 							</select>
 						<label>Estado:</label>
-							<select class="span2" type="text" name="shipping-state" disabled="true" required>
+							<select class="span2" type="text" name="shipping-state" disabled="true">
 							</select> 
 						<label for="city">Cidade:</label>
-							<input class="span3" type="text" name="shipping-city" required/> 
+							<input class="span3" type="text" name="shipping-city" disabled="true"/> 
 					</div>					
 				</div>
 				<button onclick="formSend()" class="btn btn-gebo">Salvar</button>
@@ -147,7 +147,7 @@ if (isset($this->msgError)){
 $(document).ready(function(){
 
     $('[name=birth]').mask('00/00/0000');
-    $('[name=vat]').mask('000.000.000-00');
+    $('[name=cpf]').mask('000.000.000-00');
 
 	// Preenche o endereço de entrega de acordo com o de cobrança
     
@@ -169,9 +169,15 @@ $(document).ready(function(){
         	$("select[name=billing-state]").html(data);
         	$("select[name=billing-state]").prop('disabled',false);
         	$("select[name=shipping-state]").html(data);
-        	$("select[name=shipping-state]").prop('disabled',false);
+        	$("select[name=shipping-state]").prop('disabled',false);        	
         });
     });
+
+    $('[name=billing-state]').change(function(){        
+        	$("input[name=billing-city]").prop('disabled',false);
+        	$("input[name=shipping-city]").prop('disabled',false);
+    });
+    
 
     $('[name=shipping-country]').change(function(){ 
         $.get("/admin238/customer/call-states",{country:$('[name=shipping-country]').val()},function(data){
@@ -179,6 +185,10 @@ $(document).ready(function(){
         	$("select[name=shipping-state]").prop('disabled',false);
         });
     }); 
+
+    $('[name=shipping-state]').change(function(){        
+    	$("input[name=shipping-city]").prop('disabled',false);
+    });
 
    
 });
@@ -206,28 +216,7 @@ $(document).ready(function(){
 			confirm:{
 				required:true,
 				equalTo:'[name=password]'
-			},
-			'billing-address':{
-				required:true
-			},
-			'billing-country':{
-				required:true,
-				notEqual:"0"		
-			},
-			'billing-state':{
-				required:true
-			},
-			'shipping-country':{
-				required:true,
-				notEqual:"0"
-			},
-			'shipping-state':{
-				required:true,
-				notEqual:""
-			},
-			'shipping-address':{
-				required:true
-			}	
+			}
 		},
 		messages:{
             name:{

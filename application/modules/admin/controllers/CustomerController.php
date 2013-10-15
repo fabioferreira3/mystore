@@ -11,10 +11,18 @@ class Admin_CustomerController extends Zend_Controller_Action
         $this->layout->setLayout('adminLayout');
         $this->em = $this->_helper->EM->em();
         $this->repo = $this->_helper->EM;
+        
+        if ($this->_helper->FlashMessenger->hasMessages('success')) {
+        	$this->view->msgSuccess = $this->_helper->FlashMessenger->getMessages('success');
+        }
+        if ($this->_helper->FlashMessenger->hasMessages('error')) {
+        	$this->view->msgError = $this->_helper->FlashMessenger->getMessages('error');
+        }
     }
     
     public function indexAction(){
-         
+         $tbClient = new DB_Client();         
+         Zend_Debug::dump($tbClient->getDataAddress());exit;
     }
     
     public function addAction(){
@@ -28,10 +36,14 @@ class Admin_CustomerController extends Zend_Controller_Action
     		if ($this->getRequest()->isPost()){
     			$postvars = $this->getRequest()->getPost();
     			$tbClient = new DB_Client();
-    	     	$tbAddress = new DB_Address();
-    			
+    	     	    			
     			$checkEmail = $this->repo->db('Client')->findOneByEmail($postvars['email']);
-    			$checkCpf = $this->repo->db('Client')->findOneByCpf($postvars['cpf']);
+    			
+    			// Se cliente for pessoa física (CPF)
+    			if (isset($postvars['cpf']) && $postvars['cpf'] != ''){
+    				$cpf = str_replace(array('.','-'),'',$postvars['cpf']);
+    				$checkCpf = $this->repo->db('Client')->findOneByCpf($cpf);
+    			}    			
     			
     			if ($checkEmail == NULL && $checkCpf == NULL){
     				
@@ -40,8 +52,7 @@ class Admin_CustomerController extends Zend_Controller_Action
     				$tbClient->setEmail($postvars['email']);
     				
     				$birth = new DateTime(str_replace('/', '-',$postvars['birth']));
-    				$dtNow = new DateTime();
-    				$cpf = str_replace(array('.','-'),'',$postvars['vat']);
+    				$dtNow = new DateTime();    				
     				
     				$tbClient->setDateBirth($birth);
     				$tbClient->setClientType('1');
@@ -56,11 +67,60 @@ class Admin_CustomerController extends Zend_Controller_Action
     				$tbClient->setStatus('0');
     				
     				$currentStore = $this->repo->db('Store')->findOneById('1');
-    				$tbClient->setStore($currentStore);    		 
+    				$tbClient->setStore($currentStore);
+					
+    				// Endereço de Cobrança
+    				if(isset($postvars['billing-address']) && $postvars['billing-address'] != ''){
+    					$tbAddress = new DB_Address();
+    					$tbAddress->setClient($tbClient);
+    					$billingAddress = $this->repo->db('AddressType')->findOneByName('Cobrança');
+    					$tbAddress->setAddressType($billingAddress);
+    					$tbAddress->setStreet($postvars['billing-address']);
+    					$tbAddress->setNumber($postvars['billing-number']);
+    					if(isset($postvars['billing-complement']) && $postvars['billing-complement'] != ''){
+    						$tbAddress->setComplement($postvars['billing-complement']);
+    					}
+    					$tbAddress->setZip($postvars['billing-zip']);
+    					$billingCountry = $this->repo->db('Country')->find($postvars['billing-country']);
+    					$tbAddress->setCountry($billingCountry);
+    					$tbAddress->setState($postvars['billing-state']);
+    					$tbAddress->setCity($postvars['billing-city']);
+    					$tbAddress->setDateCreate($dtNow);
+    				}
+    				
+    				// Endereço de Entrega
+    				if(isset($postvars['shipping-address']) && $postvars['shipping-address'] != ''){
+    					$tbShippingAddress = new DB_Address();
+    					$tbShippingAddress->setClient($tbClient);
+    					$shippingAddress = $this->repo->db('AddressType')->findOneByName('Entrega');
+    					$tbShippingAddress->setAddressType($shippingAddress);
+    					$tbShippingAddress->setStreet($postvars['shipping-address']);
+    					$tbShippingAddress->setNumber($postvars['shipping-number']);
+    					if(isset($postvars['shipping-complement']) && $postvars['shipping-complement'] != ''){
+    						$tbShippingAddress->setComplement($postvars['shipping-complement']);
+    					}
+    					$tbShippingAddress->setZip($postvars['shipping-zip']);
+    					$shippingCountry = $this->repo->db('Country')->find($postvars['shipping-country']);
+    					$tbShippingAddress->setCountry($shippingCountry);
+    					$tbShippingAddress->setState($postvars['shipping-state']);
+    					$tbShippingAddress->setCity($postvars['shipping-city']);
+    					$tbShippingAddress->setDateCreate($dtNow);
+    				}
+    				
     				$this->em->persist($tbClient);
+    				$this->em->persist($tbAddress);
+    				$this->em->persist($tbShippingAddress);
     				$this->em->flush();
+    				try{                    	                   
+                    	$this->_helper->flashMessenger->addMessage('Usuário Adicionado com Sucesso!','success');
+                    	$this->getHelper('Redirector')->gotoUrl('/admin/customer/add');
+                	}
+                	catch(Exception $e){
+                    	$this->_helper->flashMessenger->addMessage('Erro ao adicionar usuário!','error');
+                    	$this->getHelper('Redirector')->gotoUrl('/admin/customer/add');
+                	}
     			}else{
-    				$this->_helper->flashMessenger->addMessage('Já existe um usuário com este email e/ou CPF/CNPJ');
+    				$this->_helper->flashMessenger->addMessage('Já existe um usuário com este Email e/ou CPF/CNPJ','error');
     				$this->getHelper('Redirector')->gotoUrl('/admin/customer/add');
     			}   			
     		}	
