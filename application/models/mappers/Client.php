@@ -480,7 +480,9 @@ class DB_Client
     	$em = Zend_Registry::getInstance()->entitymanager;     	
     	$data = $em->createQueryBuilder()->select(array('a','b'))->from('DB_Address','a')->innerjoin('a.client','b','WITH','a.addressType = 1');
     	if($clientId){
-    	    $data->where();
+    	    $data->where('b.id = :clientId');
+            $data->setParameters(array('clientId' => $clientId));
+            $result = $data->getQuery()->getResult();
     	}else{
     	    $result = $data->getQuery()->getResult();
     	}    	

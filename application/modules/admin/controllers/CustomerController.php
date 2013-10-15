@@ -23,8 +23,7 @@ class Admin_CustomerController extends Zend_Controller_Action
     public function indexAction(){
         try{
          $tbClient = new DB_Client();         
-         Zend_Debug::dump($tbClient->getDataAddress());exit;
-       //  $this->clients = $tbClient->getDataAddress();
+         $this->view->clients = $tbClient->getDataAddress();
         }
         catch(Exception $e){echo $e->getMessage();exit;}
     }

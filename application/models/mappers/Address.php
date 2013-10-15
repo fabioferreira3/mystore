@@ -67,9 +67,12 @@ class DB_Address
     private $city;
 
     /**
-     * @var string $state
+     * @var State
      *
-     * @Column(name="state", type="string", length=50, nullable=false)
+     * @ManyToOne(targetEntity="DB_State")
+     * @JoinColumns({
+     *   @JoinColumn(name="state", referencedColumnName="id")
+     * })
      */
     private $state;
 
@@ -254,10 +257,10 @@ class DB_Address
     /**
      * Set state
      *
-     * @param string $state
+     * @param DB_State $state
      * @return Address
      */
-    public function setState($state)
+    public function setState(\DB_State $state = null)
     {
         $this->state = $state;
         return $this;
