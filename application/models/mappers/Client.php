@@ -472,12 +472,11 @@ class DB_Client
     public function getStore()
     {
         return $this->store;
-    }
-    
+    }    
     
 	public function getDataAddress($clientId = null){
     	
-    	$em = Zend_Registry::getInstance()->entitymanager;     	
+    	$em = Zend_Registry::getInstance()->entitymanager;
     	$data = $em->createQueryBuilder()->select(array('a','b'))->from('DB_Address','a')->innerjoin('a.client','b','WITH','a.addressType = 1');
     	if($clientId){
     	    $data->where('b.id = :clientId');
@@ -485,7 +484,7 @@ class DB_Client
             $result = $data->getQuery()->getResult();
     	}else{
     	    $result = $data->getQuery()->getResult();
-    	}    	
-    	return $result;    	   	
+    	}
+    	return $result; 
     } 
 }

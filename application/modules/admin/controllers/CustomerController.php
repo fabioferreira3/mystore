@@ -74,8 +74,7 @@ class Admin_CustomerController extends Zend_Controller_Action
     				$tbClient->setPassword(hash('sha256',$postvars['password']));
     				$tbClient->setKeyConfirm(md5(rand(5,15)));
     				$tbClient->setDateCreate($dtNow);
-    				$tbClient->setDateUpd($dtNow);
-    				$tbClient->setLastLogin($dtNow);
+    				$tbClient->setDateUpd($dtNow);    				
     				$tbClient->setStatus('0');
     				
     				$currentStore = $this->repo->db('Store')->findOneById('1');
@@ -140,6 +139,28 @@ class Admin_CustomerController extends Zend_Controller_Action
             $this->_helper->flashMessenger->addMessage($e->getMessage(),'error');
             $this->getHelper('Redirector')->gotoUrl('/admin/customer/add');
         } 
+    }
+
+    public function enableAction(){
+        
+        $params = $this->getRequest()->getParams();
+        $clientId = $params['id'];
+        $tbClient = $this->repo->db('Client')->find($clientId);
+        $tbClient->setStatus(1);
+        $this->em->flush();
+        $this->_helper->flashMessenger->addMessage('Usuário Ativado','success');
+        $this->getHelper('Redirector')->gotoUrl('/admin/customer/');
+    }
+
+    public function disableAction(){
+        
+        $params = $this->getRequest()->getParams();
+        $clientId = $params['id'];
+        $tbClient = $this->repo->db('Client')->find($clientId);
+        $tbClient->setStatus(0);
+        $this->em->flush();
+        $this->_helper->flashMessenger->addMessage('Usuário Desativado','success');
+        $this->getHelper('Redirector')->gotoUrl('/admin/customer/');
     }
     
     public function callStatesAction(){

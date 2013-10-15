@@ -65,21 +65,22 @@ if (isset($this->msgError)){
                     <td><?php echo $client->getClient()->getFirstName() . ' ' . $client->getClient()->getLastName();?></td>
                     <td><?php echo $client->getClient()->getEmail();?></td>
                     <td><?php echo $client->getState()->getName();?></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td><a href="/admin/customer/edit/id/" class="sepV_a" title="Editar"><i class="icon-pencil"></i>
-                    </a>
-                    
-                    <a href="/admin/customer/disable/id/" title="Desativar">
-                        <i class="splashy-okay"></i>                          
-                    </a>
-                               
-                    <a href="/admin/customer/enable/id/" title="Ativar">
-                        <i class="splashy-gem_remove"></i>                            
-                    </a>
-                   
+                    <td><?php echo $client->getCountry()->getName();?></td>
+                    <td><?php echo $client->getClient()->getDateCreate()->format('d/m/Y');?></td>
+                    <td><?php if ($client->getClient()->getLastLogin()){echo $client->getClient()->getLastLogin()->format('d/m/Y');};?></td>
+                    <td><?php if ($client->getClient()->getStatus() == 0){echo 'Inativo';}else{echo 'Ativo';};?></td>
+                    <td>
+                        <a href="/admin238/customer/edit/id/" class="sepV_a" title="Editar"><i class="icon-pencil"></i></a>
+                        <?php if ($client->getClient()->getStatus() != 0){?>
+                        <a href="/admin238/customer/disable?id=<?php echo $client->getClient()->getId()?>" title="Desativar">                        
+                            <i class="splashy-gem_remove"></i>                          
+                        </a>
+                        <?php }?>
+                        <?php if ($client->getClient()->getStatus() == 0){?>           
+                        <a href="/admin238/customer/enable?id=<?php echo $client->getClient()->getId()?>" title="Ativar">
+                            <i class="splashy-okay"></i>                           
+                        </a>
+                        <?php }?>
                     </td>
                 </tr>  
             	<?php }?>
