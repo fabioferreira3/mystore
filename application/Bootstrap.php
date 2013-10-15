@@ -93,7 +93,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         );
         $router->addRoute(
                 'admin_action',
-                new Zend_Controller_Router_Route('/admin238/:controller/:action',
+                new Zend_Controller_Router_Route('/admin238/:controller/:action/:param/:value',
                         array(  'module' => 'admin',
                                 'controller' => ':controller'
                         ))

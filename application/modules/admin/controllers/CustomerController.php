@@ -163,6 +163,13 @@ class Admin_CustomerController extends Zend_Controller_Action
         $this->getHelper('Redirector')->gotoUrl('/admin/customer/');
     }
     
+    public function editAction(){
+        $params = $this->getRequest()->getParams();
+        $clientId = $params['value'];        
+        $tbClient = new DB_Client();        
+        $this->view->entity = $tbClient->getDataAddress($clientId);
+    }
+    
     public function callStatesAction(){
     	$params = $this->getRequest()->getParams();
     	$countryId = $params['country'];
@@ -171,7 +178,7 @@ class Admin_CustomerController extends Zend_Controller_Action
     	foreach ($states as $state){
     		echo '<option value=' . $state->getId() . '>' . $state->getName() . '</option>';
     	}
-    	exit;    	
+    	exit;
    	}
     catch(Exception $e){echo $e->getMessage();}
     }

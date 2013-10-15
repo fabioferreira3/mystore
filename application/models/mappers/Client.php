@@ -481,7 +481,7 @@ class DB_Client
     	if($clientId){
     	    $data->where('b.id = :clientId');
             $data->setParameters(array('clientId' => $clientId));
-            $result = $data->getQuery()->getResult();
+            $result = $data->getQuery()->getSingleResult();
     	}else{
     	    $result = $data->getQuery()->getResult();
     	}
