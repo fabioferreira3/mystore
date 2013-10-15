@@ -21,20 +21,23 @@ class Admin_CustomerController extends Zend_Controller_Action
     }
     
     public function indexAction(){
+        try{
          $tbClient = new DB_Client();         
          Zend_Debug::dump($tbClient->getDataAddress());exit;
+       //  $this->clients = $tbClient->getDataAddress();
+        }
+        catch(Exception $e){echo $e->getMessage();exit;}
     }
     
     public function addAction(){
 
-    	$countries = $this->repo->db('Country')->findAll();
-    	$users = $this->repo->db('Client')->findAll();
-    	$this->view->countries = $countries;
-    	$this->view->users = $users;
+    	$countries = $this->repo->db('Country')->findAll();    	
+    	$this->view->countries = $countries;    	
     	
     	try{
     		if ($this->getRequest()->isPost()){
     			$postvars = $this->getRequest()->getPost();
+                
     			$tbClient = new DB_Client();
     	     	    			
     			$checkEmail = $this->repo->db('Client')->findOneByEmail($postvars['email']);
@@ -43,7 +46,13 @@ class Admin_CustomerController extends Zend_Controller_Action
     			if (isset($postvars['cpf']) && $postvars['cpf'] != ''){
     				$cpf = str_replace(array('.','-'),'',$postvars['cpf']);
     				$checkCpf = $this->repo->db('Client')->findOneByCpf($cpf);
-    			}    			
+    			}
+                
+                // Se cliente for pessoa jurídica (CNPJ)
+                if (isset($postvars['cnpj']) && $postvars['cnpj'] != ''){
+                    $cnpj = str_replace(array('.','-','/'),'',$postvars['cnpj']);
+                    $checkCnpj = $this->repo->db('Client')->findOneByCnpj($cnpj);
+                }    			
     			
     			if ($checkEmail == NULL && $checkCpf == NULL){
     				
@@ -52,13 +61,17 @@ class Admin_CustomerController extends Zend_Controller_Action
     				$tbClient->setEmail($postvars['email']);
     				
     				$birth = new DateTime(str_replace('/', '-',$postvars['birth']));
-    				$dtNow = new DateTime();    				
+    				$dtNow = new DateTime();
     				
     				$tbClient->setDateBirth($birth);
     				$tbClient->setClientType('1');
     				$tbClient->setGender($postvars['gender']);
-    				$tbClient->setCpf($cpf);
-    				$tbClient->setCnpj('07913647000153');
+                    if($cpf){
+                        $tbClient->setCpf($cpf);
+                    }
+    				if($cnpj){
+                        $tbClient->setCnpj($cpf);
+                    }
     				$tbClient->setPassword(hash('sha256',$postvars['password']));
     				$tbClient->setKeyConfirm(md5(rand(5,15)));
     				$tbClient->setDateCreate($dtNow);
@@ -68,6 +81,7 @@ class Admin_CustomerController extends Zend_Controller_Action
     				
     				$currentStore = $this->repo->db('Store')->findOneById('1');
     				$tbClient->setStore($currentStore);
+                    $this->em->persist($tbClient); // Track da tabela
 					
     				// Endereço de Cobrança
     				if(isset($postvars['billing-address']) && $postvars['billing-address'] != ''){
@@ -86,6 +100,8 @@ class Admin_CustomerController extends Zend_Controller_Action
     					$tbAddress->setState($postvars['billing-state']);
     					$tbAddress->setCity($postvars['billing-city']);
     					$tbAddress->setDateCreate($dtNow);
+                        $tbAddress->setDateUpd($dtNow);
+                        $this->em->persist($tbAddress); // Track da tabela
     				}
     				
     				// Endereço de Entrega
@@ -105,27 +121,26 @@ class Admin_CustomerController extends Zend_Controller_Action
     					$tbShippingAddress->setState($postvars['shipping-state']);
     					$tbShippingAddress->setCity($postvars['shipping-city']);
     					$tbShippingAddress->setDateCreate($dtNow);
+                        $tbShippingAddress->setDateUpd($dtNow);
+                        $this->em->persist($tbShippingAddress); // Track da tabela
     				}
     				
-    				$this->em->persist($tbClient);
-    				$this->em->persist($tbAddress);
-    				$this->em->persist($tbShippingAddress);
-    				$this->em->flush();
-    				try{                    	                   
-                    	$this->_helper->flashMessenger->addMessage('Usuário Adicionado com Sucesso!','success');
-                    	$this->getHelper('Redirector')->gotoUrl('/admin/customer/add');
-                	}
-                	catch(Exception $e){
-                    	$this->_helper->flashMessenger->addMessage('Erro ao adicionar usuário!','error');
-                    	$this->getHelper('Redirector')->gotoUrl('/admin/customer/add');
-                	}
+    				// Insere no banco
+                    $this->em->flush();  	                   
+                    $this->_helper->flashMessenger->addMessage('Usuário Adicionado com Sucesso!','success');
+                    $this->getHelper('Redirector')->gotoUrl('/admin/customer/add');
+                	
     			}else{
     				$this->_helper->flashMessenger->addMessage('Já existe um usuário com este Email e/ou CPF/CNPJ','error');
     				$this->getHelper('Redirector')->gotoUrl('/admin/customer/add');
     			}   			
     		}	
     	}
-    	catch(Exception $e){echo $e->getMessage();exit;} 
+    	catch(Exception $e){    	    
+    	    $this->_helper->flashMessenger->addMessage('Erro ao adicionar usuário!','error');
+            $this->_helper->flashMessenger->addMessage($e->getMessage(),'error');
+            $this->getHelper('Redirector')->gotoUrl('/admin/customer/add');
+        } 
     }
     
     public function callStatesAction(){

@@ -478,7 +478,12 @@ class DB_Client
 	public function getDataAddress($clientId = null){
     	
     	$em = Zend_Registry::getInstance()->entitymanager;     	
-    	$data = $em->createQueryBuilder()->select('a','b')->from('DB_Client','a')->innerjoin('DB_Address','b');
-    	return $data;    	   	
+    	$data = $em->createQueryBuilder()->select(array('a','b'))->from('DB_Address','a')->innerjoin('a.client','b','WITH','a.addressType = 1');
+    	if($clientId){
+    	    $data->where();
+    	}else{
+    	    $result = $data->getQuery()->getResult();
+    	}    	
+    	return $result;    	   	
     } 
 }

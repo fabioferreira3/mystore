@@ -1,8 +1,3 @@
-INSTALL.txt
-LICENSE.txt
-README.txt
-demos/
-extras/documentation
 application/configs/application.ini
 application/data/session
 tests
