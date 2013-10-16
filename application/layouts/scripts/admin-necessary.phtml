@@ -11,10 +11,15 @@
             <link rel="stylesheet" href="<?php echo $this->baseUrl();?>/assets/admin/css/main.css" />
             <link rel="stylesheet" href="<?php echo $this->baseUrl();?>/assets/admin/lib/sticky/sticky.css" />    
             <link rel="stylesheet" href="<?php echo $this->baseUrl();?>/assets/admin/img/splashy/splashy.css" />
-             
+            
+            <?php if ($this->categoryPage == true){?>
+            <link rel="stylesheet" href="<?php echo $this->baseUrl();?>/assets/admin/lib/dynatree/src/skin/ui.dynatree.css" />
+            <?php }?>
         
             <script src="<?php echo $this->baseUrl();?>/assets/admin/js/jquery.min.js"></script>
             <script src="<?php echo $this->baseUrl();?>/assets/admin/js/jquery-migrate.min.js"></script>
+            <script src="<?php echo $this->baseUrl();?>/assets/admin/lib/jquery-ui/jquery-ui-1.10.0.custom.min.js"></script>
+            
             <!-- smart resize event -->
             <script src="<?php echo $this->baseUrl();?>/assets/admin/js/jquery.debouncedresize.min.js"></script>
             <!-- hidden elements width/height -->
@@ -34,6 +39,8 @@
             <!-- scrollbar -->
             <script src="<?php echo $this->baseUrl();?>/assets/admin/lib/antiscroll/antiscroll.js"></script>
             <script src="<?php echo $this->baseUrl();?>/assets/admin/lib/antiscroll/jquery-mousewheel.js"></script>
+           <script src="<?php echo $this->baseUrl();?>/assets/admin/lib/UItoTop/jquery.ui.totop.min.js"></script> 
+            
             <!-- mobile nav -->
             <script src="<?php echo $this->baseUrl();?>/assets/admin/js/selectNav.js"></script>
             <!-- common functions -->
@@ -54,6 +61,11 @@
             <script src="<?php echo $this->baseUrl();?>/assets/admin/js/gebo_tables.js"></script>
             <!-- jquery validate -->
             <script src="<?php echo $this->baseUrl();?>/assets/admin/lib/validation/jquery.validate.min.js"></script>
+           
+            <?php if ($this->categoryPage == true){?>
+            	<script src="<?php echo $this->baseUrl();?>/assets/admin/lib/dynatree/dist/jquery.dynatree.min.js"></script>
+            	
+            <?php }?>
            
     
             <script>

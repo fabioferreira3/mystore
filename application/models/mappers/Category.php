@@ -123,23 +123,23 @@ class DB_Category
     }
 
     /**
-     * Set parentId
+     * Set parent
      *
      * @param integer $parentId
      * @return Category
      */
-    public function setParentId($parentId)
+    public function setParent($parentId)
     {
         $this->parentId = $parentId;
         return $this;
     }
 
     /**
-     * Get parentId
+     * Get parent
      *
      * @return integer 
      */
-    public function getParentId()
+    public function getParent()
     {
         return $this->parentId;
     }
@@ -208,5 +208,38 @@ class DB_Category
     public function getStore()
     {
         return $this->store;
+    }
+    
+    public function getAllDependencies(){
+    	$em = Zend_Registry::getInstance()->entitymanager;
+    	$categories = $em->getRepository('DB_Category')->findAll();
+    	   	
+    	foreach($categories as $category){
+    		// Se categoria-pai for zero, entao é uma categoria principal
+    		if ($category->getParent() == 0){
+    			$data[$category->getId()]['name'] = $category->getName();
+    			$data[$category->getId()]['id'] = $category->getId();
+    		}else{
+    			
+    			// Se não é categoria principal, verifica em qual categoria está vinculada
+    			
+    			foreach($data as $main){
+    				
+    				if ($category->getParent() == $main['id']){
+    					$data[$main['id']][$category->getId()]['name'] = $category->getName();
+    					$data[$main['id']][$category->getId()]['id'] = $category->getId();
+    				}else{
+    					
+    					if(array_key_exists($category->getParent(), $main)){
+    						$data[$main['id']][$category->getParent()][$category->getId()]['name'] = $category->getName();
+    						$data[$main['id']][$category->getParent()][$category->getId()]['id'] = $category->getId();
+    					}
+    				}
+    			}
+    			
+    		}   		
+    		
+    	}
+    	return $data;
     }
 }
