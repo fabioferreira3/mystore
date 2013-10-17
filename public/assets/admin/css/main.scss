@@ -22,9 +22,8 @@ body {
 ------------------------------------------------------------------------*/
 .rejected {
   border-collapse: collapse; }
-
-.rejected tr {
-  background-color: #fae9e9; }
+  .rejected tr {
+    background-color: #fae9e9; }
 
 .newly tr {
   background-color: rgba(43, 235, 43, 0.1); }
@@ -50,50 +49,46 @@ body {
   -o-box-shadow: 1px 1px 10px #aeaeae;
   -ms-box-shadow: 1px 1px 10px #aeaeae;
   -webkit-box-shadow: 1px 1px 10px #aeaeae; }
+  .form-add legend {
+    font-size: 16px;
+    line-height: 16px;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #dcdcdc; }
+  .form-add fieldset {
+    padding: .5em; }
+    .form-add fieldset .checkbox {
+      margin: -5px 10px 10px 10px;
+      margin-top: -5px;
+      width: 100%; }
+    .form-add fieldset .w50 {
+      width: 45%;
+      display: inline-block; }
+  .form-add .list-jogos {
+    display: block; }
+    .form-add .list-jogos label {
+      display: inline-block; }
+    .form-add .list-jogos input[type='checkbox'] {
+      display: inline-block;
+      margin-bottom: 5px;
+      margin: 10px; }
 
-.form-add legend {
-  font-size: 16px;
-  line-height: 16px;
-  padding: 10px;
-  margin-bottom: 10px;
-  border-bottom: 1px solid #dcdcdc; }
 
-.form-add fieldset {
-  padding: .5em; }
+  .catMain{
+    background:#6FC9ED !important;
+    padding:5px;
+    border-radius:5px;
+   }
 
-.form-add fieldset .checkbox {
-  margin: -5px 10px 10px 10px;
-  margin-top: -5px;
-  width: 100%; }
-
-.form-add fieldset .w50 {
-  width: 45%;
-  display: inline-block; }
-
-.form-add .list-jogos {
-  display: block; }
-
-.form-add .list-jogos label {
-  display: inline-block; }
-
-.form-add .list-jogos input[type='checkbox'] {
-  display: inline-block;
-  margin-bottom: 5px;
-  margin: 10px; }
-
-.catMain {
-  background: #6FC9ED !important;
-  padding: 5px;
-  border-radius: 5px; }
-
-.catSubMain {
-  background: #CFED6F !important;
-  padding: 5px;
-  margin-left: 20px;
-  border-radius: 5px; }
-
-.catSubSub {
-  background: #E49EED !important;
-  padding: 5px;
-  margin-left: 20px;
-  border-radius: 5px; }
+  .catSubMain{
+    background:#CFED6F !important;
+    padding:5px;
+    margin-left:20px;
+    border-radius:5px;
+  }
+  .catSubSub {
+    background:#E49EED !important;
+    padding:5px;
+    margin-left:20px;
+    border-radius:5px;
+  }  

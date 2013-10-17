@@ -24,8 +24,8 @@ class Admin_CategoryController extends Zend_Controller_Action
 	
 	public function indexAction(){
 		$tbCategory = new DB_Category();
-		$categories = $tbCategory->getAllDependencies();
-		Zend_Debug::dump($categories);
+        $categories = $tbCategory->getAllDependencies();
+        $this->view->categories = $categories;
 		
 	}
 	
@@ -42,12 +42,15 @@ class Admin_CategoryController extends Zend_Controller_Action
 			$checkCategory = $this->repo->db('Category')->findOneByName($postvars['name']);
 			
 			// Verifica se já existe uma categoria com o mesmo nome e mesma categoria pai
-			if($checkCategory->getParent() == $postvars['parent']){
-				$allowCategory = false;
-			}else{
-				$allowCategory = true;
-			}
-						
+			if($checkCategory != NULL){
+			    if ($checkCategory->getParent() == $postvars['parent']){
+				    $allowCategory = false;
+			    }else{
+				    $allowCategory = true;
+			    }
+            }else{
+                $allowCategory = true;
+            }			
 			if ($allowCategory == true){
 				$tbCategory = new DB_Category();
 			$tbCategory->setName($postvars['name']);

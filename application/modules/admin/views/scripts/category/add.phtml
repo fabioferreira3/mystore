@@ -26,54 +26,42 @@ if (isset($this->msgError)){
     
 }?>
 <div class="row-fluid">
+    <h1 class="heading">Nova Categoria</h1>
     <div class="span6">
+        <h2 class="heading">Dados da Categoria</h2>
 		<form method="post" action="/admin238/category/add" id="addCategory">
-   		 	<h1 class="heading">Nova Categoria</h1>
-    
+   		 	
+            
     		<label>Nome:</label>
     			<input type="text" name="name" class="span8" value="" />
     		<label>URL Amigavel:</label>
     			<input type="text" name="slug" class="span8" value="" />
     		<label>Categoria Pai:</label>
+    		<input type="hidden" value="" name="parent"/>
     		<div id="tree_b">
-			<ul class="dynatree-container">
+			     <ul>			
+				    <?php foreach($this->categories as $category){ ?>
+				    <li class="" data="id: <?php echo $category['id']?>">					
+					   <?php echo $category['name'];?>					
+					   <?php if(count($category) > 2){?>
+					      <ul class="">
+					          <?php foreach ($category as $sub1){					
+						              if (is_array($sub1)){?>				
+							             <li class="" data="id: <?php echo $sub1['id']?>">
+							                 <?php echo $sub1['name']?>							                
+								         </li>
+					    <?php	      }
+					   	            }
+				        ?>
+					      </ul>
+					   <?php }	else{?>
+				    </li>
+					<?php   }
+                         }
+					?>					
 			
-				<?php foreach($this->categories as $category){ ?>
-				<li class="">
-					<span class="expanded">
-					<?php echo $category['name'];?>							
-					</span>
-					<?php if(count($category) > 2){?>
-					<ul class="">
-					<?php foreach ($category as $sub1){					
-							if (is_array($sub1)){?>				
-								<li class="">
-									<span class="expanded"><?php echo $sub1['name']?>
-									</span>
-								<?php if(count($sub1 > 2)){?>
-									<ul class="">
-									<?php foreach($sub1 as $sub2){
-									if (is_array($sub2)){?>
-										<li class="">
-											<span class="expanded"><?php echo $sub2['name']?></span>
-									<?php }}?>
-									</li></ul>
-								<?php }else{?>
-								</li>
-								<?php }?>
-													
-					<?php	} 
-						   }?>
-					</ul>
-					<?php }	else{?>
-				</li>
-					<?php }}?>
-				<ul class="">
-					
-				</ul>	
-			</li>
-		</ul>
-	</div>
+		          </ul>
+	       </div>
     		<label>Loja:</label>
     			<select name="store">
     			<?php foreach($this->stores as $store){?>
@@ -84,45 +72,38 @@ if (isset($this->msgError)){
 		</form>
 	</div>
 	<div class="span4">
+	    <h2 class="heading">Árvore atual de Categorias</h2>
 		<div id="tree_a">
-			<ul class="dynatree-container">
-			
+			<ul>			
 				<?php foreach($this->categories as $category){ ?>
-				<li class="">
-					<span class="dynatree-node dynatree-expanded dynatree-has-children dynatree-lastsib dynatree-exp-el dynatree-ico-e">
-					<?php echo $category['name'];?>							
-					</span>
+				<li class="folder expanded">					
+					<?php echo $category['name'];?>					
 					<?php if(count($category) > 2){?>
 					<ul class="">
 					<?php foreach ($category as $sub1){					
 							if (is_array($sub1)){?>				
-								<li class="">
-									<span class="dynatree-node dynatree-expanded dynatree-has-children dynatree-exp-e dynatree-ico-e"><?php echo $sub1['name']?>
-									</span>
+								<li class="folder expanded">
+									<?php echo $sub1['name']?>									
 								<?php if(count($sub1 > 2)){?>
 									<ul class="">
 									<?php foreach($sub1 as $sub2){
 									if (is_array($sub2)){?>
-										<li class="">
-											<span class="dynatree-node dynatree-expanded dynatree-has-children dynatree-exp-e dynatree-ico-e"><?php echo $sub2['name']?></span>
+										<li class="folded expanded">
+											<?php echo $sub2['name']?>
 									<?php }}?>
-									</li></ul>
+									    </li>
+									</ul>
 								<?php }else{?>
 								</li>
-								<?php }?>
-													
+								<?php }?>													
 					<?php	} 
 						   }?>
 					</ul>
 					<?php }	else{?>
 				</li>
-					<?php }}?>
-				<ul class="">
-					
-				</ul>	
-			</li>
-		</ul>
-	</div>
+					<?php }}?>		   
+	       </ul>
+	   </div>
 	</div>
 </div>
 <script type="text/javascript">
@@ -137,21 +118,24 @@ $(document).ready(function(){
 		stt=$(this).val();			
 		$('[name=slug]').val(stt.replace(/\s+/g, '-').toLowerCase());
 	});
+	
 });
 gebo_dynatree = {
-		tree_a: function() {
-			 $("#tree_a").dynatree();
-		},
+        tree_a: function() {
+             $("#tree_a").dynatree();
+        },
         tree_b: function() {
-			$("#tree_b").dynatree({
-				activeVisible:true,
+            $("#tree_b").dynatree({
+                activeVisible:true,
                 checkbox: true,
                 classNames: {checkbox: "dynatree-radio"},
                 selectMode: 1,
-                onSelect: function(select, node) {
-                    var s = node.tree.getSelectedNodes().join(" | ");
-                    $("#tree_b_echoSelection").children('pre').text(s);
+                onSelect: function(select, node) {                    
+                    var s = node.data.id;
+                    var parent = document.getElementsByName('parent');
+                    parent[0].value = s;
+                   
                 }
             });
-		}};
+        }};
 </script>
