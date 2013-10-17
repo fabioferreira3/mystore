@@ -474,17 +474,51 @@ class DB_Client
         return $this->store;
     }    
     
-	public function getDataAddress($clientId = null){
+	public function getDataAddress($clientId = null, $addressType = null){
     	
     	$em = Zend_Registry::getInstance()->entitymanager;
-    	$data = $em->createQueryBuilder()->select(array('a','b'))->from('DB_Address','a')->innerjoin('a.client','b','WITH','a.addressType = 1');
+    	$data = $em->createQueryBuilder()->select(array('a','b'))->from('DB_Address','a');
+    	if($addressType){
+    		$data = $data->innerjoin('a.client','b','WITH','a.addressType = :addressType');
+    		$data->setParameters(array('addressType' => $addressType));
+    	}else{
+    		$data = $data->innerjoin('a.client','b','WITH','a.addressType = 3');
+    	}
+    	
     	if($clientId){
     	    $data->where('b.id = :clientId');
             $data->setParameters(array('clientId' => $clientId));
-            $result = $data->getQuery()->getSingleResult();
+            $result = $data->getQuery()->getOneOrNullResult();
     	}else{
     	    $result = $data->getQuery()->getResult();
     	}
     	return $result; 
-    } 
+    }
+    
+    public function getAllAddresses($clientId){
+    	$em = Zend_Registry::getInstance()->entitymanager;
+    	$data = $em->getRepository('DB_Address')->findByClient($clientId);
+    	foreach($data as $addresstype){
+    		if($addresstype->getAddressType()->getName() == 'Cobrança'){
+    			$address['billing-street'] = $addresstype->getStreet();
+    			$address['billing-number'] = $addresstype->getNumber();
+    			$address['billing-complement'] = $addresstype->getComplement();
+    			$address['billing-zip'] = $addresstype->getZip();
+    			$address['billing-country'] = $addresstype->getCountry()->getId();
+    			$address['billing-state'] = $addresstype->getState()->getId();
+    			$address['billing-state-name'] = $addresstype->getState()->getName();
+    			$address['billing-city'] = $addresstype->getCity();
+    		}else{
+    			$address['shipping-street'] = $addresstype->getStreet();
+    			$address['shipping-number'] = $addresstype->getNumber();
+    			$address['shipping-complement'] = $addresstype->getComplement();
+    			$address['shipping-zip'] = $addresstype->getZip();
+    			$address['shipping-country'] = $addresstype->getCountry()->getId();
+    			$address['shipping-state'] = $addresstype->getState()->getId();
+    			$address['shipping-state-name'] = $addresstype->getState()->getName();
+    			$address['shipping-city'] = $addresstype->getCity();
+    		}    		
+    	}    	
+    	return $address;
+    }
 }

@@ -1,0 +1,157 @@
+<?php 
+
+if (isset($this->msgSuccess)){
+   
+    foreach ($this->msgSuccess as $message){?>
+        <div class="alert alert-success">
+            <a class="close" data-dismiss="alert">×</a>
+            <?php echo $message; ?>
+        </div>
+         
+<?php }
+    
+}?>
+
+<?php 
+
+if (isset($this->msgError)){
+   
+    foreach ($this->msgError as $message){?>
+        <div class="alert alert-error">
+            <a class="close" data-dismiss="alert">×</a>
+            <?php echo $message; ?>
+        </div>
+         
+<?php }
+    
+}?>
+<div class="row-fluid">
+    <div class="span6">
+		<form method="post" action="/admin238/category/add" id="addCategory">
+   		 	<h1 class="heading">Nova Categoria</h1>
+    
+    		<label>Nome:</label>
+    			<input type="text" name="name" class="span8" value="" />
+    		<label>URL Amigavel:</label>
+    			<input type="text" name="slug" class="span8" value="" />
+    		<label>Categoria Pai:</label>
+    		<div id="tree_b">
+			<ul class="dynatree-container">
+			
+				<?php foreach($this->categories as $category){ ?>
+				<li class="">
+					<span class="expanded">
+					<?php echo $category['name'];?>							
+					</span>
+					<?php if(count($category) > 2){?>
+					<ul class="">
+					<?php foreach ($category as $sub1){					
+							if (is_array($sub1)){?>				
+								<li class="">
+									<span class="expanded"><?php echo $sub1['name']?>
+									</span>
+								<?php if(count($sub1 > 2)){?>
+									<ul class="">
+									<?php foreach($sub1 as $sub2){
+									if (is_array($sub2)){?>
+										<li class="">
+											<span class="expanded"><?php echo $sub2['name']?></span>
+									<?php }}?>
+									</li></ul>
+								<?php }else{?>
+								</li>
+								<?php }?>
+													
+					<?php	} 
+						   }?>
+					</ul>
+					<?php }	else{?>
+				</li>
+					<?php }}?>
+				<ul class="">
+					
+				</ul>	
+			</li>
+		</ul>
+	</div>
+    		<label>Loja:</label>
+    			<select name="store">
+    			<?php foreach($this->stores as $store){?>
+    				<option value="<?php echo $store->getId();?>"><?php echo $store->getName();?></option>
+    			<?php }?>
+    			</select>
+    		<input type="submit" value="Salvar" class="btn btn-gebo"/>
+		</form>
+	</div>
+	<div class="span4">
+		<div id="tree_a">
+			<ul class="dynatree-container">
+			
+				<?php foreach($this->categories as $category){ ?>
+				<li class="">
+					<span class="dynatree-node dynatree-expanded dynatree-has-children dynatree-lastsib dynatree-exp-el dynatree-ico-e">
+					<?php echo $category['name'];?>							
+					</span>
+					<?php if(count($category) > 2){?>
+					<ul class="">
+					<?php foreach ($category as $sub1){					
+							if (is_array($sub1)){?>				
+								<li class="">
+									<span class="dynatree-node dynatree-expanded dynatree-has-children dynatree-exp-e dynatree-ico-e"><?php echo $sub1['name']?>
+									</span>
+								<?php if(count($sub1 > 2)){?>
+									<ul class="">
+									<?php foreach($sub1 as $sub2){
+									if (is_array($sub2)){?>
+										<li class="">
+											<span class="dynatree-node dynatree-expanded dynatree-has-children dynatree-exp-e dynatree-ico-e"><?php echo $sub2['name']?></span>
+									<?php }}?>
+									</li></ul>
+								<?php }else{?>
+								</li>
+								<?php }?>
+													
+					<?php	} 
+						   }?>
+					</ul>
+					<?php }	else{?>
+				</li>
+					<?php }}?>
+				<ul class="">
+					
+				</ul>	
+			</li>
+		</ul>
+	</div>
+	</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+
+	gebo_dynatree.tree_a();
+	gebo_dynatree.tree_b();
+
+	
+	$('[name=name]').keyup(function(event){
+		var stt;		
+		stt=$(this).val();			
+		$('[name=slug]').val(stt.replace(/\s+/g, '-').toLowerCase());
+	});
+});
+gebo_dynatree = {
+		tree_a: function() {
+			 $("#tree_a").dynatree();
+		},
+        tree_b: function() {
+			$("#tree_b").dynatree({
+				activeVisible:true,
+                checkbox: true,
+                classNames: {checkbox: "dynatree-radio"},
+                selectMode: 1,
+                onSelect: function(select, node) {
+                    var s = node.tree.getSelectedNodes().join(" | ");
+                    $("#tree_b_echoSelection").children('pre').text(s);
+                }
+            });
+		}};
+</script>
