@@ -1,4 +1,5 @@
 application/configs/application.ini
 application/data/session
+application/models/Proxies
 tests
 
