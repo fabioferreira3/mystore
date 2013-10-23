@@ -25,6 +25,7 @@ class Admin_CategoryController extends Zend_Controller_Action
 	public function indexAction(){
 		$tbCategory = new DB_Category();
         $categories = $tbCategory->getAllDependencies();
+        
         $this->view->categories = $categories;
 		
 	}
