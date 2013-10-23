@@ -1,0 +1,151 @@
+<?php 
+
+if ($this->category->getParent() && $this->category->getParent() != null){
+	$parent = $this->category->getParent();
+}else{
+	$parent = false;
+}
+
+if (isset($this->msgSuccess)){
+   
+    foreach ($this->msgSuccess as $message){?>
+        <div class="alert alert-success">
+            <a class="close" data-dismiss="alert">×</a>
+            <?php echo $message; ?>
+        </div>
+         
+<?php }
+    
+}?>
+
+<?php 
+
+if (isset($this->msgError)){
+   
+    foreach ($this->msgError as $message){?>
+        <div class="alert alert-error">
+            <a class="close" data-dismiss="alert">×</a>
+            <?php echo $message; ?>
+        </div>
+         
+<?php }
+    
+}?>
+<div class="row-fluid">
+    <h1 class="heading">Editar Categoria : <?php echo $this->category->getName();?> </h1>
+    <div class="span6">
+        <h2 class="heading">Dados da Categoria</h2>
+		<form method="post" action="/admin238/category/add" id="addCategory">
+   		 	
+            
+    		<label>Nome:</label>
+    			<input type="text" name="name" class="span8" value="<?php echo $this->category->getName();?>" />
+    		<label>URL Amigavel:</label>
+    			<input type="text" name="slug" class="span8" value="<?php echo $this->category->getSlug();?>" />
+    		<label>Categoria Pai:</label>
+    		<input type="hidden" value="" name="parent"/>
+    		<div id="tree_b">
+			     <ul>			
+				    <?php foreach($this->categories as $category){ ?>
+				    <?php if ($category['id'] != $this->category->getId()){?>
+				    <li class="<?php if ($category['id'] == $parent){echo 'selected';}?>" data="id: <?php echo $category['id']?>">					
+					   <?php echo $category['name'];?>					
+					   <?php if(count($category) > 2){?>
+					      <ul class="">
+					          <?php foreach ($category as $sub1){					
+						              if (is_array($sub1)){
+									  if($sub1['id'] != $this->category->getId()){
+							  ?>			
+						              		
+							             <li class="<?php if ($sub1['id'] == $parent){echo 'selected';}?>" data="id: <?php echo $sub1['id'];?>">
+							                 <?php echo $sub1['name']?>							                
+								         </li>
+					    <?php	      }}
+					   	            }
+				        ?>
+					      </ul>
+					   <?php }	else{?>
+				    </li>
+					<?php   }
+                         }}
+					?>					
+			
+		          </ul>
+	       </div>
+    		<label>Loja:</label>
+    			<select name="store">
+    			<?php foreach($this->stores as $store){?>
+    				<option value="<?php echo $store->getId();?>"><?php echo $store->getName();?></option>
+    			<?php }?>
+    			</select>
+    		<input type="submit" value="Salvar" class="btn btn-gebo"/>
+		</form>
+	</div>
+	<div class="span4">
+	    <h2 class="heading">Árvore atual de Categorias</h2>
+		<div id="tree_a">
+			<ul>			
+				<?php foreach($this->categories as $category){ ?>
+				<li class="folder expanded">					
+					<?php echo $category['name'];?>					
+					<?php if(count($category) > 2){?>
+					<ul class="">
+					<?php foreach ($category as $sub1){					
+							if (is_array($sub1)){?>				
+								<li class="folder expanded">
+									<?php echo $sub1['name']?>									
+								<?php if(count($sub1 > 2)){?>
+									<ul class="">
+									<?php foreach($sub1 as $sub2){
+									if (is_array($sub2)){?>
+										<li class="folded expanded">
+											<?php echo $sub2['name']?>
+									<?php }}?>
+									    </li>
+									</ul>
+								<?php }else{?>
+								</li>
+								<?php }?>													
+					<?php	} 
+						   }?>
+					</ul>
+					<?php }	else{?>
+				</li>
+					<?php }}?>		   
+	       </ul>
+	   </div>
+	</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+
+	gebo_dynatree.tree_a();
+	gebo_dynatree.tree_b();
+
+	
+	$('[name=name]').keyup(function(event){
+		var stt;		
+		stt=$(this).val();			
+		$('[name=slug]').val(stt.replace(/\s+/g, '-').toLowerCase());
+	});
+	
+});
+gebo_dynatree = {
+        tree_a: function() {
+             $("#tree_a").dynatree();
+        },
+        tree_b: function() {
+            $("#tree_b").dynatree({
+                activeVisible:true,
+                checkbox: true,
+                classNames: {checkbox: "dynatree-radio"},
+                selectMode: 1,
+                onSelect: function(select, node) {                    
+                    var s = node.data.id;
+                    var parent = document.getElementsByName('parent');
+                    parent[0].value = s;
+                   
+                }
+            });
+        }};
+</script>
