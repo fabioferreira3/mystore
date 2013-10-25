@@ -82,18 +82,22 @@ body {
   margin: 10px; }
 
 .catMain {
-  background: #6FC9ED !important;
-  padding: 5px;
+  border: 3px solid #D6D6D6;
+  padding: 15px;
   border-radius: 5px; }
 
 .catSubMain {
-  background: #CFED6F !important;
-  padding: 5px;
+  border: 3px solid #D6D6D6;
+  padding: 15px;
+  padding-bottom: 30px;
   margin-left: 20px;
+  margin-top: 15px;
   border-radius: 5px; }
 
 .catSubSub {
-  background: #E49EED !important;
-  padding: 5px;
+  border: 3px solid #D6D6D6;
+  padding: 15px;
   margin-left: 20px;
+  margin-top: 15px;
+  margin-bottom: -10px;
   border-radius: 5px; }

@@ -210,36 +210,44 @@ class DB_Category
         return $this->store;
     }
     
-    public function getAllDependencies(){
+    public function getCategoryName($categoryId){
     	$em = Zend_Registry::getInstance()->entitymanager;
-    	$categories = $em->getRepository('DB_Category')->findAll();
-    	   	
-    	foreach($categories as $category){
-    		// Se categoria-pai for zero, entao é uma categoria principal
-    		if ($category->getParent() == 0){
-    			$data[$category->getId()]['name'] = $category->getName();
-    			$data[$category->getId()]['id'] = $category->getId();
-    		}else{
-    			
-    			// Se não é categoria principal, verifica em qual categoria está vinculada
-    			
-    			foreach($data as $main){
-    				
-    				if ($category->getParent() == $main['id']){
-    					$data[$main['id']][$category->getId()]['name'] = $category->getName();
-    					$data[$main['id']][$category->getId()]['id'] = $category->getId();
-    				}else{
-    					
-    					if(array_key_exists($category->getParent(), $main)){
-    						$data[$main['id']][$category->getParent()][$category->getId()]['name'] = $category->getName();
-    						$data[$main['id']][$category->getParent()][$category->getId()]['id'] = $category->getId();
+    	$category =  $em->getRepository('DB_Category')->find($categoryId);
+    	if($category != null){
+    		return $category->getName();
+    	}else{
+    		return false;
+    	}
+    }
+    
+    public function getAllDependencies(){
+    	
+    	$em = Zend_Registry::getInstance()->entitymanager;
+    	$tbCategory = $em->getRepository('DB_Category');
+    	$categories = $tbCategory->findAll();
+    	$a = 0; $b = 0; $c = 0;
+    	foreach ($categories as $category){
+    		if ($category->getParent() == '0' || $category->getParent() == null){
+    			$rootNodes[$a]['id'] = $category->getId();
+    			$rootNodes[$a]['name'] = $category->getName();
+    			if ($childNodes = $tbCategory->findByParentId($rootNodes[$a]['id'])){
+    				foreach($childNodes as $childNode){
+    					$rootNodes[$a][$b]['id'] = $childNode->getId();
+    					$rootNodes[$a][$b]['name'] = $childNode->getName();    	
+    					if($grandNodes = $tbCategory->findByParentId($rootNodes[$a][$b]['id'])){
+    						foreach($grandNodes as $grandNode){
+    							$rootNodes[$a][$b][$c]['id'] = $grandNode->getId();
+    							$rootNodes[$a][$b][$c]['name'] = $grandNode->getName();
+    							$c++;
+    						}
     					}
+    					$b++;			
     				}
     			}
-    			
-    		}   		
-    		
-    	}
-    	return $data;
+    		}
+    		$a++;
+    	}    	   	
+    	
+    	return $rootNodes;
     }
 }
