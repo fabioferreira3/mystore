@@ -35,7 +35,7 @@ if (isset($this->msgError)){
     <h1 class="heading">Editar Categoria : <?php echo $this->category->getName();?> </h1>
     <div class="span6">
         <h2 class="heading">Dados da Categoria</h2>
-		<form method="post" action="/admin238/category/add" id="addCategory">
+		<form method="post" action="/admin238/category/edit/id/<?php echo $this->category->getId();?>" id="addCategory">
    		 	
             
     		<label>Nome:</label>
