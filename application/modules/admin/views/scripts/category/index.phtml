@@ -47,9 +47,7 @@ if (isset($this->msgError)){
                     <div class="catSubMain">                              
                    <?php
                         if (is_array($sub1)){?>             
-                        <p><?php echo $sub1['name']?></p>
-                        
-                    
+                        <p><?php echo $sub1['name']?></p>                    
                     <?php if(count($sub1 > 2)){?>
                         <?php foreach($sub1 as $sub2){
                                 if (is_array($sub2)){?>
@@ -64,12 +62,11 @@ if (isset($this->msgError)){
                 </div>
                 <?php              }?>
                 
-                    <?php } ?></div>
+                    <?php } ?>
+                    </div>
                     </div>
               
-                   <?php       } ?>      
-              
-              
+                   <?php       } ?>            
     </div>
     <div class="span12">
         <div id="accordion1" class="accordion">
