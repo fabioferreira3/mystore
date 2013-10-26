@@ -1,0 +1,66 @@
+<?php 
+
+if (isset($this->msgSuccess)){
+   
+    foreach ($this->msgSuccess as $message){?>
+        <div class="alert alert-success">
+            <a class="close" data-dismiss="alert">×</a>
+            <?php echo $message; ?>
+        </div>
+         
+<?php }
+    
+}?>
+
+<?php 
+
+if (isset($this->msgError)){
+   
+    foreach ($this->msgError as $message){?>
+        <div class="alert alert-error">
+            <a class="close" data-dismiss="alert">×</a>
+            <?php echo $message; ?>
+        </div>         
+<?php }
+    
+}?>
+<div class="row-fluid">
+	<div class="span12">
+		<h1 class="heading">Criar Produto</h1>
+		<form>
+			<div class="tabbable tabbable-bordered">
+			<button class="btn" style="float:right">Salvar</button>	
+				<ul class="nav nav-tabs">
+					<li class="active"><a data-toggle="tab" href="#tab_br1">Dados Gerais</a></li>
+					<li class=""><a data-toggle="tab" href="#tab_br2">Preço</a></li>
+					<li class=""><a data-toggle="tab" href="#tab_br3">Estoque</a></li>
+					<li class=""><a data-toggle="tab" href="#tab_br4">Imagens</a></li>
+					<li class=""><a data-toggle="tab" href="#tab_br5">Meta Tags</a></li>
+				</ul>
+					
+				<div class="tab-content">
+					<div id="tab_br1" class="tab-pane active">
+						<h4 class="heading">Dados Gerais</h4>
+						<?php echo $this->content->render('general.phtml');?>
+					</div>
+					<div id="tab_br2" class="tab-pane">
+						<h4 class="heading">Preço</h4>
+						<?php echo $this->content->render('price.phtml');?>
+					</div>
+					<div id="tab_br3" class="tab-pane">
+						<h4 class="heading">Estoque</h4>
+						<?php echo $this->content->render('stock.phtml');?>
+					</div>
+					<div id="tab_br4" class="tab-pane">
+						<h4 class="heading">Imagens</h4>
+						<?php echo $this->content->render('images.phtml');?>
+					</div>
+					<div id="tab_br5" class="tab-pane">
+						<h4 class="heading">Meta Tags</h4>
+						<?php echo $this->content->render('metatags.phtml');?>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>

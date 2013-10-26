@@ -75,13 +75,16 @@ body {
 
 
   .catMain{
-    border:3px solid #D6D6D6;
+    background:#6BD1D3;
+    border:3px solid white;
     padding:15px;
     border-radius:5px;
+    font-size:16px;
    }
 
   .catSubMain{
-    border:3px solid #D6D6D6;
+    background:#35A7C4;
+    border:3px solid white;
     padding:15px;
     padding-bottom:30px;
     margin-left:20px;
@@ -89,7 +92,8 @@ body {
     border-radius:5px;
   }
   .catSubSub {
-    border:3px solid #D6D6D6;
+    background:#1AC2ED;
+    border:3px solid white;
     padding:15px;
     margin-left:20px;
     margin-top:15px;
