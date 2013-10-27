@@ -1,0 +1,8 @@
+<label>Nome:</label><input class="span6" type="text" name="name"/>
+<label>Descrição Resumida:</label><textarea class="span6" rows="3" name="desc1"></textarea>
+<div class="formSep">
+<label>Descrição Técnica:</label><textarea name="desc2" id="wysiwg_full" cols="30" rows="10"></textarea>
+</div>
+<script>
+        tinymce.init({selector:'textarea#wysiwg_full'});
+</script>
