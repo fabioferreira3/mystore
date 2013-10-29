@@ -28,9 +28,14 @@ class Admin_ProductController extends Zend_Controller_Action
 	}
 	
 	public function addAction(){
+		
 		$contentPath = APPLICATION_PATH . '/modules/admin/views/scripts/product/add-content/';
 		$this->view->content = new Zend_View();
 		$this->view->content->setScriptPath($contentPath);
+		
+		if($this->getRequest()->isPost()){
+			Zend_Debug::dump($this->getRequest()->getPost());
+		}
 		
 	}
 	

@@ -27,7 +27,7 @@ if (isset($this->msgError)){
 <div class="row-fluid">
 	<div class="span12">
 		<h1 class="heading">Criar Produto</h1>
-		<form>
+		<form method="post" action="">
 			<div class="tabbable tabbable-bordered">
 			<button class="btn" style="float:right">Salvar</button>	
 				<ul class="nav nav-tabs">
@@ -44,7 +44,7 @@ if (isset($this->msgError)){
 						<?php echo $this->content->render('general.phtml');?>
 					</div>
 					<div id="tab_br2" class="tab-pane">
-						<h4 class="heading">Preço</h4>
+						<h4 class="heading">Informações de Preço</h4>
 						<?php echo $this->content->render('price.phtml');?>
 					</div>
 					<div id="tab_br3" class="tab-pane">
@@ -64,3 +64,14 @@ if (isset($this->msgError)){
 		</form>
 	</div>
 </div>
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+
+    $('.dateme').mask('00/00/0000');   
+    $('.moneyme').mask('000.000.000.000.000,00', {reverse: true});  
+
+});
+    
+</script>
