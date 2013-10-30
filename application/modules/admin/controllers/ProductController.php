@@ -31,12 +31,12 @@ class Admin_ProductController extends Zend_Controller_Action
 		
 		$contentPath = APPLICATION_PATH . '/modules/admin/views/scripts/product/add-content/';
 		$this->view->content = new Zend_View();
-		$this->view->content->setScriptPath($contentPath);
+		$this->view->content->setScriptPath($contentPath);        
+        $this->view->content->groupClients = $this->repo->db('ClientGroupTypes')->findAll();
 		
 		if($this->getRequest()->isPost()){
 			Zend_Debug::dump($this->getRequest()->getPost());
-		}
-		
+		}		
 	}
 	
 	public function editAction(){
