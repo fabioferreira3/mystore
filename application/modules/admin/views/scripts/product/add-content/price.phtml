@@ -9,21 +9,32 @@
 		<label>Promoção Até:</label>
 		<input type="text" class="span3 dateme" name="promotion_until"/>
 	</div>
-	<div class="span6">
-		<h4 class="heading">Atacado</h4>
-		<label>Preço por quantidade</label>
+	<div class="span6">		
 		<div class="row-fluid">
-			<div class="span3">
-				<label>De:<input class="span6" type="text"/></label>	
+		    <h4 class="heading">Atacado</h4>
+			<div class="span3">           
+				<label>De:<input class="span6" type="text" name="qty_from"/></label>	
 			</div>
 			<div class="span3">
-				<label>Até:<input class="span6" type="text"/></label>
+				<label>Até:<input class="span6" type="text" name="qty_to"/></label>
 			</div>
-			<div class="span3">
-				<label>Preço:<input class="span6" type="text"/></label>
-			</div>
+			<div class="span4">
+				<label>Preço:<input class="span6 moneyme" type="text" name="price_range"/></label>
+			</div>			
 		</div>
-			
-				
+		<div class="row-fluid">
+            <h4 class="heading">Preço por Grupo</h4>            
+            <div class="span12">
+                <label>Grupo de Clientes</label>
+                <select name="group_clients">
+                    <option value="0">Nenhum</option>
+                    <?php foreach($this->groupClients as $groupClient){?>
+                        <option value="<?php echo $groupClient->getId();?>"><?php echo $groupClient->getName();?></option>
+                    <?php }?>
+                </select>
+                <label>Preço</label>
+                R$<input type="text" name="group_price" class="span3 moneyme"/>
+            </div>            
+        </div>
 	</div>
 </div>
