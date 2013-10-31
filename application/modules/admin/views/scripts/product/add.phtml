@@ -29,7 +29,7 @@ if (isset($this->msgError)){
 		<h1 class="heading">Criar Produto</h1>
 		<form method="post" action="">
 			<div class="tabbable tabbable-bordered">
-			<button class="btn" style="float:right">Salvar</button>	
+			<button class="btn" style="float:right" name="submit">Salvar</button>	
 				<ul class="nav nav-tabs">
 					<li class="active"><a data-toggle="tab" href="#tab_br1">Dados Gerais</a></li>
 					<li class=""><a data-toggle="tab" href="#tab_br2">Preço</a></li>
@@ -45,14 +45,14 @@ if (isset($this->msgError)){
 					</div>
 					<div id="tab_br2" class="tab-pane">
 						<h4 class="heading">Informações de Preço</h4>
-						<?php echo $this->content->render('price.phtml',$groud);?>
+						<?php echo $this->content->render('price.phtml');?>
 					</div>
 					<div id="tab_br3" class="tab-pane">
 						<h4 class="heading">Gerenciar Estoque</h4>
 						<?php echo $this->content->render('stock.phtml');?>
 					</div>
 					<div id="tab_br4" class="tab-pane">
-						<h4 class="heading">Imagens</h4>
+						<h4 class="heading">Gerenciar Imagens</h4>
 						<?php echo $this->content->render('images.phtml');?>
 					</div>
 					<div id="tab_br5" class="tab-pane">
@@ -70,7 +70,14 @@ if (isset($this->msgError)){
 $(document).ready(function(){
 
     $('.dateme').mask('00/00/0000');   
-    $('.moneyme').mask('000.000.000.000.000,00', {reverse: true});  
+    $('.moneyme').mask('000.000.000.000.000,00', {reverse: true});
+  /*  $('[name=submit]').click(function(event){
+       if($('.required').val() == ''){
+           alert('not');
+           event.preventDefault();
+       }
+    });*/
+    
 
 });
     

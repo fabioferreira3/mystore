@@ -1,17 +1,23 @@
 <div class="row-fluid">
 	<div class="span6">
+		<label>Disponibilidade: </label>
+		<select name="availability" class="span4">
+			<option value="1">Disponível</option>
+			<option value="2">Sob Encomenda</option>
+			<option value="0">Esgotado</option>
+		</select>
 		<label>Quantidade: </label>
-		<input type="text" class="span2" name="qty"/>
+		<input type="text" class="span2" name="qty" required/>
 		<label>Quantidade Mínima: </label>
 		<input type="text"  class="span2" name="minimal_qty"/>
 		<label>Mostrar como 'Esgotado' quando a quantidade chegar a:</label>
 		<input type="text"  class="span3" name="outstock_qty"/>
 		<label>Avisar por email ao Esgotar ou Atingir Qtd Minima?</label>
 			<select name="warn_stock" class="span3">
-			<option selected value="0">Nenhum</option>
-			<option value="1">Ao Esgotar</option>
-			<option value="2">Ao Atingir Minimo</option>
-		</select>
+				<option selected value="0">Nenhum</option>
+				<option value="1">Ao Esgotar</option>
+				<option value="2">Ao Atingir Minimo</option>
+			</select>
 	</div>
 	<div class="span6">
 		<label>Quantidade Mínima no Carrinho: </label>
