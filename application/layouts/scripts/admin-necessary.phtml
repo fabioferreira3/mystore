@@ -15,6 +15,15 @@
             <?php if ($this->categoryPage == true){?>
             <link rel="stylesheet" href="<?php echo $this->baseUrl();?>/assets/admin/lib/dynatree/src/skin/ui.dynatree.css" />
             <?php }?>
+            
+            <?php if ($this->productPage == true){?>            
+            <link rel="stylesheet" href="http://blueimp.github.io/Gallery/css/blueimp-gallery.min.css">
+            <link rel="stylesheet" href="<?php echo $this->baseUrl();?>/assets/admin/css/fileupload/jquery.fileupload.css" />
+            
+            <link rel="stylesheet" href="<?php echo $this->baseUrl();?>/assets/admin/css/fileupload/jquery.fileupload-ui.css" />
+            
+            <link rel="stylesheet" href="<?php echo $this->baseUrl();?>/assets/admin/css/fileupload/style.css" />
+            <?php }?>
         
             <script src="<?php echo $this->baseUrl();?>/assets/admin/js/jquery.min.js"></script>
             <script src="<?php echo $this->baseUrl();?>/assets/admin/js/jquery-migrate.min.js"></script>
@@ -64,12 +73,28 @@
            
             <?php if ($this->categoryPage == true){?>
             	<script src="<?php echo $this->baseUrl();?>/assets/admin/lib/dynatree/dist/jquery.dynatree.min.js"></script>
-            	
             <?php }?>
+            
+            <?php if ($this->productPage == true){?>
+            <!-- The Templates plugin is included to render the upload/download listings -->
+            <script src="http://blueimp.github.io/JavaScript-Templates/js/tmpl.min.js"></script>
+            <!-- The Load Image plugin is included for the preview images and image resizing functionality -->
+            <script src="http://blueimp.github.io/JavaScript-Load-Image/js/load-image.min.js"></script>
+            <!-- The Canvas to Blob plugin is included for image resizing functionality -->
+            <script src="http://blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js"></script>
+            <script src="http://blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js"></script>
             	<script src="<?php echo $this->baseUrl();?>/assets/admin/lib/tinymce/tinymce.min.js"></script>
-           
-    
+                <script src="<?php echo $this->baseUrl();?>/assets/admin/js/jquery.fileupload.js"></script>
+                <script src="<?php echo $this->baseUrl();?>/assets/admin/js/jquery.fileupload-process.js"></script>
+                <script src="<?php echo $this->baseUrl();?>/assets/admin/js/jquery.fileupload-image.js"></script>
+                <script src="<?php echo $this->baseUrl();?>/assets/admin/js/jquery.fileupload-audio.js"></script>
+                <script src="<?php echo $this->baseUrl();?>/assets/admin/js/jquery.fileupload-video.js"></script>
+                <script src="<?php echo $this->baseUrl();?>/assets/admin/js/jquery.fileupload-validate.js"></script>
+                <script src="<?php echo $this->baseUrl();?>/assets/admin/js/jquery.fileupload-ui.js"></script>
+                <script src="<?php echo $this->baseUrl();?>/assets/admin/js/main.js"></script>
+            <?php }?>
             <script>
+                        
                 $(document).ready(function() {
                     //* show all elements & remove preloader
                     setTimeout('$("html").removeClass("js")',1000);

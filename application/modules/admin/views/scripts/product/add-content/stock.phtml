@@ -4,7 +4,7 @@
 		<select name="availability" class="span4">
 			<option value="1">Disponível</option>
 			<option value="2">Sob Encomenda</option>
-			<option value="0">Esgotado</option>
+			<option value="0" selected>Esgotado</option>
 		</select>
 		<label>Quantidade: </label>
 		<input type="text" class="span2" name="qty" required/>
@@ -13,10 +13,10 @@
 		<label>Mostrar como 'Esgotado' quando a quantidade chegar a:</label>
 		<input type="text"  class="span3" name="outstock_qty"/>
 		<label>Avisar por email ao Esgotar ou Atingir Qtd Minima?</label>
-			<select name="warn_stock" class="span3">
+			<select name="warn_stock" class="span5">
 				<option selected value="0">Nenhum</option>
 				<option value="1">Ao Esgotar</option>
-				<option value="2">Ao Atingir Minimo</option>
+				<option value="2" selected>Ao Atingir Minimo</option>
 			</select>
 	</div>
 	<div class="span6">
