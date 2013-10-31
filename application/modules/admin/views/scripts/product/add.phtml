@@ -26,18 +26,19 @@ if (isset($this->msgError)){
 }?>
 <div class="row-fluid">
 	<div class="span12">
+	    
 		<h1 class="heading">Criar Produto</h1>
-		<form method="post" action="">
+		
+		<div id="gap_form">
 			<div class="tabbable tabbable-bordered">
-			<button class="btn" style="float:right" name="submit">Salvar</button>	
+			<a href="javascript:Form2.submit()">Salvar</a>
 				<ul class="nav nav-tabs">
 					<li class="active"><a data-toggle="tab" href="#tab_br1">Dados Gerais</a></li>
 					<li class=""><a data-toggle="tab" href="#tab_br2">Preço</a></li>
 					<li class=""><a data-toggle="tab" href="#tab_br3">Estoque</a></li>
 					<li class=""><a data-toggle="tab" href="#tab_br4">Imagens</a></li>
 					<li class=""><a data-toggle="tab" href="#tab_br5">Meta Tags</a></li>
-				</ul>
-					
+				</ul>					
 				<div class="tab-content">
 					<div id="tab_br1" class="tab-pane active">
 						<h4 class="heading">Dados Gerais</h4>
@@ -61,17 +62,19 @@ if (isset($this->msgError)){
 					</div>
 				</div>
 			</div>
-		</form>
+		</div>
 	</div>
 </div>
 
 <script type="text/javascript">
+    $(document).ready(function() {
+        
+        $('#gap_form').wrap('<form id="Form2" action="/admin238/product/add" method="post" ></form>');
+       
+        $('.dateme').mask('00/00/0000');
+        $('.moneyme').mask('000.000.000.000.000,00', {
+            reverse : true
+        });
 
-$(document).ready(function(){
-
-    $('.dateme').mask('00/00/0000');   
-    $('.moneyme').mask('000.000.000.000.000,00', {reverse: true});   
-
-});
-    
+    });
 </script>
