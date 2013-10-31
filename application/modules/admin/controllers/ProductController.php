@@ -19,7 +19,7 @@ class Admin_ProductController extends Zend_Controller_Action
 		if ($this->_helper->FlashMessenger->hasMessages('error')) {
 			$this->view->msgError = $this->_helper->FlashMessenger->getMessages('error');
 		}
-	
+	       
 		$this->view->productPage = true;
 	}
 	

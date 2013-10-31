@@ -19,7 +19,11 @@ $(function () {
     $('#fileupload').fileupload({
         // Uncomment the following to send cross-domain cookies:
         //xhrFields: {withCredentials: true},
-        url: 'server/php/'
+        url: '/admin238/product/add',
+        disableImageResize: /Android(?!.*Chrome)|Opera/
+                .test(window.navigator.userAgent),
+        maxFileSize: 5000000,
+        acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i
     });
 
     // Enable iframe cross-domain access via redirect option:
@@ -57,6 +61,7 @@ $(function () {
             });
         }
     } else {
+        
         // Load existing files:
         $('#fileupload').addClass('fileupload-processing');
         $.ajax({
@@ -69,7 +74,7 @@ $(function () {
             $(this).removeClass('fileupload-processing');
         }).done(function (result) {
             $(this).fileupload('option', 'done')
-                .call(this, $.Event('done'), {result: result});
+            .call(this, $.Event('done'), {result: result});
         });
     }
 
