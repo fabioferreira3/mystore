@@ -30,8 +30,9 @@ if (isset($this->msgError)){
 		<div id="errordiv"></div>
 		<div id="gap_form">
 			<div class="tabbable tabbable-bordered">
-			<button onclick="sendProductForm()" class="btn btn-gebo">Salvar</button>
+			
 				<ul class="nav nav-tabs">
+				    <button onclick="sendProductForm()" class="btn btn-gebo">Salvar</button>
 					<li class="active"><a data-toggle="tab" href="#tab_br1">Dados Gerais</a></li>
 					<li class=""><a data-toggle="tab" href="#tab_br2">Preço</a></li>
 					<li class=""><a data-toggle="tab" href="#tab_br3">Estoque</a></li>
@@ -107,11 +108,11 @@ if (isset($this->msgError)){
                     }
                 }
             });
-        }
+    }
     
     jQuery('.numbers').keyup(function () { 
         this.value = this.value.replace(/[^0-9\.]/g,'');
-    });
+    });   
         
     $(document).ready(function() {
         
@@ -120,7 +121,33 @@ if (isset($this->msgError)){
         $('.dateme').mask('00/00/0000');
         $('.moneyme').mask('000.000.000.000.000,00', {
             reverse : true
-        });        
+        });
+        
+        $('a.price-range-add').click(function(){
+            var from = $('input[name="qty_from"]').val();
+            var to = $('input[name="qty_to"]').val();
+            var price = $('input[name="price_range"]').val();
+            if(from && to && price){
+                var lastFrom = $('tbody#price-range-table tr:last-child td input.from').val();
+                var lastTo = $('tbody#price-range-table tr:last-child td input.to').val();
+                if(lastTo != undefined){
+                    if (parseInt(from) > parseInt(lastTo)){
+                        if(parseInt(from) > parseInt(to) || parseInt(from) == parseInt(to)){                    
+                            alert('Existe um conflito desses valores com uma faixa já existente');
+                        }else{                    
+                            $('tbody#price-range-table').append('<tr><td><input type="hidden" name="from[]" class="from" value="' + from  + '"/>' + from + '</td><td><input type="hidden" name="to[]" class="to" value="' + to  + '"/>' + to + '</td><td><input type="hidden" name="price[]" class="price" value="' + price  + '"/>' + price + '</td><td><a class="price-range-remove" > <i class="splashy-remove"></i></a></td></tr>');
+                        }
+                    }else{
+                        alert('Valor "De" precisa ser maior do que o valor "Até" da última faixa');
+                    }
+                }else{                    
+                    $('tbody#price-range-table').append('<tr><td><input type="hidden" name="from[]" class="from" value="' + from  + '"/>' + from + '</td><td><input type="hidden" name="to[]" class="to" value="' + to  + '"/>' + to + '</td><td><input type="hidden" name="price[]" class="price" value="' + price  + '"/>' + price + '</td><td><a class="price-range-remove" > <i class="splashy-remove"></i></a></td></tr>');
+                }
+               
+            }else{
+                alert('Preencha os campos de faixa de preço!');
+            }
+        });       
 
         $('button[name="upload-all"]').click(function(event){
         	
@@ -131,7 +158,7 @@ if (isset($this->msgError)){
 			}else{
 				order = 1;
 			}
-		
+					
 			$.ajax({
         		url: "/admin238/product/add-image",
         		type:"GET",
@@ -145,6 +172,11 @@ if (isset($this->msgError)){
                 }
         	});
         });
-
     });
+        
+        $('a.price-range-remove').click(function(){ 
+                alert('oi');                  
+            $(this).parent().parent().remove();
+        });
+    
 </script>
