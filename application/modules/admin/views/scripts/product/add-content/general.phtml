@@ -1,11 +1,11 @@
 <div class="row-fluid">
 	<div class="span6">		
-		<label>Nome:</label>
-		<input class="span12" type="text" name="name" />
+		<label>Nome: *</label>
+		<input class="span12" type="text" name="name"/>
 		<div class="row-fluid">
 			<div class="span6">
-				<label>SKU:</label>
-				<input class="span8" type="text" name="sku" />	
+				<label>SKU: *</label>
+				<input class="span8" type="text" name="sku"/>	
 			</div>
 			<div class="span6">
 				<label>Status:</label>
@@ -30,18 +30,18 @@
 	<div class="span6">
 		<div class="row-fluid">
 			<div class="span4">
-				<label>Altura (cm):</label><input class="span6" type="text" name="height" />
+				<label>Altura (cm):</label><input class="span6 numbers" type="text" name="height" />
 			</div>
 			<div class="span4">
-				<label>Largura (cm):</label><input class="span6" type="text" name="width" />
+				<label>Largura (cm):</label><input class="span6 numbers" type="text" name="width" />
 			</div>
 			<div class="span4">
-				<label>Comprimento (cm):</label><input class="span6" type="text" name="length"/>
+				<label>Comprimento (cm):</label><input class="span6 numbers" type="text" name="length"/>
 			</div>			
 		</div>
 		<div class="row-fluid">
 			<div class="span6">				
-				<label>Espessura (cm):</label><input class="span6" type="text" name="thickness" />			
+				<label>Espessura (cm):</label><input class="span6 numbers" type="text" name="thickness" />			
 			</div>
 			<div class="span6">
 				<label>Peso (kg):</label><input class="span6" type="text" name="weight" />
@@ -56,8 +56,8 @@
 </div>
 <div class="row-fluid">
 	<div class="span12">
-		<label>Descrição Resumida:</label>
-		<textarea class="span6" rows="3" name="desc1"></textarea>
+		<label>Descrição Resumida: *</label>
+		<textarea class="span6" rows="3" name="desc1" required></textarea>
 		<div class="formSep">
 			<label>Descrição Técnica:</label>
 			<textarea name="desc2" id="wysiwg_full" cols="30" rows="10"></textarea>

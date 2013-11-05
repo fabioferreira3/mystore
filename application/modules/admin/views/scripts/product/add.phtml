@@ -24,14 +24,13 @@ if (isset($this->msgError)){
 <?php }
     
 }?>
-<div class="row-fluid">
-	
+<div class="row-fluid">	
 	    
 		<h1 class="heading">Novo Produto - ID: <?= $this->productId; ?></h1>
-		
+		<div id="errordiv"></div>
 		<div id="gap_form">
 			<div class="tabbable tabbable-bordered">
-			<a href="javascript:Form2.submit()" class="btn">Salvar</a>
+			<button onclick="sendProductForm()" class="btn btn-gebo">Salvar</button>
 				<ul class="nav nav-tabs">
 					<li class="active"><a data-toggle="tab" href="#tab_br1">Dados Gerais</a></li>
 					<li class=""><a data-toggle="tab" href="#tab_br2">Preço</a></li>
@@ -41,7 +40,7 @@ if (isset($this->msgError)){
 				</ul>					
 				<div class="tab-content">
 					<div id="tab_br1" class="tab-pane active">
-						<h4 class="heading">Dados Gerais</h4>
+						<h4 class="heading">Dados Gerais</h4>						
 						<?php echo $this->content->render('general.phtml');?>
 					</div>
 					<div id="tab_br2" class="tab-pane">
@@ -58,28 +57,72 @@ if (isset($this->msgError)){
 					</div>
 					<div id="tab_br5" class="tab-pane">
 						<h4 class="heading">Meta Tags</h4>
-						<?php echo $this->content->render('metatags.phtml');?>
+						<?php// echo $this->content->render('metatags.phtml');?>
 					</div>
 				</div>
 			</div>
-		</div>
+		</div>		
 	
 </div>
 
-<script type="text/javascript">
+<script type="text/javascript">   
+
+    function sendProductForm(){
+            $('form#fileupload').remove();
+            $('#errordiv').empty();
+            $('#productForm').validate({
+                ignore:"",
+                rules:{
+                    name:{
+                        required:true
+                    },
+                    sku:{
+                        required:true
+                    },
+                    desc1:{
+                        required:true
+                    },
+                    normal_price:{
+                        required:true                       
+                    },
+                    weight:{
+                        number:true
+                    }
+                },
+                messages:{
+                    name:{
+                        required: "O campo nome é obrigatorio."               
+                    },
+                    sku:{
+                        required: "O campo sku é obrigatorio."               
+                    },
+                    desc1:{
+                        required: "O campo descrição resumida é obrigatorio."               
+                    },
+                    normal_price:{
+                        required: "O campo preço é obrigatorio."  
+                    },
+                    weight:{
+                        number: "O peso deve ser um número inteiro ou decimal"
+                    }
+                }
+            });
+        }
+    
+    jQuery('.numbers').keyup(function () { 
+        this.value = this.value.replace(/[^0-9\.]/g,'');
+    });
+        
     $(document).ready(function() {
         
-        $('#gap_form').wrap('<form id="Form2" action="/admin238/product/add" method="post" ></form>');
-       
+        $('#gap_form').wrap('<form id="productForm" action="/admin238/product/add" method="post" ></form>');
+        
         $('.dateme').mask('00/00/0000');
         $('.moneyme').mask('000.000.000.000.000,00', {
             reverse : true
-        });
-
-     
+        });        
 
         $('button[name="upload-all"]').click(function(event){
-            
         	
 			name = $('p.name a').html();
 			productid = <?= $this->productId; ?>;
@@ -87,7 +130,7 @@ if (isset($this->msgError)){
 				order = $('input[name=order]').val();
 			}else{
 				order = 1;
-			}			
+			}
 		
 			$.ajax({
         		url: "/admin238/product/add-image",
@@ -95,9 +138,7 @@ if (isset($this->msgError)){
         		data:{productid:productid, name:name, order:order},
         		contentType: "application/json; charset=utf-8",
         		dataType:"json",
-        		success: function (data) {
-                                   
-                },
+        		success: function (data) { },
                 error: function(request,error){
                 	 console.log(arguments);
                 	 alert ( " Can't do because: " + error );

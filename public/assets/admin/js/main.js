@@ -29,7 +29,7 @@ $(function () {
 	// Load existing files:
 	$('#fileupload').addClass('fileupload-processing');
 	$.ajax({
-	// Uncomment the following to send cross-domain cookies:
+	    // Uncomment the following to send cross-domain cookies:
 		//xhrFields: {withCredentials: true},
 		url: $('#fileupload').fileupload('option', 'url'),
             dataType: 'json',
@@ -40,6 +40,6 @@ $(function () {
             $(this).fileupload('option', 'done')
             .call(this, $.Event('done'), {result: result});
         });
-    
-
 });
+
+
