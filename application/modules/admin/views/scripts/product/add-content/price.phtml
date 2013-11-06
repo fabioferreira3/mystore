@@ -25,7 +25,7 @@
 			   <a class="price-range-add"><i class="splashy-add"></i></a>
 			</div>			
 		
-		    <div class="span12">
+		    <div class="span11">
 		       <table class="table">
 		           <thead>
 		              <tr>
@@ -36,24 +36,48 @@
 		              </tr>
 		           </thead>
 		           <tbody id="price-range-table">
+		              <tr>
 		              
+		              </tr>
 		           </tbody>		          
 		       </table>
 		    </div>
 		</div>
 		<div class="row-fluid">
-            <h4 class="heading">Preço por Grupo</h4>            
-            <div class="span12">
-                <label>Grupo de Clientes</label>
-                <select name="group_clients">
-                    <option value="0">Nenhum</option>
-                    <?php foreach($this->groupClients as $groupClient){?>
-                        <option value="<?php echo $groupClient->getId();?>"><?php echo $groupClient->getName();?></option>
-                    <?php }?>
-                </select>
-                <label>Preço</label>
-                R$<input type="text" name="group_price" class="span3 moneyme"/>
-            </div>            
+            <h4 class="heading">Preço Fixo por Grupo</h4>            
+            <div class="row-fluid">
+            	<div class="span4">
+	                <label>Grupo de Clientes</label>
+	                <select name="group_clients">
+	                    <option value="0">Nenhum</option>
+	                    <?php foreach($this->groupClients as $groupClient){?>
+	                        <option value="<?php echo $groupClient->getId();?>"><?php echo $groupClient->getName();?></option>
+	                    <?php }?>
+	                </select>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span4">
+	                <label>Preço</label>
+	                R$<input type="text" name="group_price" class="span8 moneyme"/>	                
+	                	<a class="price-group-add"><i class="splashy-add"></i></a>	                
+                </div>                
+            </div>
+               <div class="span11">
+		       <table class="table">
+		           <thead>
+		              <tr>
+		                  <th>Grupo</th>
+		                  <th>Preço</th>
+		                  <th>Remover</th>		                  
+		              </tr>
+		           </thead>
+		           <tbody id="price-group-table">
+		             
+		           </tbody>		          
+		       </table>
+		    </div>
+                       
         </div>
 	</div>
 </div>

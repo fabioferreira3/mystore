@@ -58,7 +58,7 @@ if (isset($this->msgError)){
 					</div>
 					<div id="tab_br5" class="tab-pane">
 						<h4 class="heading">Meta Tags</h4>
-						<?php// echo $this->content->render('metatags.phtml');?>
+						<?php echo $this->content->render('metatags.phtml');?>
 					</div>
 				</div>
 			</div>
@@ -113,6 +113,29 @@ if (isset($this->msgError)){
     jQuery('.numbers').keyup(function () { 
         this.value = this.value.replace(/[^0-9\.]/g,'');
     });   
+
+    $('tbody#price-range-table').on('click', 'a.price-range-remove', function() {
+        $(this).parent().parent().remove();
+    });
+
+    $('tbody#price-group-table').on('click', 'a.price-group-remove', function() {
+        $(this).parent().parent().remove();
+    });
+
+    function appendGroupPrices(){
+        
+    	var groupClientId = $('select[name="group_clients"] option:selected').val();
+		var groupClientName = $('select[name="group_clients"] option:selected').html();
+		var groupPriceFixed = $('input[name="group_price"]').val();
+		
+		$('tbody#price-group-table').append('<tr><td><input type="hidden" name="group_client_id[]" class="group_client_id" value="' + groupClientId + '"/>' + groupClientName + '</td><td>'+ groupPriceFixed +'</td><td><a class="price-group-remove" > <i class="splashy-remove"></i></a></td></tr>');
+    }
+
+    function appendPriceRange(from, to, price, lastFrom, lastTo){   	
+        
+        $('tbody#price-range-table').append('<tr><td><input type="hidden" name="from[]" class="from" value="' + from  + '"/>' + from + '</td><td><input type="hidden" name="to[]" class="to" value="' + to  + '"/>' + to + '</td><td><input type="hidden" name="price[]" class="price" value="' + price  + '"/>' + price + '</td><td><a class="price-range-remove" > <i class="splashy-remove"></i></a></td></tr>');
+
+    }        
         
     $(document).ready(function() {
         
@@ -124,9 +147,12 @@ if (isset($this->msgError)){
         });
         
         $('a.price-range-add').click(function(){
-            var from = $('input[name="qty_from"]').val();
-            var to = $('input[name="qty_to"]').val();
-            var price = $('input[name="price_range"]').val();
+        	var from = $('input[name="qty_from"]').val();
+        	var to = $('input[name="qty_to"]').val();
+        	var price = $('input[name="price_range"]').val();
+        	var lastFrom = $('tbody#price-range-table tr:last-child td input.from').val();
+            var lastTo = $('tbody#price-range-table tr:last-child td input.to').val();
+          
             if(from && to && price){
                 var lastFrom = $('tbody#price-range-table tr:last-child td input.from').val();
                 var lastTo = $('tbody#price-range-table tr:last-child td input.to').val();
@@ -135,19 +161,43 @@ if (isset($this->msgError)){
                         if(parseInt(from) > parseInt(to) || parseInt(from) == parseInt(to)){                    
                             alert('Existe um conflito desses valores com uma faixa já existente');
                         }else{                    
-                            $('tbody#price-range-table').append('<tr><td><input type="hidden" name="from[]" class="from" value="' + from  + '"/>' + from + '</td><td><input type="hidden" name="to[]" class="to" value="' + to  + '"/>' + to + '</td><td><input type="hidden" name="price[]" class="price" value="' + price  + '"/>' + price + '</td><td><a class="price-range-remove" > <i class="splashy-remove"></i></a></td></tr>');
+                        	appendPriceRange(from,to,price,lastFrom,lastTo);
                         }
                     }else{
                         alert('Valor "De" precisa ser maior do que o valor "Até" da última faixa');
                     }
                 }else{                    
-                    $('tbody#price-range-table').append('<tr><td><input type="hidden" name="from[]" class="from" value="' + from  + '"/>' + from + '</td><td><input type="hidden" name="to[]" class="to" value="' + to  + '"/>' + to + '</td><td><input type="hidden" name="price[]" class="price" value="' + price  + '"/>' + price + '</td><td><a class="price-range-remove" > <i class="splashy-remove"></i></a></td></tr>');
+                	appendPriceRange(from,to,price,lastFrom,lastTo);
                 }
                
             }else{
                 alert('Preencha os campos de faixa de preço!');
             }
         });       
+
+        $('a.price-group-add').click(function(){
+        	
+            
+         	var lastGroupAdded = new Array();           
+            var i = 0;
+            
+            $('tbody#price-group-table input.group_client_id').each(function(){
+            	lastGroupAdded[i] = $(this).val();    
+            	i++;
+            });                          
+                
+            var groupClientId = $('select[name="group_clients"] option:selected').val();
+                      
+			if(groupClientId == 0){
+				alert('Selecione um grupo de cliente!');
+			}else if ($('input[name="group_price"]').val() == ''){
+				alert('Preço não pode ser em branco!');
+			}else if(lastGroupAdded != undefined && jQuery.inArray(groupClientId,lastGroupAdded) != -1){
+				alert('Este grupo já possui um preço cadastrado!');	
+			}else{
+				appendGroupPrices();
+			}
+        });
 
         $('button[name="upload-all"]').click(function(event){
         	
@@ -174,9 +224,6 @@ if (isset($this->msgError)){
         });
     });
         
-        $('a.price-range-remove').click(function(){ 
-                alert('oi');                  
-            $(this).parent().parent().remove();
-        });
+        
     
 </script>
