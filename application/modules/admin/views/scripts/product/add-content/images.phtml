@@ -48,8 +48,9 @@
                     <tbody class="files">                        
                     </tbody>
                 </table>
-            </form>            
-           
+            </form>
+            
+                     
             <script id="template-upload" type="text/x-tmpl">
 
                 {% for (var i=0, file; file=o.files[i]; i++) { %}
@@ -60,6 +61,7 @@
                     </td>
                     <td>
                         <p class="name">{%=file.name%}</p>
+                        <input type="hidden" name="filename[]" value="{%=file.name%}"/>
                         {% if (file.error) { %}
                         <div><span class="label label-danger">Error</span> {%=file.error%}</div>
                         {% } %}
@@ -70,7 +72,7 @@
                         <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
                         {% } %}
                     </td>
-                    <td><input type="number" name="order" class="span2"/></td>
+                    <td><input type="text" name="order[]" class="span2"/></td>
                     <td>
                         {% if (!o.files.error && !i && !o.options.autoUpload) { %}
                         <button class="btn btn-primary start">
@@ -104,6 +106,7 @@
             <p class="name">
                 {% if (file.url) { %}
                     <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>
+                    <input type="hidden" name="filename[]" value="{%=file.name%}"/>
                 {% } else { %}
                     <span>{%=file.name%}</span>
                 {% } %}
@@ -115,7 +118,7 @@
         <td>
             <span class="size">{%=o.formatFileSize(file.size)%}</span>
         </td>
-		<td><input type="number" name="order" class="span2"/></td>
+		<td><input type="text" name="order[]" class="span2"/></td>
         <td>
             {% if (file.deleteUrl) { %}
                 <button class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>

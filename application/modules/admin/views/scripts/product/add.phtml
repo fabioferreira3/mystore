@@ -121,6 +121,11 @@ if (isset($this->msgError)){
     $('tbody#price-group-table').on('click', 'a.price-group-remove', function() {
         $(this).parent().parent().remove();
     });
+    
+  /*  $('tbody.files').on('click', 'button.btn-primary', function() {
+        alert('et');
+    });*/
+
 
     function appendGroupPrices(){
         
@@ -175,16 +180,15 @@ if (isset($this->msgError)){
             }
         });       
 
-        $('a.price-group-add').click(function(){
-        	
+        $('a.price-group-add').click(function(){        	
             
-         	var lastGroupAdded = new Array();           
+         	var lastGroupAdded = new Array();
             var i = 0;
             
             $('tbody#price-group-table input.group_client_id').each(function(){
-            	lastGroupAdded[i] = $(this).val();    
+            	lastGroupAdded[i] = $(this).val();
             	i++;
-            });                          
+            });
                 
             var groupClientId = $('select[name="group_clients"] option:selected').val();
                       
@@ -198,32 +202,43 @@ if (isset($this->msgError)){
 				appendGroupPrices();
 			}
         });
-
-        $('button[name="upload-all"]').click(function(event){
-        	
-			name = $('p.name a').html();
-			productid = <?= $this->productId; ?>;
-			if($('input[name=order]').val() != ''){
-				order = $('input[name=order]').val();
-			}else{
-				order = 1;
-			}
-					
+        
+        $('button[name="upload-all"]').click(function(){
+            
+            var name = new Array();
+            var i = 0;
+            var a = 0;
+            var productid = <?= $this->productId; ?>;
+            var order = new Array();
+            
+            $('tr input[name="filename[]"]').each(function (){
+                name[i] = $(this).val();
+                i++;
+            });
+            
+            $('tr input[name="order[]"]').each(function (){
+                if($(this).val() == ''){
+                    order[a] = 1;
+                }else{
+                    order[a] = $(this).val();
+                }
+                a++;
+            });	
+            	
+			
 			$.ajax({
         		url: "/admin238/product/add-image",
         		type:"GET",
         		data:{productid:productid, name:name, order:order},
         		contentType: "application/json; charset=utf-8",
         		dataType:"json",
-        		success: function (data) { },
+        		success: function (data) { alert(data); },
                 error: function(request,error){
                 	 console.log(arguments);
-                	 alert ( " Can't do because: " + error );
+                	 alert(error);
                 }
         	});
         });
     });
-        
-        
-    
+
 </script>

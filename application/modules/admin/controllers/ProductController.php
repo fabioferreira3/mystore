@@ -29,24 +29,20 @@ class Admin_ProductController extends Zend_Controller_Action
 	
 	public function addAction(){
 		try{
-	//	$tbProduct = new DB_Product;		
-	//	$this->em->persist($tbProduct);
-	//	$this->em->flush();	
-		$product = $this->repo->db('Product')->find('9');
-		$session = new Zend_Session_Namespace('product');
-		$session->productId = '8';
-		$this->view->productId = $session->productId;
-		
+    	//	$tbProduct = new DB_Product;		
+    	//	$this->em->persist($tbProduct);
+    	//	$this->em->flush();	
+    		$product = $this->repo->db('Product')->find('9');
+    		$session = new Zend_Session_Namespace('product');
+    		$session->productId = '8';
+    		$this->view->productId = $session->productId;
 		}
-		catch(Exception $e){echo $e->getMessage();}
+		catch(Exception $e){echo $e->getMessage();}	
 		
-		
-		
-		
-		$contentPath = APPLICATION_PATH . '/modules/admin/views/scripts/product/add-content/';
-		$this->view->content = new Zend_View();
-		$this->view->content->setScriptPath($contentPath);        
-        $this->view->content->groupClients = $this->repo->db('ClientGroupTypes')->findAll();
+    		$contentPath = APPLICATION_PATH . '/modules/admin/views/scripts/product/add-content/';
+    		$this->view->content = new Zend_View();
+    		$this->view->content->setScriptPath($contentPath);        
+            $this->view->content->groupClients = $this->repo->db('ClientGroupTypes')->findAll();
 		
 		if($this->getRequest()->isPost()){
 			Zend_Debug::dump($this->getRequest()->getPost());
@@ -56,27 +52,40 @@ class Admin_ProductController extends Zend_Controller_Action
 	public function addImageAction(){		
 		
 		$postvars = $this->getRequest()->getParams();
-		if($postvars['name'] != ''){
-			$image = $this->repo->db('ProductImages')->findByName($postvars['name']);
-			if ($image != null){
-				echo json_encode(false);
-				exit;
-			}else{
-				$productImage = new DB_ProductImages();
-				$product = $this->repo->db('Product')->find($postvars['productid']);
-				$productImage->setProduct($product);
-				$productImage->setName($postvars['name']);
-				$store = $this->repo->db('Store')->find('1');
-				$productImage->setStore($store);
-				$this->em->persist($productImage);
-				$this->em->flush();
-				echo json_encode(true);
-				exit;
-			}
-		}
-		
+        $i = 0;
+        
+        foreach ($postvars['name'] as $name){
+     
+            if ($name != ''){                
+                $image = $this->repo->db('ProductImages')->findOneByName($name);
+                if ($image == null){                
+                    $productImage = new DB_ProductImages();
+                    $product = $this->repo->db('Product')->find($postvars['productid']);
+                    $productImage->setProduct($product);
+                    $productImage->setName($name);
+                    $productImage->setOrdenation($postvars['order'][$i]);
+                    $store = $this->repo->db('Store')->find('1');
+                    $productImage->setStore($store);
+                    $this->em->persist($productImage);
+                    $this->em->flush();
+                    $i++;
+                }else{
+                    $image->setOrdenation($postvars['order'][$i]);
+                    $this->em->persist($image);
+                    $this->em->flush();
+                    $i++;
+                }               
+            }
+       }
+       
+        if($i>0){
+            echo json_encode($i . ' imagens inseridas/atualizadas com sucesso!');
+            exit;
+        }else{
+            echo json_encode(false);
+            exit;
+        }
 			
-		
 	}
 	
 	public function editAction(){

@@ -24,9 +24,16 @@ class DB_ProductImages
     /**
      * @var string $name
      *
-     * @Column(name="name", type="string", length=255, nullable=false)
+     * @Column(name="name", type="string", length=255, nullable=true)
      */
     private $name;
+    
+    /**
+     * @var integer $order
+     *
+     * @Column(name="ordenation", type="integer", length=2, nullable=true)
+     */
+    private $order;
     
    /**
      * @var Product
@@ -36,7 +43,7 @@ class DB_ProductImages
      *   @JoinColumn(name="product_id", referencedColumnName="id")
      * })
      */
-    private $product;
+    private $product;  
     
     
     /**
@@ -65,7 +72,7 @@ class DB_ProductImages
      * Set name
      *
      * @param string $name
-     * @return ProductAttributes
+     * @return ProductImages
      */
     public function setName($name)
     {
@@ -84,6 +91,28 @@ class DB_ProductImages
     }
     
     /**
+     * Set order
+     *
+     * @param integer $order
+     * @return ProductImages
+     */
+    public function setOrdenation($order)
+    {
+        $this->order = $order;
+        return $this;
+    }
+
+    /**
+     * Get order
+     *
+     * @return integer 
+     */
+    public function getOrdenation()
+    {
+        return $this->order;
+    }
+    
+    /**
      * Set product
      *
      * @param DB_Product $product
@@ -96,7 +125,7 @@ class DB_ProductImages
     }
     
     /**
-     * Get $product
+     * Get product
      *
      * @return integer
      */
@@ -104,6 +133,9 @@ class DB_ProductImages
     {
     	return $this->product;
     }
+    
+    
+   
     
     
     /**
@@ -119,7 +151,7 @@ class DB_ProductImages
     }
     
     /**
-     * Get $store
+     * Get store
      *
      * @return integer
      */
