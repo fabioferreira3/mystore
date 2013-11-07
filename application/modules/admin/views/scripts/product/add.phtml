@@ -133,7 +133,7 @@ if (isset($this->msgError)){
 
     function appendPriceRange(from, to, price, lastFrom, lastTo){   	
         
-        $('tbody#price-range-table').append('<tr><td><input type="hidden" name="from[]" class="from" value="' + from  + '"/>' + from + '</td><td><input type="hidden" name="to[]" class="to" value="' + to  + '"/>' + to + '</td><td><input type="hidden" name="price[]" class="price" value="' + price  + '"/>' + price + '</td><td><a class="price-range-remove" > <i class="splashy-remove"></i></a></td></tr>');
+        $('tbody#price-range-table').append('<tr><td><input type="hidden" name="from[]" class="from" value="' + from  + '"/>' + from + '</td><td><input type="hidden" name="to[]" class="to" value="' + to  + '"/>' + to + '</td><td><input type="hidden" name="price[]" class="price" value="' + price  + '"/>R$ ' + price + '</td><td><a class="price-range-remove" > <i class="splashy-remove"></i></a></td></tr>');
 
     }        
         
