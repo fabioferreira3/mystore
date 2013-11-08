@@ -87,6 +87,33 @@ class Admin_ProductController extends Zend_Controller_Action
         }
 			
 	}
+
+    public function deleteImageAction(){
+        
+        $postvars = $this->getRequest()->getParams();        
+        $i = 0;
+        foreach ($postvars['name'] as $name){
+            if ($name != ''){
+                $image = new DB_ProductImages();
+                $result = $image->getImagesByProduct($name,null);
+                if ($image != null){
+                    try{
+                    $this->em->remove($result[0]);
+                    $this->em->flush(); 
+                    $i++;                   
+                    }
+                    catch(Exception $e){echo json_encode($e->getMessage());exit;}
+                }
+            }        
+        }
+        if($i>0){
+            echo json_encode('Imagem removida com sucesso!');
+            exit;
+        }else{
+            echo json_encode(false);
+            exit;
+        }        
+    }
 	
 	public function editAction(){
 		

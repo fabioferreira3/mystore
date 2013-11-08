@@ -49,7 +49,7 @@
             	<div class="span4">
 	                <label>Grupo de Clientes</label>
 	                <select name="group_clients">
-	                    <option value="0">Nenhum</option>
+	                    <option value="0" selected>Nenhum</option>
 	                    <?php foreach($this->groupClients as $groupClient){?>
 	                        <option value="<?php echo $groupClient->getId();?>"><?php echo $groupClient->getName();?></option>
 	                    <?php }?>

@@ -5,7 +5,7 @@
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ProductAttributes
+ * ProductImages
  *
  * @Table(name="product_images")
  * @Entity
@@ -132,11 +132,7 @@ class DB_ProductImages
     public function getProduct()
     {
     	return $this->product;
-    }
-    
-    
-   
-    
+    }    
     
     /**
      * Set store
@@ -158,6 +154,28 @@ class DB_ProductImages
     public function getStore()
     {
     	return $this->store;
+    }
+    
+    
+    public function getImagesByProduct($imageName = null, $idProduct){
+            
+        $em = Zend_Registry::getInstance()->entitymanager;
+        $data = $em->createQueryBuilder()
+                   ->select('a')
+                   ->from('DB_ProductImages','a');                                        
+                   if($idProduct){
+                       $data->where('a.name = :name'); 
+                       $data->setParameter('id',$idProduct);
+                   }
+                   if($imageName){     
+                       $data->where('a.name = :name');                                
+                       $data->setParameter('name',$imageName);
+                   }
+                   
+        $result = $data->getQuery()->getResult();
+        
+        
+        return $result;        
     }
     
 }

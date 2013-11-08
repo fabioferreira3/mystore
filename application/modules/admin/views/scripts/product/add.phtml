@@ -110,6 +110,42 @@ if (isset($this->msgError)){
             });
     }
     
+    function sendAjaxImage(productid,name,order){
+            
+            $.ajax({
+                url: "/admin238/product/add-image",
+                type:"GET",
+                data:{productid:productid, name:name, order:order},
+                contentType: "application/json; charset=utf-8",
+                dataType:"json",
+                success: function (data) { 
+                     $.sticky(data, {autoclose : 5000, position: "top-right", type:"st-success" });
+                },
+                error: function(request,error){
+                     console.log(arguments);
+                     $.sticky(error, {autoclose : 5000, position: "top-right", type:"st-error" });
+                }
+            });
+        } 
+        
+        function deleteAjaxImage(productid,name){
+            
+            $.ajax({
+                url: "/admin238/product/delete-image",
+                type:"GET",
+                data:{productid:productid, name:name},
+                contentType: "application/json; charset=utf-8",
+                dataType:"json",
+                success: function (data) { 
+                    $.sticky(data, {autoclose : 5000, position: "top-right", type:"st-success" }); 
+                },
+                error: function(request,error){
+                     console.log(arguments);
+                     $.sticky(error, {autoclose : 5000, position: "top-right", type:"st-error" });
+                }
+            });            
+        }
+    
     jQuery('.numbers').keyup(function () { 
         this.value = this.value.replace(/[^0-9\.]/g,'');
     });   
@@ -119,12 +155,17 @@ if (isset($this->msgError)){
     });
 
     $('tbody#price-group-table').on('click', 'a.price-group-remove', function() {
-        $(this).parent().parent().remove();
+        $(this).parent().parent().remove(); 
     });
     
-  /*  $('tbody.files').on('click', 'button.btn-primary', function() {
-        alert('et');
-    });*/
+    $('body').on('click', 'button[name="delete-image"]', function() {
+        
+        var name = new Array();
+        var productid = <?= $this->productId; ?>;
+            
+        name[0] = $(this).parent().parent().find('input[name="filename[]"]').val();        
+        deleteAjaxImage(productid,name);
+    });
 
 
     function appendGroupPrices(){
@@ -136,7 +177,7 @@ if (isset($this->msgError)){
 		$('tbody#price-group-table').append('<tr><td><input type="hidden" name="group_client_id[]" class="group_client_id" value="' + groupClientId + '"/>' + groupClientName + '</td><td>'+ groupPriceFixed +'</td><td><a class="price-group-remove" > <i class="splashy-remove"></i></a></td></tr>');
     }
 
-    function appendPriceRange(from, to, price, lastFrom, lastTo){   	
+    function appendPriceRange(from, to, price, lastFrom, lastTo){
         
         $('tbody#price-range-table').append('<tr><td><input type="hidden" name="from[]" class="from" value="' + from  + '"/>' + from + '</td><td><input type="hidden" name="to[]" class="to" value="' + to  + '"/>' + to + '</td><td><input type="hidden" name="price[]" class="price" value="' + price  + '"/>R$ ' + price + '</td><td><a class="price-range-remove" > <i class="splashy-remove"></i></a></td></tr>');
 
@@ -152,6 +193,7 @@ if (isset($this->msgError)){
         });
         
         $('a.price-range-add').click(function(){
+            
         	var from = $('input[name="qty_from"]').val();
         	var to = $('input[name="qty_to"]').val();
         	var price = $('input[name="price_range"]').val();
@@ -201,7 +243,7 @@ if (isset($this->msgError)){
 			}else{
 				appendGroupPrices();
 			}
-        });
+        });        
         
         $('button[name="upload-all"]').click(function(){
             
@@ -223,21 +265,10 @@ if (isset($this->msgError)){
                     order[a] = $(this).val();
                 }
                 a++;
-            });	
-            	
+            });         	
 			
-			$.ajax({
-        		url: "/admin238/product/add-image",
-        		type:"GET",
-        		data:{productid:productid, name:name, order:order},
-        		contentType: "application/json; charset=utf-8",
-        		dataType:"json",
-        		success: function (data) { alert(data); },
-                error: function(request,error){
-                	 console.log(arguments);
-                	 alert(error);
-                }
-        	});
+			sendAjaxImage(productid,name,order);
+			
         });
     });
 
