@@ -29,13 +29,25 @@ class Admin_ProductController extends Zend_Controller_Action
 	
 	public function addAction(){
 		try{
-    	//	$tbProduct = new DB_Product;		
-    	//	$this->em->persist($tbProduct);
-    	//	$this->em->flush();	
-    		$product = $this->repo->db('Product')->find('9');
+			$params = $this->getRequest()->getParams();
+			$store = $this->repo->db('Store')->find(1);
+			if(isset($params['product_id'])){
+				$product = ($params['product_id']);					
+			}else{
+				
+				$tbProduct = new DB_Product;
+				$tbProduct->setStore($store);
+				$this->em->persist($tbProduct);
+				$this->em->flush();
+				$product = $tbProduct->getId();
+				$this->getHelper('Redirector')->gotoUrl('/admin238/product/add?product_id=' . $product);
+				
+			}    		
+    		
     		$session = new Zend_Session_Namespace('product');
-    		$session->productId = '8';
+    		$session->productId = $product;
     		$this->view->productId = $session->productId;
+    	    		
 		}
 		catch(Exception $e){echo $e->getMessage();}	
 		
@@ -43,10 +55,90 @@ class Admin_ProductController extends Zend_Controller_Action
     		$this->view->content = new Zend_View();
     		$this->view->content->setScriptPath($contentPath);        
             $this->view->content->groupClients = $this->repo->db('ClientGroupTypes')->findAll();
-		
+            $this->view->content->conditions = $this->repo->db('ProductConditions')->findAll();
+		try{
 		if($this->getRequest()->isPost()){
-			Zend_Debug::dump($this->getRequest()->getPost());
-		}		
+			$postvars = $this->getRequest()->getPost();
+			Zend_Debug::dump($postvars);
+			
+			$checkSku = $this->repo->db('Product')->findOneBySku($postvars['sku']);
+			if ($checkSku != null){
+				$this->_helper->flashMessenger->addMessage('Já existe um produto com este SKU!','error');
+				$this->getHelper('Redirector')->gotoUrl('/admin238/product/add?product_id=' . $product);
+			}
+			
+			
+			
+			$tbProduct = $this->repo->db('Product')->find($product);			
+			$condition = $this->repo->db('ProductConditions')->find($postvars['condition']);
+			$dtNow = new DateTime();			
+			
+			/* General */
+			
+			$tbProduct->setName($postvars['name']);
+			$tbProduct->setSku($postvars['sku']);
+			$tbProduct->setStatus($postvars['status']);
+			
+			if($postvars['new_since'] != null){
+				$newSince = str_replace('/','-',$postvars['new_since']);				
+				$dateNewSince = new DateTime($newSince);
+				$tbProduct->setDateNewSince($dateNewSince);
+			}
+			if($postvars['new_until'] != ''){
+				$newTo = str_replace('/','-',$postvars['new_until']);
+				$dateNewTo = new DateTime($newTo);				
+				$tbProduct->setDateNewTo($dateNewTo);
+			}
+			if($postvars['height'] != ''){
+				$tbProduct->setHeight($postvars['height']);
+			}
+			if($postvars['width'] != ''){
+				$tbProduct->setWidth($postvars['width']);
+			}
+			if($postvars['length'] != ''){
+				$tbProduct->setLength($postvars['length']);
+			}
+			if($postvars['thickness'] != ''){
+				$tbProduct->setThickness($postvars['thickness']);
+			}
+			if($postvars['weight'] != ''){
+				$tbProduct->setWeight($postvars['weight']);
+			}else{
+				$tbProduct->setWeight('0.1');
+			}
+			$tbProduct->setCondition($condition);
+			$tbProduct->setSlug($postvars['slug']);
+			$tbProduct->setDesc1($postvars['desc1']);
+			$tbProduct->setDesc2($postvars['desc2']);
+			$tbProduct->setDateCreate($dtNow);
+			$tbProduct->setDateUpd($dtNow);
+			$tbProduct->setStore($store);
+			
+			/* Prices */
+			
+			$tbProductPrices = $this->repo->db('ProductPrices')->findOneByProduct($product);
+			if ($tbProductPrices == null){
+				$tbProductPrices = new DB_ProductPrices();
+				$tbProductPrices->setDateCreate($dtNow);
+				$tbProductPrices->setDateUpd($dtNow);
+			}else{
+				$tbProductPrices->setDateUpd($dtNow);
+			}
+			$tbProductPrices->setProduct($tbProduct);
+			$oldPrice = str_replace('.','',$postvars['normal_price']);
+			$newPrice = str_replace(',','.',$oldPrice);			
+			$tbProductPrices->setPrice($newPrice);			
+			$tbProductPrices->setProduct($tbProduct);
+						
+			
+			/* DB Persist & Flush */
+			$this->em->persist($tbProduct);
+			$this->em->persist($tbProductPrices);
+			$this->em->flush();		
+			
+		}
+		}
+		catch(Exception $e){echo $e->getMessage();}		
 	}
 	
 	public function addImageAction(){		

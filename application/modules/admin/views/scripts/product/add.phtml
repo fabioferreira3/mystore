@@ -68,6 +68,15 @@ if (isset($this->msgError)){
 
 <script type="text/javascript">   
 
+	$.validator.addMethod("dependant", function(value, element) {
+	  if (value != '' && $('input[name="promotional_price"]').val() == ''){
+		  return false;
+	  }else{
+		  return true;
+	  }	 
+	}, "Datas de promoção só podem existir se houver um preço promocional");
+
+
     function sendProductForm(){
             $('form#fileupload').remove();
             $('#errordiv').empty();
@@ -75,7 +84,7 @@ if (isset($this->msgError)){
                 ignore:"",
                 rules:{
                     name:{
-                        required:true
+                        required:true                       
                     },
                     sku:{
                         required:true
@@ -85,6 +94,12 @@ if (isset($this->msgError)){
                     },
                     normal_price:{
                         required:true                       
+                    },
+                    promotion_since:{
+                        dependant:true
+                    },
+                    promotion_until:{
+                        dependant:true
                     },
                     weight:{
                         number:true
@@ -185,12 +200,18 @@ if (isset($this->msgError)){
         
     $(document).ready(function() {
         
-        $('#gap_form').wrap('<form id="productForm" action="/admin238/product/add" method="post" ></form>');
+        $('#gap_form').wrap('<form id="productForm" action="/admin238/product/add?product_id=<?= $this->productId; ?>" method="post" ></form>');
         
         $('.dateme').mask('00/00/0000');
         $('.moneyme').mask('000.000.000.000.000,00', {
             reverse : true
         });
+
+        $('[name=name]').keyup(function(event){
+    		var stt;		
+    		stt=$(this).val();			
+    		$('[name=slug]').val(stt.replace(/\s+/g, '-').toLowerCase());
+    	});
         
         $('a.price-range-add').click(function(){
             

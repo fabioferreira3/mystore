@@ -12,14 +12,25 @@
 	<div class="span8">		
 		<div class="row-fluid">
 		    <h4 class="heading">Faixas de Preço</h4>
-			<div class="span3">           
-				<label>De:<input class="span6 numbers" type="text" name="qty_from"/></label>	
+		    
+			<div class="span2">           
+				<label>De:<input class="span10 numbers" type="text" name="qty_from"/></label>	
+			</div>
+			<div class="span2">
+				<label>Até:<input class="span10 numbers" type="text" name="qty_to"/></label>
+			</div>
+			<div class="span2">
+				<label>Preço:<input class="span9 moneyme" type="text" name="price_range"/></label>
 			</div>
 			<div class="span3">
-				<label>Até:<input class="span6 numbers" type="text" name="qty_to"/></label>
-			</div>
-			<div class="span3">
-				<label>Preço:<input class="span6 moneyme" type="text" name="price_range"/></label>
+				<label>Grupo de Clientes:
+				 <select class="span12" name="group_clients">
+	                    <option value="0" selected>Nenhum</option>
+	                    <?php foreach($this->groupClients as $groupClient){?>
+	                        <option value="<?php echo $groupClient->getId();?>"><?php echo $groupClient->getName();?></option>
+	                    <?php }?>
+	             </select>
+	            </label>
 			</div>
 			<div class="span2">
 			   <a class="price-range-add"><i class="splashy-add"></i></a>
@@ -59,7 +70,7 @@
             <div class="row-fluid">
                 <div class="span4">
 	                <label>Preço</label>
-	                R$<input type="text" name="group_price" class="span8 moneyme"/>	                
+	                R$<input type="text" name="group_price" class="span6 moneyme"/>	                
 	                	<a class="price-group-add"><i class="splashy-add"></i></a>	                
                 </div>                
             </div>

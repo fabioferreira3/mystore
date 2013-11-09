@@ -25,6 +25,22 @@
 				<input class="span6 dateme" type="text" name="new_until" value=""/>
 			</div>
 		</div>
+		<div class="row-fluid">
+			<div class="span6">
+			<label>Condição:</label>
+				<select name="condition" class="span8">
+					<?php foreach ($this->conditions as $condition){?>
+						<option value="<?= $condition->getId();?>"><?= $condition->getName();?></option>
+					<?php }?>
+				</select>
+			</div>
+		</div>
+		<div class="row-fluid">
+			<div class="span12">
+				<label>URL Amigável:</label>
+				<input class="span12" type="text" name="slug" value=""/>
+			</div>
+		</div>
 			
 	</div>	
 	<div class="span6">
@@ -48,9 +64,7 @@
 			</div>
 		</div>		
 	</div>
-	<div class="span3">
-		
-	</div>
+	
 		
 </div>
 <div class="row-fluid">

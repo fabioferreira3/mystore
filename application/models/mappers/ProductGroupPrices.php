@@ -20,20 +20,7 @@ class DB_ProductGroupPrices
      * @GeneratedValue(strategy="IDENTITY")
      */
     private $id;
-
-    /**
-     * @var integer $dateFrom
-     *
-     * @Column(name="date_from", type="integer", nullable=false)
-     */
-    private $dateFrom;
-
-    /**
-     * @var integer $dateTo
-     *
-     * @Column(name="date_to", type="integer", nullable=false)
-     */
-    private $dateTo;
+    
 
     /**
      * @var integer $dateCreate
@@ -42,12 +29,7 @@ class DB_ProductGroupPrices
      */
     private $dateCreate;
 
-    /**
-     * @var integer $dateUpd
-     *
-     * @Column(name="date_upd", type="integer", nullable=false)
-     */
-    private $dateUpd;
+   
 
     /**
      * @var ProductPrices
@@ -80,50 +62,7 @@ class DB_ProductGroupPrices
     {
         return $this->id;
     }
-
-    /**
-     * Set dateFrom
-     *
-     * @param integer $dateFrom
-     * @return ProductGroupPrices
-     */
-    public function setDateFrom($dateFrom)
-    {
-        $this->dateFrom = $dateFrom;
-        return $this;
-    }
-
-    /**
-     * Get dateFrom
-     *
-     * @return integer 
-     */
-    public function getDateFrom()
-    {
-        return $this->dateFrom;
-    }
-
-    /**
-     * Set dateTo
-     *
-     * @param integer $dateTo
-     * @return ProductGroupPrices
-     */
-    public function setDateTo($dateTo)
-    {
-        $this->dateTo = $dateTo;
-        return $this;
-    }
-
-    /**
-     * Get dateTo
-     *
-     * @return integer 
-     */
-    public function getDateTo()
-    {
-        return $this->dateTo;
-    }
+   
 
     /**
      * Set dateCreate
@@ -147,27 +86,6 @@ class DB_ProductGroupPrices
         return $this->dateCreate;
     }
 
-    /**
-     * Set dateUpd
-     *
-     * @param integer $dateUpd
-     * @return ProductGroupPrices
-     */
-    public function setDateUpd($dateUpd)
-    {
-        $this->dateUpd = $dateUpd;
-        return $this;
-    }
-
-    /**
-     * Get dateUpd
-     *
-     * @return integer 
-     */
-    public function getDateUpd()
-    {
-        return $this->dateUpd;
-    }
 
     /**
      * Set price

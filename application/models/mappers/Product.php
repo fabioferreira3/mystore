@@ -90,6 +90,20 @@ class DB_Product
      * @Column(name="date_upd", type="datetime", nullable=true)
      */
     private $dateUpd;
+    
+    /**
+     * @var datetime $newSince
+     *
+     * @Column(name="date_new_since", type="datetime", nullable=true)
+     */
+    private $dateNewSince;
+    
+    /**
+     * @var datetime $newTo
+     *
+     * @Column(name="date_new_to", type="datetime", nullable=true)
+     */
+    private $dateNewTo;
 
     /**
      * @var string $width
@@ -104,6 +118,13 @@ class DB_Product
      * @Column(name="slug", type="string", length=255, nullable=true)
      */
     private $slug;
+    
+    /**
+     * @var integer $status
+     *
+     * @Column(name="status", type="integer", nullable=false)
+     */
+    private $status;
 
     /**
      * @var Store
@@ -366,6 +387,50 @@ class DB_Product
     {
         return $this->dateUpd;
     }
+    
+    /**
+     * Set dateNewSince
+     *
+     * @param datetime $dateNewSince
+     * @return Product
+     */
+    public function setDateNewSince($dateNewSince)
+    {
+    	$this->dateNewSince = $dateNewSince;
+    	return $this;
+    }
+    
+    /**
+     * Get dateNewSince
+     *
+     * @return datetime
+     */
+    public function getDateNewSince()
+    {
+    	return $this->dateNewSince;
+    }
+    
+    /**
+     * Set dateNewTo
+     *
+     * @param datetime $dateNewTo
+     * @return Product
+     */
+    public function setDateNewTo($dateNewTo)
+    {
+    	$this->dateNewTo = $dateNewTo;
+    	return $this;
+    }
+    
+    /**
+     * Get dateNewTo
+     *
+     * @return datetime
+     */
+    public function getDateNewTo()
+    {
+    	return $this->dateNewTo;
+    }
 
     /**
      * Set width
@@ -409,6 +474,28 @@ class DB_Product
     public function getSlug()
     {
         return $this->slug;
+    }
+    
+    /**
+     * Set status
+     *
+     * @param integer $status
+     * @return Product
+     */
+    public function setStatus($status)
+    {
+    	$this->status = $status;
+    	return $this;
+    }
+    
+    /**
+     * Get status
+     *
+     * @return integer
+     */
+    public function getStatus()
+    {
+    	return $this->status;
     }
 
     /**

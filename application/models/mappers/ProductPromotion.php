@@ -5,12 +5,12 @@
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ProductPrices
+ * ProductPromotion
  *
- * @Table(name="product_prices")
+ * @Table(name="product_promotion")
  * @Entity
  */
-class DB_ProductPrices
+class DB_ProductPromotion
 {
     /**
      * @var integer $id
@@ -34,6 +34,20 @@ class DB_ProductPrices
      * @Column(name="date_upd", type="datetime", nullable=true)
      */
     private $dateUpd;
+    
+    /**
+     * @var datetime $dateFrom
+     *
+     * @Column(name="date_from", type="datetime", nullable=true)
+     */
+    private $dateFrom;
+    
+    /**
+     * @var datetime $dateTo
+     *
+     * @Column(name="date_to", type="datetime", nullable=true)
+     */
+    private $dateTo;
 
     /**
      * @var Product
@@ -51,6 +65,13 @@ class DB_ProductPrices
      * @Column(name="price", type="string", nullable=false)
      */
     private $price;
+    
+    /**
+     * @var integer $status
+     *
+     * @Column(name="status", type="integer", nullable=false)
+     */
+    private $status;
 
 
 
@@ -68,7 +89,7 @@ class DB_ProductPrices
      * Set dateCreate
      *
      * @param datetime $dateCreate
-     * @return ProductPrices
+     * @return ProductPromotion
      */
     public function setDateCreate($dateCreate)
     {
@@ -90,7 +111,7 @@ class DB_ProductPrices
      * Set dateUpd
      *
      * @param datetime $dateUpd
-     * @return ProductPrices
+     * @return ProductPromotion
      */
     public function setDateUpd($dateUpd)
     {
@@ -107,12 +128,56 @@ class DB_ProductPrices
     {
         return $this->dateUpd;
     }
+    
+    /**
+     * Set dateFrom
+     *
+     * @param datetime $dateFrom
+     * @return ProductPromotion
+     */
+    public function setDateFrom($dateFrom)
+    {
+    	$this->dateFrom = $dateFrom;
+    	return $this;
+    }
+    
+    /**
+     * Get dateFrom
+     *
+     * @return datetime
+     */
+    public function getDateFrom()
+    {
+    	return $this->dateFrom;
+    }
+    
+    /**
+     * Set dateTo
+     *
+     * @param datetime $dateTo
+     * @return ProductPromotion
+     */
+    public function setDateTo($dateTo)
+    {
+    	$this->dateTo = $dateTo;
+    	return $this;
+    }
+    
+    /**
+     * Get dateTo
+     *
+     * @return datetime
+     */
+    public function getDateTo()
+    {
+    	return $this->dateTo;
+    }
 
     /**
      * Set product
      *
      * @param DB_Product $product
-     * @return ProductPrices
+     * @return ProductPromotion
      */
     public function setProduct(\DB_Product $product = null)
     {
@@ -134,7 +199,7 @@ class DB_ProductPrices
      * Set price
      *
      * @param string $price
-     * @return ProductPrices
+     * @return ProductPromotion
      */
     public function setPrice($price)
     {
@@ -150,5 +215,27 @@ class DB_ProductPrices
     public function getPrice()
     {
     	return $this->price;
+    }
+    
+    /**
+     * Set status
+     *
+     * @param integer $status
+     * @return ProductPromotion
+     */
+    public function setStatus($status)
+    {
+    	$this->status = $status;
+    	return $this;
+    }
+    
+    /**
+     * Get status
+     *
+     * @return integer
+     */
+    public function getStatus()
+    {
+    	return $this->status;
     }
 }

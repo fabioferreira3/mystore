@@ -5,12 +5,12 @@
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ProductPrices
+ * ProductPriceRange
  *
- * @Table(name="product_prices")
+ * @Table(name="product_promotion")
  * @Entity
  */
-class DB_ProductPrices
+class DB_ProductPriceRange
 {
     /**
      * @var integer $id
@@ -29,13 +29,6 @@ class DB_ProductPrices
     private $dateCreate;
 
     /**
-     * @var datetime $dateUpd
-     *
-     * @Column(name="date_upd", type="datetime", nullable=true)
-     */
-    private $dateUpd;
-
-    /**
      * @var Product
      *
      * @ManyToOne(targetEntity="DB_Product")
@@ -51,6 +44,20 @@ class DB_ProductPrices
      * @Column(name="price", type="string", nullable=false)
      */
     private $price;
+    
+    /**
+     * @var integer $qty_from
+     *
+     * @Column(name="qty_from", type="integer", nullable=false)
+     */
+    private $qtyFrom;
+    
+    /**
+     * @var integer $qty_to
+     *
+     * @Column(name="qty_to", type="integer", nullable=false)
+     */
+    private $qtyTo;
 
 
 
@@ -68,7 +75,7 @@ class DB_ProductPrices
      * Set dateCreate
      *
      * @param datetime $dateCreate
-     * @return ProductPrices
+     * @return ProductPriceRange
      */
     public function setDateCreate($dateCreate)
     {
@@ -84,35 +91,13 @@ class DB_ProductPrices
     public function getDateCreate()
     {
         return $this->dateCreate;
-    }
-
-    /**
-     * Set dateUpd
-     *
-     * @param datetime $dateUpd
-     * @return ProductPrices
-     */
-    public function setDateUpd($dateUpd)
-    {
-        $this->dateUpd = $dateUpd;
-        return $this;
-    }
-
-    /**
-     * Get dateUpd
-     *
-     * @return datetime 
-     */
-    public function getDateUpd()
-    {
-        return $this->dateUpd;
-    }
+    }   
 
     /**
      * Set product
      *
      * @param DB_Product $product
-     * @return ProductPrices
+     * @return ProductPriceRange
      */
     public function setProduct(\DB_Product $product = null)
     {
@@ -130,11 +115,22 @@ class DB_ProductPrices
         return $this->product;
     }
     
+    
+    /**
+     * Get price
+     *
+     * @return DB_Product
+     */
+    public function getPrice()
+    {
+    	return $this->price;
+    }
+    
     /**
      * Set price
      *
      * @param string $price
-     * @return ProductPrices
+     * @return ProductPriceRange
      */
     public function setPrice($price)
     {
@@ -143,12 +139,47 @@ class DB_ProductPrices
     }
     
     /**
-     * Get price
+     * Get qtyFrom
      *
      * @return string
      */
-    public function getPrice()
+    public function getQtyFrom()
     {
-    	return $this->price;
+    	return $this->qtyFrom;
     }
+    
+    /**
+     * Set qtyFrom
+     *
+     * @param integer $qty_from
+     * @return ProductPriceRange
+     */
+    public function setQtyFrom($qtyFrom)
+    {
+    	$this->qtyFrom = $qtyFrom;
+    	return $this;
+    }
+    
+    /**
+     * Get qtyTo
+     *
+     * @return string
+     */
+    public function getQtyTo()
+    {
+    	return $this->qtyTo;
+    }
+    
+    /**
+     * Set qtyTo
+     *
+     * @param integer $qty_to
+     * @return ProductPriceRange
+     */
+    public function setQtyTo($qtyTo)
+    {
+    	$this->qtyTo = $qtyTo;
+    	return $this;
+    }  
+    
 }
