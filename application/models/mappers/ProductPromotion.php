@@ -21,12 +21,6 @@ class DB_ProductPromotion
      */
     private $id;
 
-    /**
-     * @var datetime $dateCreate
-     *
-     * @Column(name="date_create", type="datetime", nullable=false)
-     */
-    private $dateCreate;
 
     /**
      * @var datetime $dateUpd
@@ -66,15 +60,7 @@ class DB_ProductPromotion
      */
     private $price;
     
-    /**
-     * @var integer $status
-     *
-     * @Column(name="status", type="integer", nullable=false)
-     */
-    private $status;
-
-
-
+    
     /**
      * Get id
      *
@@ -85,28 +71,7 @@ class DB_ProductPromotion
         return $this->id;
     }
 
-    /**
-     * Set dateCreate
-     *
-     * @param datetime $dateCreate
-     * @return ProductPromotion
-     */
-    public function setDateCreate($dateCreate)
-    {
-        $this->dateCreate = $dateCreate;
-        return $this;
-    }
-
-    /**
-     * Get dateCreate
-     *
-     * @return datetime 
-     */
-    public function getDateCreate()
-    {
-        return $this->dateCreate;
-    }
-
+    
     /**
      * Set dateUpd
      *
@@ -216,26 +181,5 @@ class DB_ProductPromotion
     {
     	return $this->price;
     }
-    
-    /**
-     * Set status
-     *
-     * @param integer $status
-     * @return ProductPromotion
-     */
-    public function setStatus($status)
-    {
-    	$this->status = $status;
-    	return $this;
-    }
-    
-    /**
-     * Get status
-     *
-     * @return integer
-     */
-    public function getStatus()
-    {
-    	return $this->status;
-    }
+
 }

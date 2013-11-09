@@ -120,20 +120,74 @@ class Admin_ProductController extends Zend_Controller_Action
 			if ($tbProductPrices == null){
 				$tbProductPrices = new DB_ProductPrices();
 				$tbProductPrices->setDateCreate($dtNow);
-				$tbProductPrices->setDateUpd($dtNow);
-			}else{
-				$tbProductPrices->setDateUpd($dtNow);
 			}
+			$tbProductPrices->setDateUpd($dtNow);
 			$tbProductPrices->setProduct($tbProduct);
 			$oldPrice = str_replace('.','',$postvars['normal_price']);
 			$newPrice = str_replace(',','.',$oldPrice);			
 			$tbProductPrices->setPrice($newPrice);			
 			$tbProductPrices->setProduct($tbProduct);
-						
 			
-			/* DB Persist & Flush */
+			if($postvars['promotional_price'] != ''){
+				$tbProductPromotion = $this->repo->db('ProductPromotion')->findOneByProduct($product);
+				if($tbProductPromotion == null){
+					$tbProductPromotion = new DB_ProductPromotion();					
+				}
+				$tbProductPromotion->setDateUpd($dtNow);
+				$tbProductPromotion->setProduct($tbProduct);
+				$oldPromoPrice = str_replace('.','',$postvars['promotional_price']);
+				$newPromoPrice = str_replace(',','.',$oldPromoPrice);
+				$tbProductPromotion->setPrice($newPromoPrice);
+				if($postvars['promotion_since']){
+					$newPromoSince = str_replace('/','-',$postvars['promotion_since']);		
+					$newPromoSince = new DateTime($newPromoSince);					
+					$tbProductPromotion->setDateFrom($newPromoSince);
+				}
+				if($postvars['promotion_until']){
+					$newPromoTo = str_replace('/','-',$postvars['promotion_until']);
+					$newPromoTo = new DateTime($newPromoTo);
+					$tbProductPromotion->setDateTo($newPromoTo);
+				}
+				
+				$this->em->persist($tbProductPromotion);
+			}
+			
+			/* Stock */
+			
+			$tbProductStock = $this->repo->db('ProductStock')->findOneByProduct($product);
+			if ($tbProductStock == null){
+				$tbProductStock = new DB_ProductStock();				
+			}
+			$tbProductStock->setProduct($tbProduct);
+			$tbProductStock->setDateUpd($dtNow);
+			$tbProductStock->setCurrentQty($postvars['qty']);
+			$tbProductStock->setAvailability($postvars['availability']);
+			if($postvars['minimal_qty']){
+				$tbProductStock->setMinimumQty($postvars['minimal_qty']);
+			}
+			if($postvars['outstock_qty']){
+				$tbProductStock->setQtyOutOfStock($postvars['outstock_qty']);
+			}
+			if($postvars['warning_stock']){
+				$tbProductStock->setEmailWarning($postvars['warning_stock']);
+			}
+			if($postvars['minimal_cart_qty']){
+				$tbProductStock->setMinimumCartQty($postvars['minimal_cart_qty']);
+			}
+			if($postvars['maximum_cart_qty']){
+				$tbProductStock->setMaximumCartQty($postvars['maximum_cart_qty']);
+			}
+			if($postvars['decimal']){
+				$tbProductStock->setDecimal($postvars['decimal']);
+			}
+			
+			
+			
+			/* DB Flush */
 			$this->em->persist($tbProduct);
 			$this->em->persist($tbProductPrices);
+			$this->em->persist($tbProductStock);
+			
 			$this->em->flush();		
 			
 		}

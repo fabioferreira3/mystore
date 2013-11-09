@@ -68,6 +68,24 @@ if (isset($this->msgError)){
 
 <script type="text/javascript">   
 
+	$('input[name="use_title"]').on( "click", function(event){		
+		if($('input[name="name"]').val() == ''){
+			alert('Defina um titulo para o produto primeiro!');
+			event.preventDefault();
+		}else{
+			$('input[name="meta_title"]').val($('input[name="name"]').val());
+		}		
+	});
+	$('input[name="use_description"]').on( "click", function(event){		
+		if($('textarea[name="desc1"]').val() == ''){
+			alert('Defina uma descrição para o produto primeiro!');
+			event.preventDefault();
+		}else{
+			$('textarea[name="meta_description"]').val($('textarea[name="desc1"]').val());
+		}
+		
+	});	
+
 	$.validator.addMethod("dependant", function(value, element) {
 	  if (value != '' && $('input[name="promotional_price"]').val() == ''){
 		  return false;
