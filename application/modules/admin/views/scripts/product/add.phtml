@@ -16,7 +16,7 @@ if (isset($this->msgSuccess)){
 
 if (isset($this->msgError)){
    
-    foreach ($this->msgError as $message){?>
+      foreach ($this->msgError as $message){?>
         <div class="alert alert-error">
             <a class="close" data-dismiss="alert">×</a>
             <?php echo $message; ?>
@@ -34,10 +34,11 @@ if (isset($this->msgError)){
 				<ul class="nav nav-tabs">
 				    <button onclick="sendProductForm()" class="btn btn-gebo">Salvar</button>
 					<li class="active"><a data-toggle="tab" href="#tab_br1">Dados Gerais</a></li>
-					<li class=""><a data-toggle="tab" href="#tab_br2">Preço</a></li>
-					<li class=""><a data-toggle="tab" href="#tab_br3">Estoque</a></li>
-					<li class=""><a data-toggle="tab" href="#tab_br4">Imagens</a></li>
-					<li class=""><a data-toggle="tab" href="#tab_br5">Meta Tags</a></li>
+					<li class=""><a data-toggle="tab" href="#tab_br2">Categorias</a></li>
+					<li class=""><a data-toggle="tab" href="#tab_br3">Preço</a></li>
+					<li class=""><a data-toggle="tab" href="#tab_br4">Estoque</a></li>
+					<li class=""><a data-toggle="tab" href="#tab_br5">Imagens</a></li>
+					<li class=""><a data-toggle="tab" href="#tab_br6">Meta Tags</a></li>
 				</ul>					
 				<div class="tab-content">
 					<div id="tab_br1" class="tab-pane active">
@@ -45,18 +46,22 @@ if (isset($this->msgError)){
 						<?php echo $this->content->render('general.phtml');?>
 					</div>
 					<div id="tab_br2" class="tab-pane">
+						<h4 class="heading">Categorias do Produto</h4>
+						<?php echo $this->content->render('categories.phtml');?>
+					</div>
+					<div id="tab_br3" class="tab-pane">
 						<h4 class="heading">Informações de Preço</h4>
 						<?php echo $this->content->render('price.phtml');?>
 					</div>
-					<div id="tab_br3" class="tab-pane">
+					<div id="tab_br4" class="tab-pane">
 						<h4 class="heading">Gerenciar Estoque</h4>
 						<?php echo $this->content->render('stock.phtml');?>
 					</div>
-					<div id="tab_br4" class="tab-pane">
+					<div id="tab_br5" class="tab-pane">
 						<h4 class="heading">Gerenciar Imagens</h4>
 						<?php echo $this->content->render('images.phtml');?>
 					</div>
-					<div id="tab_br5" class="tab-pane">
+					<div id="tab_br6" class="tab-pane">
 						<h4 class="heading">Meta Tags</h4>
 						<?php echo $this->content->render('metatags.phtml');?>
 					</div>
@@ -76,7 +81,7 @@ if (isset($this->msgError)){
 			$('input[name="meta_title"]').val($('input[name="name"]').val());
 		}		
 	});
-	$('input[name="use_description"]').on( "click", function(event){		
+	$('input[name="use_description"]').on( "click", function(event){
 		if($('textarea[name="desc1"]').val() == ''){
 			alert('Defina uma descrição para o produto primeiro!');
 			event.preventDefault();

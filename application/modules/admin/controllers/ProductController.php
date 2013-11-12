@@ -25,17 +25,27 @@ class Admin_ProductController extends Zend_Controller_Action
 	
 	public function indexAction(){
 		
+		$tbProduct = $this->repo->db('Product')->findAll();		
+		try{
+			$tbProduct = new DB_Product();
+			$products = $tbProduct->getAllProductInfo();		
+		}
+		catch(Exception $e){echo $e->getMessage();exit;}
+		$this->view->products = $products;	
+		
 	}
 	
 	public function addAction(){
 		try{
 			$params = $this->getRequest()->getParams();
-			$store = $this->repo->db('Store')->find(1);
+			$store = $this->repo->db('Store')->find(1);				
+			
 			if(isset($params['product_id'])){
 				$product = ($params['product_id']);					
 			}else{
 				
 				$tbProduct = new DB_Product;
+				$tbProduct->setName('Sem Nome');
 				$tbProduct->setStore($store);
 				$this->em->persist($tbProduct);
 				$this->em->flush();
@@ -53,7 +63,8 @@ class Admin_ProductController extends Zend_Controller_Action
 		
     		$contentPath = APPLICATION_PATH . '/modules/admin/views/scripts/product/add-content/';
     		$this->view->content = new Zend_View();
-    		$this->view->content->setScriptPath($contentPath);        
+    		$this->view->content->setScriptPath($contentPath);   
+    		$this->view->content->categories = $this->repo->db('Categories')->findAll();     
             $this->view->content->groupClients = $this->repo->db('ClientGroupTypes')->findAll();
             $this->view->content->conditions = $this->repo->db('ProductConditions')->findAll();
 		try{
@@ -62,12 +73,13 @@ class Admin_ProductController extends Zend_Controller_Action
 			Zend_Debug::dump($postvars);
 			
 			$checkSku = $this->repo->db('Product')->findOneBySku($postvars['sku']);
-			if ($checkSku != null){
-				$this->_helper->flashMessenger->addMessage('Já existe um produto com este SKU!','error');
-				$this->getHelper('Redirector')->gotoUrl('/admin238/product/add?product_id=' . $product);
-			}
 			
-			
+				if ($checkSku != null){
+					if($checkSku->getId() != $product){					
+						$this->_helper->flashMessenger->addMessage('Já existe um produto com este SKU!','error');
+						$this->getHelper('Redirector')->gotoUrl('/admin238/product/edit?product_id=' . $product);
+					}
+				}				
 			
 			$tbProduct = $this->repo->db('Product')->find($product);			
 			$condition = $this->repo->db('ProductConditions')->find($postvars['condition']);
@@ -79,28 +91,25 @@ class Admin_ProductController extends Zend_Controller_Action
 			$tbProduct->setSku($postvars['sku']);
 			$tbProduct->setStatus($postvars['status']);
 			
-			if($postvars['new_since'] != null){
-				$newSince = str_replace('/','-',$postvars['new_since']);				
+			if($postvars['new_since'] == ''){
+				$tbProduct->setDateNewSince(null);
+			}else{
+				$newSince = str_replace('/','-',$postvars['new_since']);
 				$dateNewSince = new DateTime($newSince);
-				$tbProduct->setDateNewSince($dateNewSince);
+				$tbProduct->setDateNewSince($dateNewSince);				
 			}
-			if($postvars['new_until'] != ''){
+							
+			if($postvars['new_until'] == ''){
+				$tbProduct->setDateNewTo(null);
+			}else{
 				$newTo = str_replace('/','-',$postvars['new_until']);
 				$dateNewTo = new DateTime($newTo);				
 				$tbProduct->setDateNewTo($dateNewTo);
 			}
-			if($postvars['height'] != ''){
-				$tbProduct->setHeight($postvars['height']);
-			}
-			if($postvars['width'] != ''){
-				$tbProduct->setWidth($postvars['width']);
-			}
-			if($postvars['length'] != ''){
-				$tbProduct->setLength($postvars['length']);
-			}
-			if($postvars['thickness'] != ''){
-				$tbProduct->setThickness($postvars['thickness']);
-			}
+			$tbProduct->setHeight($postvars['height']);
+			$tbProduct->setWidth($postvars['width']);
+			$tbProduct->setLength($postvars['length']);
+			$tbProduct->setThickness($postvars['thickness']);			
 			if($postvars['weight'] != ''){
 				$tbProduct->setWeight($postvars['weight']);
 			}else{
@@ -128,29 +137,38 @@ class Admin_ProductController extends Zend_Controller_Action
 			$tbProductPrices->setPrice($newPrice);			
 			$tbProductPrices->setProduct($tbProduct);
 			
-			if($postvars['promotional_price'] != ''){
+			
 				$tbProductPromotion = $this->repo->db('ProductPromotion')->findOneByProduct($product);
 				if($tbProductPromotion == null){
 					$tbProductPromotion = new DB_ProductPromotion();					
 				}
 				$tbProductPromotion->setDateUpd($dtNow);
 				$tbProductPromotion->setProduct($tbProduct);
-				$oldPromoPrice = str_replace('.','',$postvars['promotional_price']);
-				$newPromoPrice = str_replace(',','.',$oldPromoPrice);
-				$tbProductPromotion->setPrice($newPromoPrice);
-				if($postvars['promotion_since']){
+				if($postvars['promotion_price'] == ''){
+					$tbProductPromotion->setPrice(null);
+				}else{
+					$oldPromoPrice = str_replace('.','',$postvars['promotional_price']);
+					$newPromoPrice = str_replace(',','.',$oldPromoPrice);
+					$tbProductPromotion->setPrice($newPromoPrice);
+				}
+				
+				if($postvars['promotion_since'] == ''){
+					$tbProductPromotion->setDateFrom(null);
+				}else{
 					$newPromoSince = str_replace('/','-',$postvars['promotion_since']);		
 					$newPromoSince = new DateTime($newPromoSince);					
 					$tbProductPromotion->setDateFrom($newPromoSince);
 				}
-				if($postvars['promotion_until']){
+				if($postvars['promotion_until'] == ''){
+					$tbProductPromotion->setDateTo(null);
+				}else{
 					$newPromoTo = str_replace('/','-',$postvars['promotion_until']);
 					$newPromoTo = new DateTime($newPromoTo);
 					$tbProductPromotion->setDateTo($newPromoTo);
 				}
 				
 				$this->em->persist($tbProductPromotion);
-			}
+			
 			
 			/* Stock */
 			
@@ -160,27 +178,48 @@ class Admin_ProductController extends Zend_Controller_Action
 			}
 			$tbProductStock->setProduct($tbProduct);
 			$tbProductStock->setDateUpd($dtNow);
-			$tbProductStock->setCurrentQty($postvars['qty']);
+			if($postvars['qty'] != ''){
+				$tbProductStock->setCurrentQty($postvars['qty']);
+			}else{
+				$tbProductStock->setCurrentQty('0');
+			}			
 			$tbProductStock->setAvailability($postvars['availability']);
-			if($postvars['minimal_qty']){
+			if($postvars['minimal_qty'] == ''){
+				$tbProductStock->setMinimumQty(null);
+			}else{
 				$tbProductStock->setMinimumQty($postvars['minimal_qty']);
 			}
-			if($postvars['outstock_qty']){
+			if($postvars['outstock_qty'] == ''){
+				$tbProductStock->setQtyOutOfStock(null);
+			}else{
 				$tbProductStock->setQtyOutOfStock($postvars['outstock_qty']);
 			}
-			if($postvars['warning_stock']){
-				$tbProductStock->setEmailWarning($postvars['warning_stock']);
-			}
-			if($postvars['minimal_cart_qty']){
+			if($postvars['minimal_cart_qty'] == ''){
+				$tbProductStock->setMinimumCartQty(null);
+			}else{
 				$tbProductStock->setMinimumCartQty($postvars['minimal_cart_qty']);
 			}
-			if($postvars['maximum_cart_qty']){
+			if($postvars['maximum_cart_qty'] == ''){
+				$tbProductStock->setMaximumCartQty(null);
+			}else{
 				$tbProductStock->setMaximumCartQty($postvars['maximum_cart_qty']);
 			}
-			if($postvars['decimal']){
-				$tbProductStock->setDecimal($postvars['decimal']);
-			}
+			$tbProductStock->setEmailWarning($postvars['warning_stock']);			
+			$tbProductStock->setDecimal($postvars['decimal']);
 			
+			
+			/* Meta Tags */
+			
+				$tbProductMeta = $this->repo->db('ProductMeta')->findOneByProduct($product);
+				if($tbProductMeta == null){
+					$tbProductMeta = new DB_ProductMeta();
+				}
+				$tbProductMeta->setProduct($tbProduct);
+				$tbProductMeta->setMetaTitle($postvars['meta_title']);
+				$tbProductMeta->setMetaDescription($postvars['meta_description']);
+				$tbProductMeta->setMetaSearch($postvars['meta_search']);
+				
+				$this->em->persist($tbProductMeta);
 			
 			
 			/* DB Flush */
@@ -188,7 +227,21 @@ class Admin_ProductController extends Zend_Controller_Action
 			$this->em->persist($tbProductPrices);
 			$this->em->persist($tbProductStock);
 			
-			$this->em->flush();		
+			$this->em->flush();
+			if(isset($params['method'])){
+				if($params['method'] == 'edit'){
+					$this->_helper->flashMessenger->addMessage('Produto Atualizado com sucesso!','success');
+				}
+			}else{
+				$this->_helper->flashMessenger->addMessage('Produto Cadastrado com sucesso!','success');
+			}
+			$this->getHelper('Redirector')->gotoUrl('/admin238/product/edit?product_id=' . $product);
+			
+			
+			
+		}else{
+			$tbProduct = $this->repo->db('Product')->find($product);
+			$tbProductPrice = $this->repo->db('ProductPrices')->findOneByProduct($product);
 			
 		}
 		}
@@ -262,6 +315,59 @@ class Admin_ProductController extends Zend_Controller_Action
     }
 	
 	public function editAction(){
+		
+		$contentPath = APPLICATION_PATH . '/modules/admin/views/scripts/product/edit-content/';
+		$this->view->content = new Zend_View();
+		$this->view->content->setScriptPath($contentPath);
+		
+		$params = $this->getRequest()->getParams();
+		$tbProduct = $this->repo->db('Product')->find($params['product_id']);
+		$tbProductPrice = $this->repo->db('ProductPrices')->findOneByProduct($params['product_id']);
+		$tbProductStock = $this->repo->db('ProductStock')->findOneByProduct($params['product_id']);
+		$tbProductMeta = $this->repo->db('ProductMeta')->findOneByProduct($params['product_id']);
+		$tbProductPromotion = $this->repo->db('ProductPromotion')->findOneByProduct($params['product_id']);
+		if($tbProductPromotion != null){
+			$this->view->content->promotion = $tbProductPromotion;
+		}else{
+			$this->view->content->promotion = false;
+		}
+		$this->view->productId = $params['product_id'];
+		$this->view->productName = $tbProduct->getName();
+		$this->view->content->general = $tbProduct;
+		$this->view->content->price = $tbProductPrice;
+		$this->view->content->stock = $tbProductStock;
+		$this->view->content->meta = $tbProductMeta;
+		$this->view->content->groupClients = $this->repo->db('ClientGroupTypes')->findAll();
+		$this->view->content->conditions = $this->repo->db('ProductConditions')->findAll();
+	}
+	
+	public function removeAction(){
+		$params = $this->getRequest()->getParams();
+		$product = $this->repo->db('Product')->find($params['product_id']);		
+		
+	}
+	
+	public function enableAction(){
+		
+		$params = $this->getRequest()->getParams();
+		$product = $this->repo->db('Product')->find($params['product_id']);
+		$product->setStatus('1');
+		$this->em->persist($product);
+		$this->em->flush();
+		$this->_helper->flashMessenger->addMessage('Produto habilitado com sucesso!','success');		
+		$this->getHelper('Redirector')->gotoUrl('/admin238/product');
+		
+	}
+	
+	public function disableAction(){
+		
+		$params = $this->getRequest()->getParams();
+		$product = $this->repo->db('Product')->find($params['product_id']);
+		$product->setStatus('0');
+		$this->em->persist($product);
+		$this->em->flush();
+		$this->_helper->flashMessenger->addMessage('Produto desabilitado com sucesso!','success');
+		$this->getHelper('Redirector')->gotoUrl('/admin238/product');		
 		
 	}
 	

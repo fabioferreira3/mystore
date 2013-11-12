@@ -1,35 +1,99 @@
+<?php 
+
+if (isset($this->msgSuccess)){
+   
+    foreach ($this->msgSuccess as $message){?>
+        <div class="alert alert-success">
+            <a class="close" data-dismiss="alert">×</a>
+            <?php echo $message; ?>
+        </div>
+         
+<?php }
+    
+}?>
+
+<?php 
+
+if (isset($this->msgError)){
+   
+      foreach ($this->msgError as $message){?>
+        <div class="alert alert-error">
+            <a class="close" data-dismiss="alert">×</a>
+            <?php echo $message; ?>
+        </div>         
+<?php }
+    
+}?>
 <div class="row-fluid">
 	<div class="span12">
-<h1 class="heading">Produtos</h1>
+<h1 class="heading">Produtos<button class="btn add-new"><a href="/admin238/product/add">Criar Novo</a></button></h1>
+	<div class="row-fluid">
+	<div class="span6">
+		<div class="dt_actions">
+			<div class="btn-group">
+				<button class="btn dropdown-toggle" data-toggle="dropdown">Ações em Massa <span class="caret"></span></button>
+					<ul class="dropdown-menu">
+						<li><a href="javascript:void(0)" class="select_rows">Selecionar Tudo</a></li>
+						<li><a href="javascript:void(0)" class="deselect_rows">Deselecionar Tudo</a></li>
+						<li><a data-tableid="dt_gal" class="delete_rows_dt" href="#"><i class="icon-trash"></i> Remover</a></li>
+                    	<li><a href="javascript:void(0)" class="enable_rows"><i class="splashy-gem_okay"></i>Habilitar</a></li>
+                    	<li><a href="javascript:void(0)" class="disable_rows"><i class="splashy-gem_remove"></i>Desabilitar</a></li>
+                	</ul>
+			</div>
+		</div>				
+	</div>
+	</div>
+	<div class="row-fluid">
 <table class="table table-bordered table-striped table_vam" >
 	<thead>
 		<tr>
 			<th class="table_checkbox"><input type="checkbox" name="select_rows" class="select_rows" data-tableid="dt_gal" /></th>
-			<th>Image</th>
-			<th>Name</th>
-			<th>Size</th>
-			<th>Date</th>
-			<th>Actions</th>
+			<th>Imagem</th>
+			<th>Nome</th>
+			<th>SKU</th>
+			<th>Preço</th>
+			<th>Estoque</th>
+			<th>Status</th>
+			<th>Ações</th>
 		</tr>
 	</thead>
 	<tbody>
-		<tr>
-			<td><input type="checkbox" name="row_sel" class="row_sel" /></td>
-			<td style="width: 60px"><a href="gallery/Image10.jpg"
-				title="Image 10" class="cbox_single thumbnail"> <img alt=""
-					src="gallery/Image10_tn.jpg" style="height: 50px; width: 50px">
+		<?php foreach($this->products as $product){ ?>
+				
+			<tr>
+			<td><input type="checkbox" name="row_sel" class="row_sel" value="<?= $product['product']->getId();?>"/></td>
+			<td style="width: 60px"><a href="<?php if ($product['images']){echo '/images/catalog/' . $product['product']->getId() . '/' . $product['images'][0]->getName();};?>"
+				title="" class="cbox_single thumbnail"> <img alt="" src="<?php if ($product['images']){echo '/images/catalog/' . $product['product']->getId() . '/thumbnail/' . $product['images'][0]->getName();};?>" style="height: 50px; width: 50px">
 			</a>
 			</td>
-			<td>Lorem ipsum dolor sit<br /> <small>Image10.jpg</small>
-			</td>
-			<td>200 KB</td>
-			<td>28/06/2012</td>
-			<td><a href="#" class="sepV_a" title="Edit"><i class="icon-pencil"></i>
-			</a> <a href="#" class="sepV_a" title="View"><i class="icon-eye-open"></i>
-			</a> <a href="#" title="Delete"><i class="icon-trash"></i> </a>
+			<td><?php echo $product['product']->getName();?></td>
+			<td><?php echo $product['product']->getSku();?></td>
+			<td><?php if($product['price']){ echo 'R$' . $product['price']->getPrice();}?></td>
+			<td><?php if($product['stock']){echo $product['stock']->getCurrentQty();}?></td>			
+			<td><?php if($product['product']->getStatus() == '1'){echo '<a href="/admin238/product/disable?product_id='.$product['product']->getId().'"><i class="splashy-gem_okay"></i>Ativo';}else{ echo '<a href="/admin238/product/enable?product_id='.$product['product']->getId().'"><i class="splashy-gem_remove"></i>Desabilitado</a>';}?></td>
+			<td><a href="<?= '/admin238/product/edit?product_id=' . $product['product']->getId();?>" class="sepV_a" title="Edit"><i class="icon-pencil"></i>
+				</a> <a href="#" title="Delete"><i class="icon-trash"></i> </a>
 			</td>
 		</tr>
+		<?php }?>
+		
 	</tbody>
 </table>
 </div>
 </div>
+</div>
+
+<script>
+$('.add-new').on('click',function(event){
+	confirm('Deseja criar um novo produto?');
+	return true;
+});
+$('.select_rows').on('click',function(event){
+	$('.row_sel').prop('checked',true);
+});
+$('.deselect_rows').on('click',function(event){
+	$('.row_sel').prop('checked',false);
+});
+
+
+</script>

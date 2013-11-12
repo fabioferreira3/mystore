@@ -1,0 +1,27 @@
+<div class="row-fluid">
+	<div class="span8">
+		<div class="span6">
+			<label><input type="checkbox" name="use_title"/>Usar Titulo do Produto</label>	
+			<label>Meta Title:</label>
+			<input type="text" name="meta_title" value="<?php if($this->meta){echo $this->meta->getMetaTitle();}?>"/>
+		</div>	
+	</div>
+</div>
+<div class="row-fluid">
+	<div class="span8">
+		<div class="span12">
+			<label><input type="checkbox" name="use_description" />Usar Descrição Resumida do Produto</label>				
+			<label>Meta Description:</label>
+			<textarea name="meta_description" class="span12"><?php if($this->meta){echo $this->meta->getMetaDescription();}?></textarea>
+		</div>
+	</div>
+</div>
+<div class="row-fluid">
+	<div class="span6">
+		<label>Mecanismos de Busca:</label>
+		<select name="meta_search">
+			<option value="1" <?php if($this->meta){if($this->meta->getMetaSearch() == '1'){echo 'selected';}}?>>INDEX, FOLLOW</option>
+			<option value="2" <?php if($this->meta){if($this->meta->getMetaSearch() == '2'){echo 'selected';}}?>>NOINDEX, NOFOLLOW</option>
+		</select>
+	</div>
+</div>

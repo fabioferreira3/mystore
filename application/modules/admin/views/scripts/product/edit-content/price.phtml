@@ -1,13 +1,13 @@
 <div class="row-fluid">
 	<div class="span4">
 		<label>Preço Normal</label>R$
-		<input type="text" value="" class="span4 moneyme" name="normal_price"/>
+		<input type="text" class="span4 moneyme" name="normal_price" value="<?php if($this->price){echo $this->price->getPrice();}?>"/>
 		<label>Preço Promocional</label>R$
-		<input type="text" value="" class="span4 moneyme" name="promotional_price"/>
+		<input type="text" class="span4 moneyme" name="promotional_price" value="<?php if($this->promotion){echo $this->promotion->getPrice();}?>"/>
 		<label>Promoção De:</label>
-		<input type="text" class="span4 dateme" name="promotion_since"/>
+		<input type="text" class="span4 dateme" name="promotion_since" value="<?php if($this->promotion && $this->promotion->getDateFrom()){echo $this->promotion->getDateFrom()->format('d/m/Y');}?>"/>
 		<label>Promoção Até:</label>
-		<input type="text" class="span4 dateme" name="promotion_until"/>
+		<input type="text" class="span4 dateme" name="promotion_until" value="<?php if($this->promotion && $this->promotion->getDateTo()){echo $this->promotion->getDateTo()->format('d/m/Y');}?>"/>
 	</div>
 	<div class="span8">		
 		<div class="row-fluid">

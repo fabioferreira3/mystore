@@ -1,0 +1,29 @@
+<div class="row-fluid">
+	<div class="span6">
+	<?php foreach($this->categories as $category){
+            	if(count($category) > 2){?>
+            	
+				<?php 	echo '<div class="catMain">' . $category['name']?> <span><a href="/admin238/category/edit/id/<?php echo $category['id'];?>"><i class="splashy-application_windows_edit"></i></a></span><span><a href="#"><i class="splashy-application_windows_remove"></i></a></span>
+				<?php 	foreach ($category as $sub1){
+						
+						if(isset($sub1['name'])){
+							echo '<div class="catSubMain">'; 
+							echo $sub1['name']; ?> <span><a href="/admin238/category/edit/id/<?php echo $sub1['id'];?>"><i class="splashy-application_windows_edit"></i></a></span><span><a href="#"><i class="splashy-application_windows_remove"></i></a></span>
+							<?php if(count($sub1) > 2){
+								foreach($sub1 as $sub2){
+									if(isset($sub2['name'])){
+										echo '<div class="catSubSub">';
+										echo $sub2['name']; ?> <span><a href="/admin238/category/edit/id/<?php echo $sub2['id'];?>"><i class="splashy-application_windows_edit"></i></a></span><span><a href="#"><i class="splashy-application_windows_remove"></i></a></span>
+										<?php echo '</div>';
+									}
+								}
+							}
+							echo '</div>';
+						}												
+					} echo '</div>';
+				}else{
+					echo '<div class="catMain">' . $category['name'] . '</br>';
+				}                 
+             }?> 
+	</div>
+</div>

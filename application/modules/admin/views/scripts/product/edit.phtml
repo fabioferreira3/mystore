@@ -1,1 +1,314 @@
-<h1 class="heading">Editar Produto:</h1>
+<?php 
+
+if (isset($this->msgSuccess)){
+   
+    foreach ($this->msgSuccess as $message){?>
+        <div class="alert alert-success">
+            <a class="close" data-dismiss="alert">×</a>
+            <?php echo $message; ?>
+        </div>
+         
+<?php }
+    
+}?>
+
+<?php 
+
+if (isset($this->msgError)){
+   
+      foreach ($this->msgError as $message){?>
+        <div class="alert alert-error">
+            <a class="close" data-dismiss="alert">×</a>
+            <?php echo $message; ?>
+        </div>         
+<?php }
+    
+}?>
+<div class="row-fluid">	
+	    
+		<h1 class="heading">Editar Produto - <?= $this->productName; ?></h1>
+		<div id="errordiv"></div>
+		<div id="gap_form">
+			<div class="tabbable tabbable-bordered">
+			
+				<ul class="nav nav-tabs">
+				    <button onclick="sendProductForm()" class="btn btn-gebo">Salvar</button>
+					<li class="active"><a data-toggle="tab" href="#tab_br1">Dados Gerais</a></li>
+					<li class=""><a data-toggle="tab" href="#tab_br2">Preço</a></li>
+					<li class=""><a data-toggle="tab" href="#tab_br3">Estoque</a></li>
+					<li class=""><a data-toggle="tab" href="#tab_br4">Imagens</a></li>
+					<li class=""><a data-toggle="tab" href="#tab_br5">Meta Tags</a></li>
+				</ul>					
+				<div class="tab-content">
+					<div id="tab_br1" class="tab-pane active">
+						<h4 class="heading">Dados Gerais</h4>						
+						<?php echo $this->content->render('general.phtml');?>
+					</div>
+					<div id="tab_br2" class="tab-pane">
+						<h4 class="heading">Informações de Preço</h4>
+						<?php echo $this->content->render('price.phtml');?>
+					</div>
+					<div id="tab_br3" class="tab-pane">
+						<h4 class="heading">Gerenciar Estoque</h4>
+						<?php echo $this->content->render('stock.phtml');?>
+					</div>
+					<div id="tab_br4" class="tab-pane">
+						<h4 class="heading">Gerenciar Imagens</h4>
+						<?php echo $this->content->render('images.phtml');?>
+					</div>
+					<div id="tab_br5" class="tab-pane">
+						<h4 class="heading">Meta Tags</h4>
+						<?php echo $this->content->render('metatags.phtml');?>
+					</div>
+				</div>
+			</div>
+		</div>		
+	
+</div>
+
+<script type="text/javascript">   
+
+	$('input[name="use_title"]').on( "click", function(event){		
+		if($('input[name="name"]').val() == ''){
+			alert('Defina um titulo para o produto primeiro!');
+			event.preventDefault();
+		}else{
+			$('input[name="meta_title"]').val($('input[name="name"]').val());
+		}		
+	});
+	$('input[name="use_description"]').on( "click", function(event){
+		if($('textarea[name="desc1"]').val() == ''){
+			alert('Defina uma descrição para o produto primeiro!');
+			event.preventDefault();
+		}else{
+			$('textarea[name="meta_description"]').val($('textarea[name="desc1"]').val());
+		}
+		
+	});	
+
+	$.validator.addMethod("dependant", function(value, element) {
+	  if (value != '' && $('input[name="promotional_price"]').val() == ''){
+		  return false;
+	  }else{
+		  return true;
+	  }	 
+	}, "Datas de promoção só podem existir se houver um preço promocional");
+
+
+    function sendProductForm(){
+            $('form#fileupload').remove();
+            $('#errordiv').empty();
+            $('#productForm').validate({
+                ignore:"",
+                rules:{
+                    name:{
+                        required:true                       
+                    },
+                    sku:{
+                        required:true
+                    },
+                    desc1:{
+                        required:true
+                    },
+                    normal_price:{
+                        required:true                       
+                    },
+                    promotion_since:{
+                        dependant:true
+                    },
+                    promotion_until:{
+                        dependant:true
+                    },
+                    weight:{
+                        number:true
+                    }
+                },
+                messages:{
+                    name:{
+                        required: "O campo nome é obrigatorio."               
+                    },
+                    sku:{
+                        required: "O campo sku é obrigatorio."               
+                    },
+                    desc1:{
+                        required: "O campo descrição resumida é obrigatorio."               
+                    },
+                    normal_price:{
+                        required: "O campo preço é obrigatorio."  
+                    },
+                    weight:{
+                        number: "O peso deve ser um número inteiro ou decimal"
+                    }
+                }
+            });
+    }
+    
+    function sendAjaxImage(productid,name,order){
+            
+            $.ajax({
+                url: "/admin238/product/add-image",
+                type:"GET",
+                data:{productid:productid, name:name, order:order},
+                contentType: "application/json; charset=utf-8",
+                dataType:"json",
+                success: function (data) { 
+                     $.sticky(data, {autoclose : 5000, position: "top-right", type:"st-success" });
+                },
+                error: function(request,error){
+                     console.log(arguments);
+                     $.sticky(error, {autoclose : 5000, position: "top-right", type:"st-error" });
+                }
+            });
+        } 
+        
+        function deleteAjaxImage(productid,name){
+            
+            $.ajax({
+                url: "/admin238/product/delete-image",
+                type:"GET",
+                data:{productid:productid, name:name},
+                contentType: "application/json; charset=utf-8",
+                dataType:"json",
+                success: function (data) { 
+                    $.sticky(data, {autoclose : 5000, position: "top-right", type:"st-success" }); 
+                },
+                error: function(request,error){
+                     console.log(arguments);
+                     $.sticky(error, {autoclose : 5000, position: "top-right", type:"st-error" });
+                }
+            });            
+        }
+    
+    jQuery('.numbers').keyup(function () {
+		this.value = this.value.replace(/[^0-9\.]/g,'');    	        
+    });   
+
+    $('tbody#price-range-table').on('click', 'a.price-range-remove', function() {
+        $(this).parent().parent().remove();
+    });
+
+    $('tbody#price-group-table').on('click', 'a.price-group-remove', function() {
+        $(this).parent().parent().remove(); 
+    });
+    
+    $('body').on('click', 'button[name="delete-image"]', function() {
+        
+        var name = new Array();
+        var productid = <?= $this->productId; ?>;
+            
+        name[0] = $(this).parent().parent().find('input[name="filename[]"]').val();        
+        deleteAjaxImage(productid,name);
+    });
+
+
+    function appendGroupPrices(){
+        
+    	var groupClientId = $('select[name="group_clients"] option:selected').val();
+		var groupClientName = $('select[name="group_clients"] option:selected').html();
+		var groupPriceFixed = $('input[name="group_price"]').val();
+		
+		$('tbody#price-group-table').append('<tr><td><input type="hidden" name="group_client_id[]" class="group_client_id" value="' + groupClientId + '"/>' + groupClientName + '</td><td>'+ groupPriceFixed +'</td><td><a class="price-group-remove" > <i class="splashy-remove"></i></a></td></tr>');
+    }
+
+    function appendPriceRange(from, to, price, lastFrom, lastTo){
+        
+        $('tbody#price-range-table').append('<tr><td><input type="hidden" name="from[]" class="from" value="' + from  + '"/>' + from + '</td><td><input type="hidden" name="to[]" class="to" value="' + to  + '"/>' + to + '</td><td><input type="hidden" name="price[]" class="price" value="' + price  + '"/>R$ ' + price + '</td><td><a class="price-range-remove" > <i class="splashy-remove"></i></a></td></tr>');
+
+    }        
+        
+    $(document).ready(function() {
+        
+        $('#gap_form').wrap('<form id="productForm" action="/admin238/product/add?product_id=<?= $this->productId; ?>&method=edit" method="post" ></form>');
+        
+        $('.dateme').mask('00/00/0000');
+        $('.moneyme').mask('000.000.000.000.000,00', {
+            reverse : true
+        });
+
+        $('[name=name]').keyup(function(event){
+    		var stt;		
+    		stt=$(this).val();			
+    		$('[name=slug]').val(stt.replace(/\s+/g, '-').toLowerCase());
+    	});
+        
+        $('a.price-range-add').click(function(){
+            
+        	var from = $('input[name="qty_from"]').val();
+        	var to = $('input[name="qty_to"]').val();
+        	var price = $('input[name="price_range"]').val();
+        	var lastFrom = $('tbody#price-range-table tr:last-child td input.from').val();
+            var lastTo = $('tbody#price-range-table tr:last-child td input.to').val();
+          
+            if(from && to && price){
+                var lastFrom = $('tbody#price-range-table tr:last-child td input.from').val();
+                var lastTo = $('tbody#price-range-table tr:last-child td input.to').val();
+                if(lastTo != undefined){
+                    if (parseInt(from) > parseInt(lastTo)){
+                        if(parseInt(from) > parseInt(to) || parseInt(from) == parseInt(to)){                    
+                            alert('Existe um conflito desses valores com uma faixa já existente');
+                        }else{                    
+                        	appendPriceRange(from,to,price,lastFrom,lastTo);
+                        }
+                    }else{
+                        alert('Valor "De" precisa ser maior do que o valor "Até" da última faixa');
+                    }
+                }else{                    
+                	appendPriceRange(from,to,price,lastFrom,lastTo);
+                }
+               
+            }else{
+                alert('Preencha os campos de faixa de preço!');
+            }
+        });       
+
+        $('a.price-group-add').click(function(){        	
+            
+         	var lastGroupAdded = new Array();
+            var i = 0;
+            
+            $('tbody#price-group-table input.group_client_id').each(function(){
+            	lastGroupAdded[i] = $(this).val();
+            	i++;
+            });
+                
+            var groupClientId = $('select[name="group_clients"] option:selected').val();
+                      
+			if(groupClientId == 0){
+				alert('Selecione um grupo de cliente!');
+			}else if ($('input[name="group_price"]').val() == ''){
+				alert('Preço não pode ser em branco!');
+			}else if(lastGroupAdded != undefined && jQuery.inArray(groupClientId,lastGroupAdded) != -1){
+				alert('Este grupo já possui um preço cadastrado!');	
+			}else{
+				appendGroupPrices();
+			}
+        });        
+        
+        $('button[name="upload-all"]').click(function(){
+            
+            var name = new Array();
+            var i = 0;
+            var a = 0;
+            var productid = <?= $this->productId; ?>;
+            var order = new Array();
+            
+            $('tr input[name="filename[]"]').each(function (){
+                name[i] = $(this).val();
+                i++;
+            });
+            
+            $('tr input[name="order[]"]').each(function (){
+                if($(this).val() == ''){
+                    order[a] = 1;
+                }else{
+                    order[a] = $(this).val();
+                }
+                a++;
+            });         	
+			
+			sendAjaxImage(productid,name,order);
+			
+        });
+    });
+
+</script>

@@ -563,4 +563,47 @@ class DB_Product
     {
         return $this->condition;
     }
+    
+    public function getAllProductInfo($productId = null){
+    	
+    	$em = Zend_Registry::getInstance()->entitymanager;
+    	if($productId){
+    		$product = $em->getRepository('DB_Product')->find($productId);
+    		$images = $em->getRepository('DB_ProductImages')->findByProduct($productId);    		
+    		$product['image'] = $image;
+    		return $product;
+    	}else{
+    		$products = $em->getRepository('DB_Product')->findAll();
+    		$i = 0;
+    		foreach($products as $product){
+    			$images = $em->getRepository('DB_ProductImages')->findByProduct($product->getId());
+    			$stock = $em->getRepository('DB_ProductStock')->findOneByProduct($product->getId());
+    			$price = $em->getRepository('DB_ProductPrices')->findOneByProduct($product->getId());
+    			$meta = $em->getRepository('DB_ProductMeta')->findOneByProduct($product->getId());
+    			$data[$i]['product'] = $product;
+    			if($price != null){
+    				$data[$i]['price'] = $price;
+    			}else{
+    				$data[$i]['price'] = false;
+    			}    			
+    			if($meta != null){
+    				$data[$i]['meta'] = $meta;
+    			}else{
+    				$data[$i]['meta'] = false;
+    			}
+    			if($stock != null){
+    				$data[$i]['stock'] = $stock;
+    			}else{
+    				$data[$i]['stock'] = false;
+    			}
+    			if($images != null){
+    				$data[$i]['images'] = $images;
+    			}else{
+    				$data[$i]['images'] = false;
+    			}    			
+    			$i++;  
+    		}
+    		return $data;
+    	}    	
+    }
 }

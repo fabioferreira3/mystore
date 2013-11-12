@@ -56,7 +56,7 @@ class DB_ProductPromotion
     /**
      * @var datetime $price
      *
-     * @Column(name="price", type="string", nullable=false)
+     * @Column(name="price", type="string", nullable=true)
      */
     private $price;
     

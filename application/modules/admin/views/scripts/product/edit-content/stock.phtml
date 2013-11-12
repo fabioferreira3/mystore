@@ -1,0 +1,36 @@
+<div class="row-fluid">
+	<div class="span6">
+		<label>Disponibilidade: </label>
+		<select name="availability" class="span4">
+			<option value="1" <?php if($this->stock){if($this->stock->getAvailability() == '1'){echo 'selected';}}?>>Disponível</option>
+			<option value="2" <?php if($this->stock){if($this->stock->getAvailability() == '2'){echo 'selected';}}?>>Sob Encomenda</option>
+			<option value="0" <?php if($this->stock){if($this->stock->getAvailability() == '0'){echo 'selected';}}?>>Esgotado</option>
+		</select>
+		<label>Quantidade: </label>
+		<input type="text" class="span2 numbers" name="qty" value="<?php if($this->stock){echo $this->stock->getCurrentQty();}?>"/>
+		<label>Quantidade Mínima: </label>
+		<input type="text"  class="span2 numbers" name="minimal_qty" value="<?php if($this->stock){echo $this->stock->getMinimumQty();}?>"/>
+		<label>Mostrar como 'Esgotado' quando a quantidade chegar a:</label>
+		<input type="text"  class="span3" name="outstock_qty" value="<?php if($this->stock){echo $this->stock->getQtyOutOfStock();}?>"/>
+		<label>Avisar por email ao Esgotar ou Atingir Qtd Minima?</label>
+			<select name="warning_stock" class="span5">
+				<option value="0" <?php if($this->stock){if($this->stock->getEmailWarning() == '0'){echo 'selected';}}?>>Nenhum</option>
+				<option value="1" <?php if($this->stock){if($this->stock->getEmailWarning() == '1'){echo 'selected';}}?>>Ao Esgotar</option>
+				<option value="2" <?php if($this->stock){if($this->stock->getEmailWarning() == '2'){echo 'selected';}}?>>Ao Atingir Minimo</option>
+			</select>
+	</div>
+	<div class="span6">
+		<label>Quantidade Mínima no Carrinho: </label>
+		<input type="text"  class="span2 numbers" name="minimal_cart_qty" value="<?php if($this->stock){echo $this->stock->getMinimumCartQty();}?>"/>
+		<label>Quantidade Máxima no Carrinho: </label>
+		<input type="text"  class="span2 numbers" name="maximum_cart_qty" value="<?php if($this->stock){echo $this->stock->getMaximumCartQty();}?>"/>
+		<label>Quantidade Decimal?</label>
+		<select name="decimal" class="span3">
+			<option value="0" <?php if($this->stock){if($this->stock->getDecimal() == '0'){echo 'selected';}}?>>Não</option>
+			<option value="1" <?php if($this->stock){if($this->stock->getDecimal() == '1'){echo 'selected';}}?>>Sim</option>
+		</select>
+	</div>
+	<div class="span6">		
+		
+	</div>
+</div>

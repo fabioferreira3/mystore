@@ -1,0 +1,82 @@
+<div class="row-fluid">
+	<div class="span6">		
+		<label>Nome: *</label>
+		<input class="span12" type="text" name="name" value="<?php if($this->general->getName() !== null){echo $this->general->getName();}?>"/>
+		<div class="row-fluid">
+			<div class="span6">
+				<label>SKU: *</label>
+				<input class="span8" type="text" name="sku" value="<?php if($this->general->getSku() !== null){echo $this->general->getSku();}?>"/>	
+			</div>
+			<div class="span6">
+				<label>Status:</label>
+				<select name="status">
+					<option value="1" <?php if($this->general->getStatus() == '1'){echo 'selected';}?>>Ativo</option>
+					<option value="0" <?php if($this->general->getStatus() == '0'){echo 'selected';}?>>Desabilitado</option>
+				</select>
+			</div>
+		</div>
+		<div class="row-fluid">
+			<div class="span6">
+				<label>Novo Desde:</label>
+				<input class="span6 dateme" type="text" name="new_since" value="<?php if($this->general->getDateNewSince() != null){echo $this->general->getDateNewSince()->format('d/m/Y');};?>"/>
+			</div>
+			<div class="span6">
+				<label>Novo Até:</label>
+				<input class="span6 dateme" type="text" name="new_until" value="<?php if($this->general->getDateNewTo() != null){echo $this->general->getDateNewTo()->format('d/m/Y');};?>"/>
+			</div>
+		</div>
+		<div class="row-fluid">
+			<div class="span6">
+			<label>Condição:</label>
+				<select name="condition" class="span8">
+					<?php foreach ($this->conditions as $condition){?>
+						<option value="<?= $condition->getId();?>" <?php if($this->general->getCondition()){if ($this->general->getCondition()->getId() == $condition->getId()){echo 'selected';}}?>><?= $condition->getName();?></option>
+					<?php }?>
+				</select>
+			</div>
+		</div>
+		<div class="row-fluid">
+			<div class="span12">
+				<label>URL Amigável:</label>
+				<input class="span12" type="text" name="slug" value="<?php if($this->general->getSlug()){ echo $this->general->getSlug();}?>"/>
+			</div>
+		</div>
+			
+	</div>	
+	<div class="span6">
+		<div class="row-fluid">
+			<div class="span4">
+				<label>Altura (cm):</label><input class="span6 numbers" type="text" name="height" value="<?php if($this->general->getHeight()){ echo $this->general->getHeight();}?>"/>
+			</div>
+			<div class="span4">
+				<label>Largura (cm):</label><input class="span6 numbers" type="text" name="width" value="<?php if($this->general->getWidth()){ echo $this->general->getWidth();}?>"/>
+			</div>
+			<div class="span4">
+				<label>Comprimento (cm):</label><input class="span6 numbers" type="text" name="length" value="<?php if($this->general->getLength()){ echo $this->general->getLength();}?>"/>
+			</div>			
+		</div>
+		<div class="row-fluid">
+			<div class="span6">				
+				<label>Espessura (cm):</label><input class="span6 numbers" type="text" name="thickness" value="<?php if($this->general->getThickness()){ echo $this->general->getThickness();}?>"/>			
+			</div>
+			<div class="span6">
+				<label>Peso (kg):</label><input class="span6 numbers" type="text" name="weight" value="<?php if($this->general->getWeight()){ echo $this->general->getWeight();}?>"/>
+			</div>
+		</div>		
+	</div>
+	
+		
+</div>
+<div class="row-fluid">
+	<div class="span12">
+		<label>Descrição Resumida: *</label>
+		<textarea class="span6" rows="3" name="desc1" required><?php if($this->general->getDesc1()){ echo $this->general->getDesc1();}?></textarea>
+		<div class="formSep">
+			<label>Descrição Técnica:</label>
+			<textarea name="desc2" id="wysiwg_full" cols="30" rows="10"><?php if($this->general->getDesc2()){ echo $this->general->getDesc2();}?></textarea>
+		</div>
+	</div>
+</div>
+<script>
+        tinymce.init({selector:'textarea#wysiwg_full'});
+</script>
