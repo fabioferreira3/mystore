@@ -29,41 +29,44 @@ if (isset($this->msgError)){
 		<h1 class="heading">Editar Produto - <?= $this->productName; ?></h1>
 		<div id="errordiv"></div>
 		<div id="gap_form">
-			<div class="tabbable tabbable-bordered">
-			
+			<div class="tabbable tabbable-bordered">			
 				<ul class="nav nav-tabs">
 				    <button onclick="sendProductForm()" class="btn btn-gebo">Salvar</button>
 					<li class="active"><a data-toggle="tab" href="#tab_br1">Dados Gerais</a></li>
-					<li class=""><a data-toggle="tab" href="#tab_br2">Preço</a></li>
-					<li class=""><a data-toggle="tab" href="#tab_br3">Estoque</a></li>
-					<li class=""><a data-toggle="tab" href="#tab_br4">Imagens</a></li>
-					<li class=""><a data-toggle="tab" href="#tab_br5">Meta Tags</a></li>
+					<li class=""><a data-toggle="tab" href="#tab_br2">Categorias</a></li>
+					<li class=""><a data-toggle="tab" href="#tab_br3">Preço</a></li>
+					<li class=""><a data-toggle="tab" href="#tab_br4">Estoque</a></li>
+					<li class=""><a data-toggle="tab" href="#tab_br5">Imagens</a></li>
+					<li class=""><a data-toggle="tab" href="#tab_br6">Meta Tags</a></li>
 				</ul>					
 				<div class="tab-content">
-					<div id="tab_br1" class="tab-pane active">
-						<h4 class="heading">Dados Gerais</h4>						
-						<?php echo $this->content->render('general.phtml');?>
-					</div>
-					<div id="tab_br2" class="tab-pane">
-						<h4 class="heading">Informações de Preço</h4>
-						<?php echo $this->content->render('price.phtml');?>
-					</div>
-					<div id="tab_br3" class="tab-pane">
-						<h4 class="heading">Gerenciar Estoque</h4>
-						<?php echo $this->content->render('stock.phtml');?>
-					</div>
-					<div id="tab_br4" class="tab-pane">
-						<h4 class="heading">Gerenciar Imagens</h4>
-						<?php echo $this->content->render('images.phtml');?>
-					</div>
-					<div id="tab_br5" class="tab-pane">
-						<h4 class="heading">Meta Tags</h4>
-						<?php echo $this->content->render('metatags.phtml');?>
-					</div>
-				</div>
+                    <div id="tab_br1" class="tab-pane active">
+                        <h4 class="heading">Dados Gerais</h4>                       
+                        <?php echo $this->content->render('general.phtml');?>
+                    </div>
+                    <div id="tab_br2" class="tab-pane">
+                        <h4 class="heading">Categorias do Produto</h4>
+                        <?php echo $this->content->render('categories.phtml');?>
+                    </div>
+                    <div id="tab_br3" class="tab-pane">
+                        <h4 class="heading">Informações de Preço</h4>
+                        <?php echo $this->content->render('price.phtml');?>
+                    </div>
+                    <div id="tab_br4" class="tab-pane">
+                        <h4 class="heading">Gerenciar Estoque</h4>
+                        <?php echo $this->content->render('stock.phtml');?>
+                    </div>
+                    <div id="tab_br5" class="tab-pane">
+                        <h4 class="heading">Gerenciar Imagens</h4>
+                        <?php echo $this->content->render('images.phtml');?>
+                    </div>
+                    <div id="tab_br6" class="tab-pane">
+                        <h4 class="heading">Meta Tags</h4>
+                        <?php echo $this->content->render('metatags.phtml');?>
+                    </div>
+                </div>
 			</div>
-		</div>		
-	
+		</div>	
 </div>
 
 <script type="text/javascript">   
@@ -216,7 +219,7 @@ if (isset($this->msgError)){
 
     }        
         
-    $(document).ready(function() {
+    $(document).ready(function() {            
         
         $('#gap_form').wrap('<form id="productForm" action="/admin238/product/add?product_id=<?= $this->productId; ?>&method=edit" method="post" ></form>');
         
@@ -309,6 +312,8 @@ if (isset($this->msgError)){
 			sendAjaxImage(productid,name,order);
 			
         });
+       
+    
     });
 
 </script>

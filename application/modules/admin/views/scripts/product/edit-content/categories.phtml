@@ -1,0 +1,39 @@
+<div class="row-fluid">
+    <div class="span6">
+        <div id="lista-categorias">
+            <ul>            
+                <?php foreach($this->categories as $category){ ?>
+                <li>
+                   
+                    <input type="checkbox" value="<?php echo $category['id'];?>"/>                  
+                    <?php echo $category['name'];?>                                  
+                    <?php if(count($category) > 2){?>
+                    <ul>
+                    <?php foreach ($category as $sub1){                 
+                            if (is_array($sub1)){?>             
+                                <li>
+                                    <input type="checkbox" value="<?php echo $sub['id'];?>"/>
+                                    <?php echo $sub1['name']?>
+                                    <?php if(count($sub1 > 2)){?>
+                                    <ul>
+                                    <?php foreach($sub1 as $sub2){
+                                    if (is_array($sub2)){?>
+                                        <li>
+                                            <input type="checkbox" value="<?php echo $sub2['id'];?>"/>
+                                            <?php echo $sub2['name']?>
+                                    <?php }}?>
+                                        </li>
+                                    </ul>
+                                <?php }else{?>
+                                </li>
+                                <?php }?>                                                   
+                    <?php   } 
+                           }?>
+                    </ul>
+                    <?php } else{?>
+                </li>
+                    <?php }}?>         
+           </ul>
+       </div>
+    </div>
+</div>

@@ -12,7 +12,7 @@
             <link rel="stylesheet" href="<?php echo $this->baseUrl();?>/assets/admin/lib/sticky/sticky.css" />    
             <link rel="stylesheet" href="<?php echo $this->baseUrl();?>/assets/admin/img/splashy/splashy.css" />
             
-            <?php if ($this->categoryPage == true){?>
+            <?php if ($this->categoryPage == true || $this->productPage == true){?>
             <link rel="stylesheet" href="<?php echo $this->baseUrl();?>/assets/admin/lib/dynatree/src/skin/ui.dynatree.css" />
             <?php }?>
             
@@ -70,7 +70,7 @@
             <!-- jquery validate -->
             <script src="<?php echo $this->baseUrl();?>/assets/admin/lib/validation/jquery.validate.min.js"></script>
            
-            <?php if ($this->categoryPage == true){?>
+            <?php if ($this->categoryPage == true || $this->productPage == true){?>
             	<script src="<?php echo $this->baseUrl();?>/assets/admin/lib/dynatree/dist/jquery.dynatree.min.js"></script>
             <?php }?>
             

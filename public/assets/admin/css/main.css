@@ -602,3 +602,7 @@ a.price-range-add {
 
   .col-lg-offset-11 {
     margin-left: 91.66666666666666%; } }
+#lista-categorias input[type="checkbox"] {
+  margin: 0; }
+#lista-categorias li, #lista-categorias ul {
+  list-style: none; }

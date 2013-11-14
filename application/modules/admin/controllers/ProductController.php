@@ -41,7 +41,8 @@ class Admin_ProductController extends Zend_Controller_Action
 	public function addAction(){
 		try{
 			$params = $this->getRequest()->getParams();
-			$store = $this->repo->db('Store')->find(1);				
+			$store = $this->repo->db('Store')->find(1);	
+            $tbCategories = new DB_Category();			
 			
 			if(isset($params['product_id'])){
 				$product = ($params['product_id']);					
@@ -64,13 +65,13 @@ class Admin_ProductController extends Zend_Controller_Action
             $contentPath = APPLICATION_PATH . '/modules/admin/views/scripts/product/add-content/';
             $this->view->content = new Zend_View();
             $this->view->content->setScriptPath($contentPath);   
-            $this->view->content->categories = $this->repo->db('Categories')->findAll();     
+            $this->view->content->categories = $tbCategories->getAllDependencies();     
             $this->view->content->groupClients = $this->repo->db('ClientGroupTypes')->findAll();
             $this->view->content->conditions = $this->repo->db('ProductConditions')->findAll();
     	    
             if($this->getRequest()->isPost()){
             $postvars = $this->getRequest()->getPost();
-            Zend_Debug::dump($postvars);
+            Zend_Debug::dump($postvars);exit;
             
             $checkSku = $this->repo->db('Product')->findOneBySku($postvars['sku']);
             
@@ -135,8 +136,7 @@ class Admin_ProductController extends Zend_Controller_Action
             $oldPrice = str_replace('.','',$postvars['normal_price']);
             $newPrice = str_replace(',','.',$oldPrice);         
             $tbProductPrices->setPrice($newPrice);          
-            $tbProductPrices->setProduct($tbProduct);
-            
+            $tbProductPrices->setProduct($tbProduct);            
             
                 $tbProductPromotion = $this->repo->db('ProductPromotion')->findOneByProduct($product);
                 if($tbProductPromotion == null){
@@ -144,11 +144,11 @@ class Admin_ProductController extends Zend_Controller_Action
                 }
                 $tbProductPromotion->setDateUpd($dtNow);
                 $tbProductPromotion->setProduct($tbProduct);
-                if($postvars['promotion_price'] == ''){
+                if($postvars['promotional_price'] == ''){
                     $tbProductPromotion->setPrice(null);
                 }else{
                     $oldPromoPrice = str_replace('.','',$postvars['promotional_price']);
-                    $newPromoPrice = str_replace(',','.',$oldPromoPrice);
+                    $newPromoPrice = str_replace(',','.',$oldPromoPrice);                    
                     $tbProductPromotion->setPrice($newPromoPrice);
                 }
                 
@@ -314,7 +314,8 @@ class Admin_ProductController extends Zend_Controller_Action
         catch(Exception $e){echo json_encode($e->getMessage());exit;}       
     }
 	
-	public function editAction(){
+	public function editAction(){	    
+	   
 		try{
     		$contentPath = APPLICATION_PATH . '/modules/admin/views/scripts/product/edit-content/';
     		$this->view->content = new Zend_View();
@@ -326,6 +327,7 @@ class Admin_ProductController extends Zend_Controller_Action
     		$tbProductStock = $this->repo->db('ProductStock')->findOneByProduct($params['product_id']);
     		$tbProductMeta = $this->repo->db('ProductMeta')->findOneByProduct($params['product_id']);
     		$tbProductPromotion = $this->repo->db('ProductPromotion')->findOneByProduct($params['product_id']);
+    		$tbCategories = new DB_Category();  
     		if($tbProductPromotion != null){
     			$this->view->content->promotion = $tbProductPromotion;
     		}else{
@@ -334,6 +336,7 @@ class Admin_ProductController extends Zend_Controller_Action
     		$this->view->productId = $params['product_id'];
     		$this->view->productName = $tbProduct->getName();
     		$this->view->content->general = $tbProduct;
+            $this->view->content->categories = $tbCategories->getAllDependencies();
     		$this->view->content->price = $tbProductPrice;
     		$this->view->content->stock = $tbProductStock;
     		$this->view->content->meta = $tbProductMeta;
