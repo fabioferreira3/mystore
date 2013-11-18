@@ -182,8 +182,8 @@ if (isset($this->msgError)){
             });            
         }
     
-    jQuery('.numbers').keyup(function () {
-		this.value = this.value.replace(/[^0-9\.]/g,'');    	        
+    jQuery('.numbers').keyup(function () { 
+        this.value = this.value.replace(/[^0-9\.]/g,'');
     });   
 
     $('tbody#price-range-table').on('click', 'a.price-range-remove', function() {
@@ -219,9 +219,9 @@ if (isset($this->msgError)){
 
     }        
         
-    $(document).ready(function() {            
+    $(document).ready(function() {
         
-        $('#gap_form').wrap('<form id="productForm" action="/admin238/product/add?product_id=<?= $this->productId; ?>&method=edit" method="post" ></form>');
+        $('#gap_form').wrap('<form id="productForm" action="/admin238/product/add?product_id=<?= $this->productId; ?>" method="post" ></form>');
         
         $('.dateme').mask('00/00/0000');
         $('.moneyme').mask('000.000.000.000.000,00', {
@@ -312,8 +312,6 @@ if (isset($this->msgError)){
 			sendAjaxImage(productid,name,order);
 			
         });
-       
-    
     });
 
 </script>

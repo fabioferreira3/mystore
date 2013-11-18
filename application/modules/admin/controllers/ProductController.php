@@ -343,9 +343,13 @@ class Admin_ProductController extends Zend_Controller_Action
 		try{
     		$contentPath = APPLICATION_PATH . '/modules/admin/views/scripts/product/edit-content/';
     		$this->view->content = new Zend_View();
-    		$this->view->content->setScriptPath($contentPath);
-    		
+    		$this->view->content->setScriptPath($contentPath);    		
+    		   		
     		$params = $this->getRequest()->getParams();
+    		
+    		$session = new Zend_Session_Namespace('product');
+    		$session->productId = $params['product_id'];
+    		
     		$tbProduct = $this->repo->db('Product')->find($params['product_id']);
     		$tbProductPrice = $this->repo->db('ProductPrices')->findOneByProduct($params['product_id']);
     		$tbProductStock = $this->repo->db('ProductStock')->findOneByProduct($params['product_id']);

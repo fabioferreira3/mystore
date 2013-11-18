@@ -48,6 +48,7 @@ if (isset($this->msgError)){
 	<thead>
 		<tr>
 			<th class="table_checkbox"><input type="checkbox" name="select_rows" class="select_rows" data-tableid="dt_gal" /></th>
+			<th>ID</th>
 			<th>Imagem</th>
 			<th class="span4">Nome</th>
 			<th class="span2">SKU</th>
@@ -61,6 +62,7 @@ if (isset($this->msgError)){
 			<tr>
 				<td></td>
 				<td></td>
+				<td></td>
 				<td><input type="text" name="search_name" value="" class="span12"/></td>
 				<td><input type="text" name="search_sku" value="" class="span12"/></td>
 				<td><input type="text" name="search_price" value="" class="span12"/></td>
@@ -72,6 +74,7 @@ if (isset($this->msgError)){
 				
 			<tr>
 			<td><input type="checkbox" name="row_sel" class="row_sel" value="<?= $product['product']->getId();?>"/></td>
+			<td><?php echo $product['product']->getId();?></td>
 			<td style="width: 60px"><a href="<?php if ($product['images']){echo '/images/catalog/' . $product['product']->getId() . '/' . $product['images'][0]->getName();};?>"
 				title="" class="cbox_single thumbnail"> <img alt="" src="<?php if ($product['images']){echo '/images/catalog/' . $product['product']->getId() . '/thumbnail/' . $product['images'][0]->getName();};?>" style="height: 50px; width: 50px">
 			</a>
