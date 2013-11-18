@@ -49,15 +49,25 @@ if (isset($this->msgError)){
 		<tr>
 			<th class="table_checkbox"><input type="checkbox" name="select_rows" class="select_rows" data-tableid="dt_gal" /></th>
 			<th>Imagem</th>
-			<th>Nome</th>
-			<th>SKU</th>
-			<th>Preço</th>
-			<th>Estoque</th>
-			<th>Status</th>
+			<th class="span4">Nome</th>
+			<th class="span2">SKU</th>
+			<th class="span2">Preço</th>
+			<th class="span1">Estoque</th>
+			<th class="span3">Status</th>
 			<th>Ações</th>
 		</tr>
 	</thead>
 	<tbody>
+			<tr>
+				<td></td>
+				<td></td>
+				<td><input type="text" name="search_name" value="" class="span12"/></td>
+				<td><input type="text" name="search_sku" value="" class="span12"/></td>
+				<td><input type="text" name="search_price" value="" class="span12"/></td>
+				<td><input type="text" name="search_stock" value="" class="span12"/></td>
+				<td><input type="text" name="search_status" value="" class="span12"/></td>
+				<td><button class="btn">Enviar</button></td>
+			</tr>
 		<?php foreach($this->products as $product){ ?>
 				
 			<tr>

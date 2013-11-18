@@ -186,4 +186,15 @@ class DB_CategoryProducts
     {
         return $this->product;
     }
+    
+    public function getCategoriesByProduct($productId){
+    	
+    	$em = Zend_Registry::getInstance()->entitymanager;
+    	$categories =  $em->getRepository('DB_CategoryProducts')->findByProduct($productId);
+    	if ($categories != null){
+    		return $categories;
+    	}else{
+    		return false;
+    	}
+    }
 }

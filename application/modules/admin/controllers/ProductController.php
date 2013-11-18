@@ -71,7 +71,7 @@ class Admin_ProductController extends Zend_Controller_Action
     	    
             if($this->getRequest()->isPost()){
             $postvars = $this->getRequest()->getPost();
-            Zend_Debug::dump($postvars);exit;
+            Zend_Debug::dump($postvars);
             
             $checkSku = $this->repo->db('Product')->findOneBySku($postvars['sku']);
             
@@ -84,7 +84,31 @@ class Admin_ProductController extends Zend_Controller_Action
             
             $tbProduct = $this->repo->db('Product')->find($product);            
             $condition = $this->repo->db('ProductConditions')->find($postvars['condition']);
-            $dtNow = new DateTime();            
+            $dtNow = new DateTime();         
+
+            /* Categories */
+            
+            if ($postvars['categories']){
+           
+            	$tbCategoryProducts = $this->repo->db('CategoryProducts')->findByProduct($tbProduct);
+	            if($tbCategoryProducts != null){	     
+	            	foreach($tbCategoryProducts as $one){
+	            		$this->em->remove($one);
+	            		$this->em->flush();
+	            	}       	
+	            	        	
+	            }	            
+	            	foreach ($postvars['categories'] as $categoryId){
+	            		$tbCategoryProducts = new DB_CategoryProducts();
+	            		$category = $this->repo->db('Category')->find($categoryId);
+	            		$tbCategoryProducts->setCategory($category);
+	            		$tbCategoryProducts->setProduct($tbProduct);
+	            		$tbCategoryProducts->setDateCreate($dtNow);
+	            		$tbCategoryProducts->setStore($store);
+	            		$this->em->persist($tbCategoryProducts);
+	            		$this->em->flush();	            		
+	            	}	            
+            }
             
             /* General */
             
@@ -337,6 +361,12 @@ class Admin_ProductController extends Zend_Controller_Action
     		$this->view->productName = $tbProduct->getName();
     		$this->view->content->general = $tbProduct;
             $this->view->content->categories = $tbCategories->getAllDependencies();
+            $categoriesByProduct = $this->repo->db('CategoryProducts')->findByProduct($tbProduct);
+            $categoriesArray = array();
+            foreach($categoriesByProduct as $category){
+            	$categoriesArray[] = $category->getCategory()->getId();
+            }
+            $this->view->content->categoriesByProduct = $categoriesArray;
     		$this->view->content->price = $tbProductPrice;
     		$this->view->content->stock = $tbProductStock;
     		$this->view->content->meta = $tbProductMeta;
@@ -378,9 +408,7 @@ class Admin_ProductController extends Zend_Controller_Action
     		$this->getHelper('Redirector')->gotoUrl('/admin238/product');
         }
         catch(Exception $e){echo $e->getMessage();exit;}		
-	}
-	
-	
+	}	
 }
 
 ?>
