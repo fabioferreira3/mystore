@@ -569,9 +569,14 @@ class DB_Product
     	$em = Zend_Registry::getInstance()->entitymanager;
     	if($productId){
     		$product = $em->getRepository('DB_Product')->find($productId);
-    		$images = $em->getRepository('DB_ProductImages')->findByProduct($productId);    		
-    		$product['image'] = $image;
-    		return $product;
+    		$images = $em->getRepository('DB_ProductImages')->findByProduct($productId);  
+    		$price = $em->getRepository('DB_ProductPrices')->findOneByProduct($productId);
+    		$stock = $em->getRepository('DB_ProductStock')->findOneByProduct($productId);
+    		$data['product'] = $product;  		
+    		$data['images'] = $images;
+    		$data['price'] = $price;
+    		$data['stock'] = $stock;
+    		return $data;
     	}else{
     		$products = $em->getRepository('DB_Product')->findAll();
     		$i = 0;
@@ -607,28 +612,25 @@ class DB_Product
     	}
     }
 
-    public function getProductsByFilter(array $params){
+    public function getProductsByFilter($params){
         
         $em = Zend_Registry::getInstance()->entitymanager;
+        
         $query = $em->createQueryBuilder()->select('p')->from('DB_Product','p');
         if($params['status'] != ''){
             $query->where('p.status = :status');
-            $query->setParameter('status',$params['status']);
+            $query->setParameter('status',$params['status']);            
         }else{
-            $query->where('p.status != 1234567');
-        }        
-        if($params['name'] != ''){
+            $query->where('p.status != 1234567');            
+        }       
+        if(isset($params['name']) && $params['name'] != ''){         	
             $query->andWhere('p.name LIKE :name');
-            $query->setParameter('name',"%".$params['name']."%");
-        }
-        if($params['sku'] != ''){
+            $query->setParameter('name',"%".$params['name']."%");            
+        }        
+        if(isset($params['sku']) && $params['sku'] != ''){        	
             $query->andWhere('p.sku LIKE :sku');
-            $query->setParameter('sku',"%".$params['sku']."%");
-        }
-        if($params['status'] != ''){
-            $query->andWhere('p.status = :status');
-            $query->setParameter('status',$params['status']);
-        }
+            $query->setParameter('sku',"%".$params['sku']."%");            
+        } 
         $data = $query->getQuery()->getResult();
         
         return $data;

@@ -419,26 +419,34 @@ class Admin_ProductController extends Zend_Controller_Action
             $params = $this->getRequest()->getParams();
             $tbProduct = new DB_Product();
             $filter = array();
-            if($params['name'] != ''){
+            if(isset($params['name']) && $params['name'] != ''){
                 $filter['name'] = $params['name'];
             }
-            if($params['sku'] != ''){
+            if(isset($params['sku']) && $params['sku'] != ''){
                 $filter['sku'] = $params['sku'];
             }
             if($params['status'] != ''){                 
                 $filter['status'] = $params['status'];
             }
-            $result = $tbProduct->getProductsByFilter($filter);
-            if($result != null){
-                $maker = $this->_helper->TableMaker->create(false,true,$result);
+            
+            $results = $tbProduct->getProductsByFilter($filter);
+            
+            if($results != null){
+            	$data = array();
+	            foreach($results as $result){          
+	           	$data[] = $tbProduct->getAllProductInfo($result->getId());
+	            }     
+	           // Zend_Debug::dump($data);exit;     
+	         //   echo json_encode('teste');exit;
+                $maker = $this->_helper->TableMaker->create(false,true,$data);
                 echo json_encode($maker);
-            }else{
+            }else{            	
                 $maker = $this->_helper->TableMaker->create(false,true,false);
                 echo json_encode($maker);
-            }            
+            }          
             exit;
         }
-        catch(Exception $e){echo $e->getMessage();exit;}
+        catch(Exception $e){echo json_encode($e->getMessage());exit;}
     }	
 }
 
