@@ -412,7 +412,34 @@ class Admin_ProductController extends Zend_Controller_Action
     		$this->getHelper('Redirector')->gotoUrl('/admin238/product');
         }
         catch(Exception $e){echo $e->getMessage();exit;}		
-	}	
+	}
+    
+    public function filterAction(){
+        try{
+            $params = $this->getRequest()->getParams();
+            $tbProduct = new DB_Product();
+            $filter = array();
+            if($params['name'] != ''){
+                $filter['name'] = $params['name'];
+            }
+            if($params['sku'] != ''){
+                $filter['sku'] = $params['sku'];
+            }
+            if($params['status'] != ''){                 
+                $filter['status'] = $params['status'];
+            }
+            $result = $tbProduct->getProductsByFilter($filter);
+            if($result != null){
+                $maker = $this->_helper->TableMaker->create(false,true,$result);
+                echo json_encode($maker);
+            }else{
+                $maker = $this->_helper->TableMaker->create(false,true,false);
+                echo json_encode($maker);
+            }            
+            exit;
+        }
+        catch(Exception $e){echo $e->getMessage();exit;}
+    }	
 }
 
 ?>

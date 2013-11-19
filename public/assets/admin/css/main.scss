@@ -123,3 +123,32 @@ a.price-range-add{
     list-style:none;
   }
 }
+
+.wait {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background: rgba( 255, 255, 255, .8 ) 
+                url('../img/ajax-loader.gif') 
+                50% 50% 
+                no-repeat;
+    h1{
+      color:#2867EE;
+      margin:20% auto auto;
+      text-align:center;
+      display:block;
+      width:50%;
+    }
+}
+
+
+body.loading {
+    overflow: hidden;   
+}
+body.loading .wait {
+    display: block;
+}

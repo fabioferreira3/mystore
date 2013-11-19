@@ -98,7 +98,9 @@ if (isset($this->msgError)){
 	}, "Datas de promoção só podem existir se houver um preço promocional");
 
 
-    function sendProductForm(){
+    function sendProductForm(){            
+            $('body').addClass('loading');
+            $('.wait h1').html('Aguarde enquanto salvo seu produto...');
             $('form#fileupload').remove();
             $('#errordiv').empty();
             $('#productForm').validate({
@@ -313,5 +315,7 @@ if (isset($this->msgError)){
 			
         });
     });
+    
+    
 
 </script>

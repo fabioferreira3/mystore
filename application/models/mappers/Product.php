@@ -600,10 +600,37 @@ class DB_Product
     				$data[$i]['images'] = $images;
     			}else{
     				$data[$i]['images'] = false;
-    			}    			
-    			$i++;  
+    			}
+    			$i++;
     		}
     		return $data;
-    	}    	
+    	}
+    }
+
+    public function getProductsByFilter(array $params){
+        
+        $em = Zend_Registry::getInstance()->entitymanager;
+        $query = $em->createQueryBuilder()->select('p')->from('DB_Product','p');
+        if($params['status'] != ''){
+            $query->where('p.status = :status');
+            $query->setParameter('status',$params['status']);
+        }else{
+            $query->where('p.status != 1234567');
+        }        
+        if($params['name'] != ''){
+            $query->andWhere('p.name LIKE :name');
+            $query->setParameter('name',"%".$params['name']."%");
+        }
+        if($params['sku'] != ''){
+            $query->andWhere('p.sku LIKE :sku');
+            $query->setParameter('sku',"%".$params['sku']."%");
+        }
+        if($params['status'] != ''){
+            $query->andWhere('p.status = :status');
+            $query->setParameter('status',$params['status']);
+        }
+        $data = $query->getQuery()->getResult();
+        
+        return $data;
     }
 }

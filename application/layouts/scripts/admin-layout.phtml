@@ -11,7 +11,7 @@
 	
     </head>
 	
-	<body>
+	<body class="loading">
 	     
 		<div id="maincontainer" class="clearfix">
 			
@@ -31,9 +31,17 @@
             <div>
                 <?php echo $this->render('admin-sidebar.phtml'); ?>
             </div>
-    
+        <div class="wait">
+            <h1></h1>
+        </div>
 		</div>
+		
 	</body>
-   
+   <script type="text/javascript">
+       $( document ).ready(function() {
+            $('.wait h1').html("");   
+            $('body').removeClass("loading");     
+       });
+   </script>
 </html>
 
