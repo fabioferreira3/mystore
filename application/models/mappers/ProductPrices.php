@@ -38,7 +38,7 @@ class DB_ProductPrices
     /**
      * @var Product
      *
-     * @ManyToOne(targetEntity="DB_Product")
+     * @OneToOne(targetEntity="DB_Product", inversedBy="price")
      * @JoinColumns({
      *   @JoinColumn(name="product_id", referencedColumnName="id")
      * })

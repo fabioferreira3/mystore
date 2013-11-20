@@ -38,7 +38,7 @@ class DB_ProductImages
    /**
      * @var Product
      *
-     * @ManyToOne(targetEntity="DB_Product")
+     * @ManyToOne(targetEntity="DB_Product", inversedBy="images")
      * @JoinColumns({
      *   @JoinColumn(name="product_id", referencedColumnName="id")
      * })

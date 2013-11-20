@@ -47,7 +47,7 @@ if (isset($this->msgError)){
 <table class="table table-bordered table-striped table_vam product-results" >
 	<thead>
 		<tr>
-			<th class="table_checkbox"><input type="checkbox" name="select_rows" class="select_rows" data-tableid="dt_gal" /></th>
+			<th></th>
 			<th>ID</th>
 			<th>Imagem</th>
 			<th class="span4">Nome</th>
@@ -65,8 +65,14 @@ if (isset($this->msgError)){
 				<td></td>
 				<td><input type="text" name="search_name" value="" class="span12"/></td>
 				<td><input type="text" name="search_sku" value="" class="span12"/></td>
-				<td><input type="text" name="search_price" value="" class="span12"/></td>
-				<td><input type="text" name="search_stock" value="" class="span12"/></td>
+				<td>
+					<input type="text" name="search_price_from" value="" class="span12" placeholder="De"/>
+				    <input type="text" name="search_price_to" value="" class="span12" placeholder="Até"/>
+				</td>
+				<td>
+					<input type="text" name="search_stock_from" value="" class="span12" placeholder="De"/>
+					<input type="text" name="search_stock_to" value="" class="span12" placeholder="Até"/>
+				</td>
 				<td>
 				    <select name="search_status" class="span12">
 				        <option value="1">Habilitado</option>
@@ -122,12 +128,16 @@ $('button.search').on('click',function(){
     var name = $('input[name="search_name"]').val();
     var sku = $('input[name="search_sku"]').val();
     var status = $('select[name="search_status"]').val();
+    var stockFrom =  $('input[name="search_stock_from"]').val();
+    var stockTo =  $('input[name="search_stock_from"]').val();
+    var priceFrom =  $('input[name="search_price_from"]').val();
+    var priceTo =  $('input[name="search_price_to"]').val();
 
    
     $.ajax({
         url: "/admin238/product/filter",
         type:"GET",
-        data:{name:name, sku:sku, status:status},
+        data:{name:name, sku:sku, status:status, priceFrom:priceFrom, priceTo:priceTo, stockFrom:stockFrom, stockTo:stockTo},
         contentType: "application/json; charset=utf-8",
         dataType:"json",
         success: function (data) { 

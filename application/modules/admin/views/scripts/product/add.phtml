@@ -157,9 +157,11 @@ if (isset($this->msgError)){
                 contentType: "application/json; charset=utf-8",
                 dataType:"json",
                 success: function (data) { 
+                	 $('body').removeClass('loading');
                      $.sticky(data, {autoclose : 5000, position: "top-right", type:"st-success" });
                 },
                 error: function(request,error){
+                	 $('body').removeClass('loading');
                      console.log(arguments);
                      $.sticky(error, {autoclose : 5000, position: "top-right", type:"st-error" });
                 }
@@ -289,6 +291,9 @@ if (isset($this->msgError)){
         });        
         
         $('button[name="upload-all"]').click(function(){
+
+        	$('.wait h1').html('Salvando imagens...');
+            $('body').addClass('loading');
             
             var name = new Array();
             var i = 0;

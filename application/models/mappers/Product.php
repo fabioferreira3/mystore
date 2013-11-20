@@ -155,8 +155,24 @@ class DB_Product
      * })
      */
     private $condition;
-
-
+    
+    /**
+     * @var Price
+     *
+     * @OneToOne(targetEntity="DB_ProductPrices", mappedBy="product")
+     
+     */
+    private $price;
+    
+    /**
+     * @var Images
+     *
+     * @OneToMany(targetEntity="DB_ProductImages", mappedBy="product")
+      
+     */
+    private $images;
+    
+   
 
     /**
      * Get id
@@ -453,6 +469,26 @@ class DB_Product
     {
         return $this->width;
     }
+    
+    /**
+     * Get price
+     *
+     * @return string
+     */
+    public function getPrice()
+    {
+    	return $this->price->getPrice();
+    }
+    
+    /**
+     * Get images
+     *
+     * @return string
+     */
+    public function getImages()
+    {
+    	return $this->images;
+    }
 
     /**
      * Set slug
@@ -615,8 +651,9 @@ class DB_Product
     public function getProductsByFilter($params){
         
         $em = Zend_Registry::getInstance()->entitymanager;
-        
-        $query = $em->createQueryBuilder()->select('p')->from('DB_Product','p');
+    
+        $query = $em->createQueryBuilder();        
+        $query->select('p')->from('DB_Product','p');
         if($params['status'] != ''){
             $query->where('p.status = :status');
             $query->setParameter('status',$params['status']);            
@@ -631,7 +668,21 @@ class DB_Product
             $query->andWhere('p.sku LIKE :sku');
             $query->setParameter('sku',"%".$params['sku']."%");            
         } 
-        $data = $query->getQuery()->getResult();
+        if(isset($params['priceFrom']) && $params['priceFrom'] && !isset($params['priceTo'])){        	
+        	$query->innerjoin('p.price','pr','WITH','pr.price >= :priceFrom');
+        	$query->setParameter('priceFrom',$params['priceFrom']);     
+        }
+        if(isset($params['priceTo']) && $params['priceTo'] && !isset($params['priceFrom'])){
+        	$query->innerjoin('p.price','pr','WITH','pr.price <= :priceTo');
+        	$query->setParameter('priceTo',$params['priceTo']);
+        }
+         if(isset($params['priceFrom']) && $params['priceFrom'] && isset($params['priceTo']) && $params['priceTo']){
+         	$query->innerjoin('p.price','pr','WITH','pr.price <= :priceTo AND pr.price >= :priceFrom');
+         	$query->setParameter('priceFrom',$params['priceFrom']);
+         	$query->setParameter('priceTo',$params['priceTo']);
+         }
+        $query->orderBy('p.id','DESC');
+        $data = $query->getQuery()->getResult(); 
         
         return $data;
     }

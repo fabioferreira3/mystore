@@ -428,16 +428,22 @@ class Admin_ProductController extends Zend_Controller_Action
             if($params['status'] != ''){                 
                 $filter['status'] = $params['status'];
             }
+            if(isset($params['priceFrom']) && $params['priceFrom'] != ''){
+            	$filter['priceFrom'] = $params['priceFrom'];
+            }
+            if(isset($params['priceTo']) && $params['priceTo'] != ''){
+            	$filter['priceTo'] = $params['priceTo'];
+            }
             
             $results = $tbProduct->getProductsByFilter($filter);
             
             if($results != null){
             	$data = array();
 	            foreach($results as $result){          
-	           	$data[] = $tbProduct->getAllProductInfo($result->getId());
+	           		$data[] = $tbProduct->getAllProductInfo($result->getId());
 	            }     
-	           // Zend_Debug::dump($data);exit;     
-	         //   echo json_encode('teste');exit;
+	         //   Zend_Debug::dump($data);exit;     
+	         
                 $maker = $this->_helper->TableMaker->create(false,true,$data);
                 echo json_encode($maker);
             }else{            	
