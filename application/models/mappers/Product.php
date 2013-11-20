@@ -165,6 +165,14 @@ class DB_Product
     private $price;
     
     /**
+     * @var Stock
+     *
+     * @OneToOne(targetEntity="DB_ProductStock", mappedBy="product")
+      
+     */
+    private $stock;
+    
+    /**
      * @var Images
      *
      * @OneToMany(targetEntity="DB_ProductImages", mappedBy="product")
@@ -676,11 +684,25 @@ class DB_Product
         	$query->innerjoin('p.price','pr','WITH','pr.price <= :priceTo');
         	$query->setParameter('priceTo',$params['priceTo']);
         }
-         if(isset($params['priceFrom']) && $params['priceFrom'] && isset($params['priceTo']) && $params['priceTo']){
+        if(isset($params['priceFrom']) && $params['priceFrom'] && isset($params['priceTo']) && $params['priceTo']){
          	$query->innerjoin('p.price','pr','WITH','pr.price <= :priceTo AND pr.price >= :priceFrom');
          	$query->setParameter('priceFrom',$params['priceFrom']);
          	$query->setParameter('priceTo',$params['priceTo']);
-         }
+        }
+        if(isset($params['stockFrom']) && $params['stockFrom'] && !isset($params['stockTo'])){
+        	$query->innerjoin('p.stock','st','WITH','st.currentQty >= :stockFrom');
+        	$query->setParameter('stockFrom',$params['stockFrom']);
+        }
+        if(isset($params['stockTo']) && $params['stockTo'] && !isset($params['stockFrom'])){
+        	$query->innerjoin('p.stock','st','WITH','st.currentQty <= :stockTo');
+        	$query->setParameter('stockTo',$params['stockTo']);
+        }
+        if(isset($params['stockFrom']) && $params['stockFrom'] && isset($params['stockTo']) && $params['stockTo']){
+        	$query->innerjoin('p.stock','st','WITH','st.currentQty <= :stockTo AND st.currentQty >= :stockFrom');
+        	$query->setParameter('stockFrom',$params['stockFrom']);
+        	$query->setParameter('stockTo',$params['stockTo']);
+        }
+        
         $query->orderBy('p.id','DESC');
         $data = $query->getQuery()->getResult(); 
         

@@ -31,7 +31,7 @@ class DB_ProductStock
     /**
      * @var Product
      *
-     * @ManyToOne(targetEntity="DB_Product")
+     * @OneToOne(targetEntity="DB_Product", inversedBy="stock")
      * @JoinColumns({
      *   @JoinColumn(name="product_id", referencedColumnName="id")
      * })
