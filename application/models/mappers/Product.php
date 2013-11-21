@@ -3,6 +3,7 @@
 
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Tools\Pagination\Paginator as Paginator;
 
 /**
  * Product
@@ -489,6 +490,16 @@ class DB_Product
     }
     
     /**
+     * Get stock
+     *
+     * @return string
+     */
+    public function getCurrentQty()
+    {
+    	return $this->stock->getCurrentQty();
+    }
+    
+    /**
      * Get images
      *
      * @return string
@@ -608,56 +619,43 @@ class DB_Product
         return $this->condition;
     }
     
-    public function getAllProductInfo($productId = null){
+    public function getProducts($productId = null, $perPage = null, $curPage = null){
     	
-    	$em = Zend_Registry::getInstance()->entitymanager;
-    	if($productId){
-    		$product = $em->getRepository('DB_Product')->find($productId);
-    		$images = $em->getRepository('DB_ProductImages')->findByProduct($productId);  
-    		$price = $em->getRepository('DB_ProductPrices')->findOneByProduct($productId);
-    		$stock = $em->getRepository('DB_ProductStock')->findOneByProduct($productId);
-    		$data['product'] = $product;  		
-    		$data['images'] = $images;
-    		$data['price'] = $price;
-    		$data['stock'] = $stock;
-    		return $data;
-    	}else{
-    		$products = $em->getRepository('DB_Product')->findAll();
-    		$i = 0;
-    		foreach($products as $product){
-    			$images = $em->getRepository('DB_ProductImages')->findByProduct($product->getId());
-    			$stock = $em->getRepository('DB_ProductStock')->findOneByProduct($product->getId());
-    			$price = $em->getRepository('DB_ProductPrices')->findOneByProduct($product->getId());
-    			$meta = $em->getRepository('DB_ProductMeta')->findOneByProduct($product->getId());
-    			$data[$i]['product'] = $product;
-    			if($price != null){
-    				$data[$i]['price'] = $price;
-    			}else{
-    				$data[$i]['price'] = false;
-    			}    			
-    			if($meta != null){
-    				$data[$i]['meta'] = $meta;
-    			}else{
-    				$data[$i]['meta'] = false;
-    			}
-    			if($stock != null){
-    				$data[$i]['stock'] = $stock;
-    			}else{
-    				$data[$i]['stock'] = false;
-    			}
-    			if($images != null){
-    				$data[$i]['images'] = $images;
-    			}else{
-    				$data[$i]['images'] = false;
-    			}
-    			$i++;
-    		}
-    		return $data;
+    	if(!$perPage){
+    		$perPage = 1000;
     	}
-    }
+    	if(!$curPage){
+    		$curPage = 1;
+    	}
+    	$em = Zend_Registry::getInstance()->entitymanager;
+    	$query = $em->createQueryBuilder();        
+        $query->select('p')->from('DB_Product','p');
+        if($productId){
+        	$query->where('p.id = :productId');
+        	$query->setParameter('productId',$productId);
+        }
+    	$paginator = new Paginator($query);
+    	$paginator_iter = $paginator->getIterator();
+    	$adapter =  new \Zend_Paginator_Adapter_Iterator($paginator_iter);
+    	$data = new \Zend_Paginator($adapter);
+    	$data->setItemCountPerPage($perPage)->setCurrentPageNumber($curPage);
+    	
+    	return $data;
+    }    
 
     public function getProductsByFilter($params){
         
+    	if(!isset($params['curPage'])){
+    		$currentPage = 1;
+    	}else{
+    		$currentPage = $params['curPage'];
+    	}
+    	if(!isset($params['perPage'])){
+    		$perPage = 10;
+    	}else{
+    		$perPage = $params['perPage'];
+    	}
+    	
         $em = Zend_Registry::getInstance()->entitymanager;
     
         $query = $em->createQueryBuilder();        
@@ -704,7 +702,12 @@ class DB_Product
         }
         
         $query->orderBy('p.id','DESC');
-        $data = $query->getQuery()->getResult(); 
+        
+        $paginator = new Paginator($query);         
+        $paginator_iter = $paginator->getIterator();        
+        $adapter =  new \Zend_Paginator_Adapter_Iterator($paginator_iter);        
+        $data = new \Zend_Paginator($adapter);        
+        $data->setItemCountPerPage($perPage)->setCurrentPageNumber($currentPage);     
         
         return $data;
     }

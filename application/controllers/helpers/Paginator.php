@@ -1,21 +1,28 @@
 <?php
 
-use Doctrine\ORM\Tools\Pagination\Paginator as Paginator;
+
 
 class Zend_Controller_Action_Helper_Paginator extends Zend_Controller_Action_Helper_Abstract
 {
-   public function generate($query,$page){
+   public function generate($qtyPages, $curPage, $maxPages){
    	
-   		$doctrine_paginator = new Paginator($query);
+   		$html = '<div class="pagination"><ul>';
+   		$html .= '<li>
+					<a href="#">Anterior</a>
+				</li>
+				<li class="active">
+					<a href="#">1</a>
+				</li>
+				<li>
+					<a href="#">2</a>
+				</li>
+				<li>
+					<a href="#">Próximo</a>
+				</li>
+			';
    		
-   		$doctrine_paginator_iter = $d2_paginator->getIterator();
-   		$adapter =  new Zend_Paginator_Adapter_Iterator($doctrine_paginator_iter);
-   		
-   		$zend_paginator = new Zend_Paginator($adapter);
-   		
-   		$zend_paginator->setItemCountPerPage(1)->setCurrentPageNumber($page);
-   		
-   		return $zend_paginator;
+   		$html .= '</ul></div>';
+   
    }
 }
 

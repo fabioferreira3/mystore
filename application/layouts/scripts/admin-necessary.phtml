@@ -12,6 +12,8 @@
             <link rel="stylesheet" href="<?php echo $this->baseUrl();?>/assets/admin/lib/sticky/sticky.css" />    
             <link rel="stylesheet" href="<?php echo $this->baseUrl();?>/assets/admin/img/splashy/splashy.css" />
             
+          <link rel="stylesheet" href="<?php echo $this->baseUrl();?>/assets/admin/lib/datatables/extras/TableTools/media/css/TableTools.css"> 
+            
             <?php if ($this->categoryPage == true || $this->productPage == true){?>
             <link rel="stylesheet" href="<?php echo $this->baseUrl();?>/assets/admin/lib/dynatree/src/skin/ui.dynatree.css" />
             <?php }?>
@@ -64,8 +66,12 @@
             <script src="<?php echo $this->baseUrl();?>/assets/admin/lib/datatables/jquery.dataTables.min.js"></script>
             <!-- additional sorting for datatables -->
             <script src="<?php echo $this->baseUrl();?>/assets/admin/lib/datatables/jquery.dataTables.sorting.js"></script>
+            <script src="<?php echo $this->baseUrl();?>/assets/admin/lib/datatables/extras/TableTools/media/js/TableTools.min.js"></script>
+            <script src="<?php echo $this->baseUrl();?>/assets/admin/lib/datatables/extras/TableTools/media/js/ZeroClipboard.js"></script>
+            <script src="<?php echo $this->baseUrl();?>/assets/admin/lib/datatables/extras/Scroller/media/js/dataTables.scroller.min.js"></script>
             <!-- datatables bootstrap integration -->
             <script src="<?php echo $this->baseUrl();?>/assets/admin/lib/datatables/jquery.dataTables.bootstrap.min.js"></script>
+            <script src="<?php echo $this->baseUrl();?>/assets/admin/js/gebo_datatables.js"></script>
             <!-- tables functions -->
             <script src="<?php echo $this->baseUrl();?>/assets/admin/js/gebo_tables.js"></script>
             <!-- jquery validate -->

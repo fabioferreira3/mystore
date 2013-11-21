@@ -1,5 +1,7 @@
 <?php 
 
+
+
 class Admin_ProductController extends Zend_Controller_Action
 {
 	private $layout;
@@ -27,11 +29,13 @@ class Admin_ProductController extends Zend_Controller_Action
 	
 	public function indexAction(){		
 		
-		try{
-		    $tbProduct = $this->repo->db('Product')->findAll();       
+		try{		     
 			$tbProduct = new DB_Product();
-			$products = $tbProduct->getAllProductInfo();
-            $this->view->products = $products;
+			$produtos = $tbProduct->getProducts();
+			
+		//	Zend_Debug::dump($produtos);exit;
+		//	$products = $tbProduct->getAllProductInfo();
+            $this->view->products = $produtos;
 		}
 		catch(Exception $e){echo $e->getMessage();exit;}
 			
@@ -417,43 +421,17 @@ class Admin_ProductController extends Zend_Controller_Action
     public function filterAction(){
         try{
             $params = $this->getRequest()->getParams();
-            $tbProduct = new DB_Product();
-            $filter = array();
-            if(isset($params['name']) && $params['name'] != ''){
-                $filter['name'] = $params['name'];
-            }
-            if(isset($params['sku']) && $params['sku'] != ''){
-                $filter['sku'] = $params['sku'];
-            }
-            if($params['status'] != ''){                 
-                $filter['status'] = $params['status'];
-            }
-            if(isset($params['priceFrom']) && $params['priceFrom'] != ''){
-            	$filter['priceFrom'] = $params['priceFrom'];
-            }
-            if(isset($params['priceTo']) && $params['priceTo'] != ''){
-            	$filter['priceTo'] = $params['priceTo'];
-            }
-            if(isset($params['stockFrom']) && $params['stockFrom'] != ''){
-            	$filter['stockFrom'] = $params['stockFrom'];
-            }
-            if(isset($params['stockTo']) && $params['stockTo'] != ''){
-            	$filter['stockTo'] = $params['stockTo'];
-            }
+            $tbProduct = new DB_Product();          
             
-            $results = $tbProduct->getProductsByFilter($filter);
+            $results = $tbProduct->getProductsByFilter($params);
+           // Zend_Debug::dump($results);exit;
             
             if($results != null){
-            	$data = array();
-	            foreach($results as $result){          
-	           		$data[] = $tbProduct->getAllProductInfo($result->getId());
-	            }     
-	          //  Zend_Debug::dump($data);exit;     
-	         
-                $maker = $this->_helper->TableMaker->create(false,true,$data);
+            	$data = array();         
+                $maker = $this->_helper->ProductTableMaker->create(false,true,$results);           
                 echo json_encode($maker);
             }else{            	
-                $maker = $this->_helper->TableMaker->create(false,true,false);
+                $maker = $this->_helper->ProductTableMaker->create(false,true,false);
                 echo json_encode($maker);
             }          
             exit;
