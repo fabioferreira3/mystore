@@ -30,12 +30,18 @@ class Admin_ProductController extends Zend_Controller_Action
 	public function indexAction(){		
 		
 		try{		     
-			$tbProduct = new DB_Product();
-			$produtos = $tbProduct->getProducts();
+			$params = $this->getRequest()->getParams();
+			if(isset($params['page'])){$curPage = $params['page'];}
+			else{$curPage = 1;}
 			
-		//	Zend_Debug::dump($produtos);exit;
-		//	$products = $tbProduct->getAllProductInfo();
-            $this->view->products = $produtos;
+			$tbProduct = new DB_Product();
+			$maxItemsPerPage = 20;
+			$produtos = $tbProduct->getProducts(false,$maxItemsPerPage,$curPage);			
+			$totalItems = $produtos->getTotalItemCount();
+			$maxPages = ceil($totalItems / $maxItemsPerPage);
+	//		Zend_Debug::dump($this->_helper->Paginator->generate(1,$maxPages));exit;
+			$this->view->pagination = $this->_helper->Paginator->generate($curPage,$maxPages,$totalItems);
+		    $this->view->products = $produtos;
 		}
 		catch(Exception $e){echo $e->getMessage();exit;}
 			

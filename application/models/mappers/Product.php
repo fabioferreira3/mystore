@@ -629,7 +629,7 @@ class DB_Product
     	}
     	$em = Zend_Registry::getInstance()->entitymanager;
     	$query = $em->createQueryBuilder();        
-        $query->select('p')->from('DB_Product','p');
+        $query->select('p')->from('DB_Product','p')->orderBy('p.id','DESC');
         if($productId){
         	$query->where('p.id = :productId');
         	$query->setParameter('productId',$productId);
