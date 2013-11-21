@@ -515,6 +515,150 @@ class DB_Client
         $data->setItemCountPerPage($perPage)->setCurrentPageNumber($currentPage);
         
         return $data;
-    }    
+    }
+    
+    public function addOrUpdate($params,$clientId, $address = false){
+        
+        $em = Zend_Registry::getInstance()->entitymanager;
+            if($clientId){
+                $tbClient = $em->getRepository('DB_Client')->find($clientId);
+                $tbClient->setFirstName($params['name']);
+                $tbClient->setLastName($params['lastname']);
+                $tbClient->setCpf($params['cpf']);
+                $birth = new DateTime(str_replace('/', '-',$params['birth']));
+                $tbClient->setDateBirth($birth);
+                $tbClient->setGender($params['gender']);
+                $tbClient->setEmail($params['email']);
+                if($params['password'] != ''){
+                    $tbClient->setPassword(hash('sha256',$params['password']));
+                } 
+            }else{
+               
+                $checkEmail = $em->getRepository('DB_Client')->findOneByEmail($params['email']);
+                
+                // Se cliente for pessoa física (CPF)
+                if (isset($params['cpf']) && $params['cpf'] != ''){
+                    $cpf = str_replace(array('.','-'),'',$params['cpf']);
+                    $checkCpf = $em->getRepository('DB_Client')->findOneByCpf($cpf);
+                }
+                
+                // Se cliente for pessoa jurídica (CNPJ)
+                if (isset($params['cnpj']) && $params['cnpj'] != ''){
+                    $cnpj = str_replace(array('.','-','/'),'',$params['cnpj']);
+                    $checkCnpj = $em->getRepository('DB_Client')->findOneByCnpj($cnpj);
+                }
+                
+                if ($checkEmail == NULL && $checkCpf == NULL){                    
+                
+                    $tbClient = new DB_Client();
+                    $tbClient->setFirstName($params['name']);
+                    $tbClient->setLastName($params['lastname']);
+                    $tbClient->setCpf($params['cpf']);
+                    $birth = new DateTime(str_replace('/', '-',$params['birth']));
+                    $dtNow = new DateTime();
+                    $tbClient->setDateBirth($birth);
+                    $tbClient->setClientType('1');
+                    $tbClient->setGender($params['gender']);
+                    $tbClient->setEmail($params['email']);
+                    if($params['password'] != ''){
+                        $tbClient->setPassword(hash('sha256',$params['password']));
+                    }
+                    $tbClient->setKeyConfirm(md5(rand(5,15)));
+                    $tbClient->setDateCreate($dtNow);
+                    $tbClient->setDateUpd($dtNow);                  
+                    $tbClient->setStatus('0'); 
+                    $currentStore = $em->getRepository('DB_Store')->findOneById('1');
+                    $tbClient->setStore($currentStore);                   
+                }else{
+                    Zend_Controller_Action_HelperBroker::getStaticHelper('flashMessenger')->addMessage('Já existe um usuário com este Email e/ou CPF/CNPJ','error');
+                    return false;
+                }
+
+            } 
+                $em->persist($tbClient);
+            
+                if($address){
+                    $tbAddress = new DB_Address(); 
+                    if($clientId){
+                        $billingAddress = $tbAddress->checkAddressTypeExist(3,$clientId);
+                    }else{
+                        $billingAddress = false;
+                    }                   
+                
+                    if($billingAddress != false){
+                        $billingAddress = $tbAddress->getAddressByType(3,$clientId);
+                        $billingAddress->setStreet($params['billingaddress']);
+                        $billingAddress->setNumber($params['billingnumber']);
+                        $billingAddress->setComplement($params['billingcomplement']);
+                        $billingCountry = $em->getRepository('DB_Country')->find($params['billingcountry']);
+                        $billingAddress->setCountry($billingCountry);
+                        $billingState = $em->getRepository('DB_State')->find($params['billingstate']);
+                        $billingAddress->setState($billingState);
+                        $billingAddress->setCity($params['billingcity']);
+                        $em->persist($billingAddress);
+                    }else{
+                        if(isset($params['billingstate']) && $params['billingstate'] != ''){
+                            $billingAddress = new DB_Address();
+                            $billingAddress->setStreet($params['billingaddress']);
+                            $billingAddress->setNumber($params['billingnumber']);
+                            $billingAddress->setComplement($params['billingcomplement']);
+                            $billingAddress->setZip($params['billingzip']);
+                            $billingCountry = $em->getRepository('DB_Country')->find($params['billingcountry']);
+                            $billingAddress->setCountry($billingCountry);
+                            $billingState = $em->getRepository('DB_State')->find($params['billingstate']);
+                            $billingAddress->setState($billingState);
+                            $billingAddress->setCity($params['billingcity']);
+                            $addressType = $em->getRepository('DB_AddressType')->find(3);
+                            $billingAddress->setAddressType($addressType);
+                            $billingAddress->setClient($tbClient);
+                            $dtNow = new DateTime();
+                            $billingAddress->setDateCreate($dtNow);
+                            $em->persist($billingAddress);
+                        }
+                    }
+                    
+                    if($clientId){
+                        $shippingAddress = $tbAddress->checkAddressTypeExist(2,$clientId);
+                    }else{
+                        $shippingAddress = false;
+                    }            
+            
+                    if($shippingAddress != false){
+                        $shippingAddress = $tbAddress->getAddressByType(2,$clientId);
+                        $shippingAddress->setStreet($params['shippingaddress']);
+                        $shippingAddress->setNumber($params['shippingnumber']);
+                        $shippingAddress->setComplement($params['shippingcomplement']);
+                        $shippingCountry = $em->getRepository('DB_Country')->find($params['shippingcountry']);
+                        $shippingAddress->setCountry($billingCountry);
+                        $shippingState = $em->getRepository('DB_State')->find($params['shippingstate']);
+                        $shippingAddress->setState($shippingState);
+                        $shippingAddress->setCity($params['shippingcity']);
+                        $em->persist($shippingAddress);                         
+                    }else{
+                        if(isset($params['shippingstate']) && $params['shippingstate'] != ''){
+                            $shippingAddress = new DB_Address();
+                            $shippingAddress->setStreet($params['shippingaddress']);
+                            $shippingAddress->setNumber($params['shippingnumber']);
+                            $shippingAddress->setComplement($params['shippingcomplement']);
+                            $shippingAddress->setZip($params['shippingzip']);
+                            $shippingCountry = $em->getRepository('DB_Country')->find($params['shippingcountry']);
+                            $shippingAddress->setCountry($shippingCountry);
+                            $shippingState = $em->getRepository('DB_State')->find($params['shippingstate']);
+                            $shippingAddress->setState($shippingState);
+                            $shippingAddress->setCity($params['shippingcity']);
+                            $addressType = $em->getRepository('DB_AddressType')->find(2);
+                            $shippingAddress->setAddressType($addressType);
+                            $shippingAddress->setClient($tbClient);
+                            $dtNow = new DateTime();
+                            $shippingAddress->setDateCreate($dtNow);                            
+                            $em->persist($shippingAddress); 
+                        }
+                    }                  
+            }
+            $em->flush();
+            Zend_Controller_Action_HelperBroker::getStaticHelper('flashMessenger')->addMessage('Cliente cadastrado com sucesso!','success');
+            return true;      
+    }
+     
     
 }

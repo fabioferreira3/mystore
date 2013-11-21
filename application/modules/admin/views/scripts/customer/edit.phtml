@@ -83,15 +83,15 @@ if (isset($this->msgError)){
 						<h4 class="heading">Endereço de Cobrança</h4>
 						
 						<label>Logradouro:</label> 
-							<input class="span6" type="text" name="billing-address" value="<?= $this->billing->getStreet();?>"/> 
+							<input class="span6" type="text" name="billingaddress" value="<?= $this->billing->getStreet();?>"/> 
 						<label>Número:</label>
-							<input class="span1" type="text" name="billing-number" value="<?php if($this->billing->getNumber() !== null){echo $this->billing->getNumber();};?>"/> 
+							<input class="span1" type="text" name="billingnumber" value="<?php if($this->billing->getNumber() !== null){echo $this->billing->getNumber();};?>"/> 
 						<label>Complemento:</label> 
-							<input class="span2" type="text" name="billing-complement" value="<?php if($this->billing->getComplement() !== null){echo $this->billing->getComplement();};?>"/> 
+							<input class="span2" type="text" name="billingcomplement" value="<?php if($this->billing->getComplement() !== null){echo $this->billing->getComplement();};?>"/> 
 						<label>CEP:</label> 
-						<input class="span2" type="text" name="billing-zip" value="<?php if($this->billing->getZip() !== null){echo $this->billing->getZip();};?>"/>
+						<input class="span2" type="text" name="billingzip" value="<?php if($this->billing->getZip() !== null){echo $this->billing->getZip();};?>"/>
 						<label>País:</label> 
-							<select class="span2" name="billing-country">
+							<select class="span2" name="billingcountry">
 								<option value="0">Escolha</option>
 								<?php foreach ($this->countries as $country){?>								
 								<option value="<?= $country->getId(); ?>" <?php if($this->billing->getCountry()->getId() !== null && $country->getId() == $this->billing->getCountry()->getId()){echo 'selected';};?>>
@@ -100,29 +100,29 @@ if (isset($this->msgError)){
 								<?php } ?>
 							</select>
 						<label>Estado:</label>
-							<select class="span2" type="text" name="billing-state">
+							<select class="span2" type="text" name="billingstate">
 							    <?php if($this->billing->getState() !== null){?>
 								<option value="<?= $this->billing->getState()->getId();?>"><?= $this->billing->getState()->getName();?></option>
 							    <?php }?>
 							</select>
 							 
 						<label>Cidade:</label>
-							<input class="span3" type="text" name="billing-city" value="<?= $this->billing->getCity();?>"/> 
+							<input class="span3" type="text" name="billingcity" value="<?= $this->billing->getCity();?>"/> 
 						
 					</div>
 					<div id="tab_br2" class="tab-pane">
 						<h4 class="heading">Endereço de Entrega</h4>
 						<label class="checkbox"><input type="checkbox" name="same-address"/>Mesmo endereço de cobrança</label>						
 						<label for="address">Logradouro:</label> 
-							<input class="span6" type="text" name="shipping-address" value="<?php if($this->shipping->getStreet() !== null){echo $this->shipping->getStreet();};?>"/> 
+							<input class="span6" type="text" name="shippingaddress" value="<?php if($this->shipping->getStreet() !== null){echo $this->shipping->getStreet();};?>"/> 
 						<label for="numer">Número:</label>
-							<input class="span1" type="text" name="shipping-number" value="<?php if($this->shipping->getNumber() !== null){echo $this->shipping->getNumber();};?>"/> 
+							<input class="span1" type="text" name="shippingnumber" value="<?php if($this->shipping->getNumber() !== null){echo $this->shipping->getNumber();};?>"/> 
 						<label for="complement">Complemento:</label> 
-							<input class="span2" type="text" name="shipping-complement" value="<?php if($this->shipping->getComplement() !== null){echo $this->shipping->getComplement();};?>"/> 
+							<input class="span2" type="text" name="shippingcomplement" value="<?php if($this->shipping->getComplement() !== null){echo $this->shipping->getComplement();};?>"/> 
 						<label for="zip">CEP:</label> 
-							<input class="span2" type="text" name="shipping-zip" value="<?php if($this->shipping->getZip() !== null){echo $this->shipping->getZip();};?>"/> 
+							<input class="span2" type="text" name="shippingzip" value="<?php if($this->shipping->getZip() !== null){echo $this->shipping->getZip();};?>"/> 
 						<label for="country">País:</label> 
-							<select class="span2" name="shipping-country" >
+							<select class="span2" name="shippingcountry" >
 								<option value="0">Escolha</option>
 								<?php foreach ($this->countries as $country){?>
 								<option value="<?= $country->getId(); ?>" <?php if($this->shipping->getCountry()->getId() !== null && $country->getId() == $this->shipping->getCountry()->getId()){echo 'selected';};?>>
@@ -131,13 +131,13 @@ if (isset($this->msgError)){
 								<?php } ?>
 							</select>
 						<label>Estado:</label>
-							<select class="span2" type="text" name="shipping-state">
+							<select class="span2" type="text" name="shippingstate">
 							<?php if ($this->shipping->getState() !== null){?>
 								<option value="<?= $this->shipping->getState()->getId();?>"><?= $this->shipping->getState()->getName();?></option>
 							<?php }?>
 							</select> 
 						<label for="city">Cidade:</label>
-							<input class="span3" type="text" name="shipping-city" value="<?php if($this->shipping->getCity() !== null){echo $this->shipping->getCity();};?>"/> 
+							<input class="span3" type="text" name="shippingcity" value="<?php if($this->shipping->getCity() !== null){echo $this->shipping->getCity();};?>"/> 
 					</div>					
 				</div>
 				<button onclick="formSend()" class="btn btn-gebo">Salvar</button>
@@ -157,42 +157,42 @@ $(document).ready(function(){
 	// Preenche o endereço de entrega de acordo com o de cobrança
     
     $('[name=same-address]').click(function(){
-        $('input[name=shipping-address]').val($('input[name=billing-address]').val());
-        $('input[name=shipping-number]').val($('input[name=billing-number]').val());
-        $('input[name=shipping-complement]').val($('input[name=billing-complement]').val());
-        $('input[name=shipping-zip]').val($('input[name=billing-zip]').val());
-        $('input[name=shipping-city]').val($('input[name=billing-city]').val());
-        var country = $('select[name=billing-country] option:selected').html().trim();
-        $("select[name=shipping-country] option").each(function() { this.selected = (this.text == country); });
-        var state = $('select[name=billing-state] option:selected').html().trim();
-        $("select[name=shipping-state] option").each(function() { this.selected = (this.text == state); });
+        $('input[name=shippingaddress]').val($('input[name=billingaddress]').val());
+        $('input[name=shippingnumber]').val($('input[name=billingnumber]').val());
+        $('input[name=shippingcomplement]').val($('input[name=billingcomplement]').val());
+        $('input[name=shippingzip]').val($('input[name=billingzip]').val());
+        $('input[name=shippingcity]').val($('input[name=billingcity]').val());
+        var country = $('select[name=billingcountry] option:selected').html().trim();
+        $("select[name=shippingcountry] option").each(function() { this.selected = (this.text == country); });
+        var state = $('select[name=billingstate] option:selected').html().trim();
+        $("select[name=shippingstate] option").each(function() { this.selected = (this.text == state); });
 
     });
 	
-    $('[name=billing-country]').change(function(){ 
-        $.get("/admin238/customer/call-states",{country:$('[name=billing-country]').val()},function(data){
-        	$("select[name=billing-state]").html(data);
-        	$("select[name=billing-state]").prop('disabled',false);
-        	$("select[name=shipping-state]").html(data);
-        	$("select[name=shipping-state]").prop('disabled',false);        	
+    $('[name=billingcountry]').change(function(){ 
+        $.get("/admin238/customer/call-states",{country:$('[name=billingcountry]').val()},function(data){
+        	$("select[name=billingstate]").html(data);
+        	$("select[name=billingstate]").prop('disabled',false);
+        	$("select[name=shippingstate]").html(data);
+        	$("select[name=shippingstate]").prop('disabled',false);        	
         });
     });
 
-    $('[name=billing-state]').change(function(){        
-        	$("input[name=billing-city]").prop('disabled',false);
-        	$("input[name=shipping-city]").prop('disabled',false);
+    $('[name=billingstate]').change(function(){        
+        	$("input[name=billingcity]").prop('disabled',false);
+        	$("input[name=shippingcity]").prop('disabled',false);
     });
     
 
-    $('[name=shipping-country]').change(function(){ 
-        $.get("/admin238/customer/call-states",{country:$('[name=shipping-country]').val()},function(data){
-        	$("select[name=shipping-state]").html(data);
-        	$("select[name=shipping-state]").prop('disabled',false);
+    $('[name=shippingcountry]').change(function(){ 
+        $.get("/admin238/customer/call-states",{country:$('[name=shippingcountry]').val()},function(data){
+        	$("select[name=shippingstate]").html(data);
+        	$("select[name=shippingstate]").prop('disabled',false);
         });
     }); 
 
-    $('[name=shipping-state]').change(function(){        
-    	$("input[name=shipping-city]").prop('disabled',false);
+    $('[name=shippingstate]').change(function(){        
+    	$("input[name=shippingcity]").prop('disabled',false);
     });
 
    

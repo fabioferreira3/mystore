@@ -364,15 +364,32 @@ class DB_Address
         return $this->client;
     }
     
-    public function checkAddressTypeExist($addressTypeId){
+    public function checkAddressTypeExist($addressTypeId,$clientId){
         
          $em = Zend_Registry::getInstance()->entitymanager;
-         $data = $em->getRepository('Address')->findByAddressType($addressTypeId);
+         $query = $em->createQueryBuilder()->select('a')->from('DB_Address','a');
+         $query->innerjoin('a.client','c','WITH','c.id = :clientId');
+         $query->setParameter('clientId',$clientId);
+         $data = $query->getQuery()->getResult();
+         
          if($data != null){
              return true;
          }else{
              return false;
-         }
+         }        
+    }
+    
+    public function getAddressByType($addressType, $clientId = null){
         
+        $em = Zend_Registry::getInstance()->entitymanager;
+        $query = $em->createQueryBuilder()->select('a')->from('DB_Address','a');
+        $query->where('a.addressType = :typeId');
+        $query->setParameter('typeId',$addressType);        
+        if($clientId){
+            $query->innerjoin('a.client','c','WITH','c.id = :clientId');
+            $query->setParameter('clientId',$clientId);
+        }
+        
+        return $query->getQuery()->getSingleResult();
     }
 }

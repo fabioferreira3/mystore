@@ -84,16 +84,16 @@ if (isset($this->msgError)){
 						<h4 class="heading">Endereço de Cobrança</h4>
 						
 						<label>Logradouro:</label> 
-							<input class="span6" type="text" name="billing-address" /> 
+							<input class="span6" type="text" name="billingaddress" /> 
 						<label>Número:</label>
-							<input class="span1" type="text" name="billing-number" /> 
+							<input class="span1" type="text" name="billingnumber" /> 
 						<label>Complemento:</label> 
-							<input class="span2" type="text" name="billing-complement" /> 
+							<input class="span2" type="text" name="billingcomplement" /> 
 						<label>CEP:</label> 
-						<input class="span2" type="text" name="billing-zip"/>
+						<input class="span2" type="text" name="billingzip"/>
 						<label>País:</label> 
-							<select class="span2" name="billing-country">
-								<option value="0">Escolha</option>
+							<select class="span2" name="billingcountry" >
+								<option value="">Escolha</option>
 								<?php foreach ($this->countries as $country){?>
 								<option value="<?php echo $country->getId(); ?>">
 									<?php echo $country->getName(); ?>
@@ -101,26 +101,26 @@ if (isset($this->msgError)){
 								<?php } ?>
 							</select>
 						<label>Estado:</label>
-							<select class="span2" type="text" name="billing-state" disabled="true">
+							<select class="span2" type="text" name="billingstate" disabled="true">
 							</select>
 							 
 						<label>Cidade:</label>
-							<input class="span3" type="text" name="billing-city"  disabled="true"/> 
+							<input class="span3" type="text" name="billingcity"  disabled="true"/> 
 						
 					</div>
 					<div id="tab_br2" class="tab-pane">
 						<h4 class="heading">Endereço de Entrega</h4>
 						<label class="checkbox"><input type="checkbox" name="same-address"/>Mesmo endereço de cobrança</label>						
 						<label for="address">Logradouro:</label> 
-							<input class="span6" type="text" name="shipping-address"/> 
+							<input class="span6" type="text" name="shippingaddress"/> 
 						<label for="numer">Número:</label>
-							<input class="span1" type="text" name="shipping-number" /> 
+							<input class="span1" type="text" name="shippingnumber" /> 
 						<label for="complement">Complemento:</label> 
-							<input class="span2" type="text" name="shipping-complement"/> 
+							<input class="span2" type="text" name="shippingcomplement"/> 
 						<label for="zip">CEP:</label> 
-							<input class="span2" type="text" name="shipping-zip" /> 
+							<input class="span2" type="text" name="shippingzip" /> 
 						<label for="country">País:</label> 
-							<select class="span2" name="shipping-country" >
+							<select class="span2" name="shippingcountry" >
 								<option value="0">Escolha</option>
 								<?php foreach ($this->countries as $country){?>
 								<option value="<?php echo $country->getId(); ?>">
@@ -129,10 +129,10 @@ if (isset($this->msgError)){
 								<?php } ?>
 							</select>
 						<label>Estado:</label>
-							<select class="span2" type="text" name="shipping-state" disabled="true">
+							<select class="span2" type="text" name="shippingstate" disabled="true">
 							</select> 
 						<label for="city">Cidade:</label>
-							<input class="span3" type="text" name="shipping-city" disabled="true"/> 
+							<input class="span3" type="text" name="shippingcity" disabled="true"/> 
 					</div>					
 				</div>
 				<button onclick="formSend()" class="btn btn-gebo">Salvar</button>
@@ -152,42 +152,45 @@ $(document).ready(function(){
 	// Preenche o endereço de entrega de acordo com o de cobrança
     
     $('[name=same-address]').click(function(){
-        $('input[name=shipping-address]').val($('input[name=billing-address]').val());
-        $('input[name=shipping-number]').val($('input[name=billing-number]').val());
-        $('input[name=shipping-complement]').val($('input[name=billing-complement]').val());
-        $('input[name=shipping-zip]').val($('input[name=billing-zip]').val());
-        $('input[name=shipping-city]').val($('input[name=billing-city]').val());
-        var country = $('select[name=billing-country] option:selected').html().trim();
-        $("select[name=shipping-country] option").each(function() { this.selected = (this.text == country); });
-        var state = $('select[name=billing-state] option:selected').html().trim();
-        $("select[name=shipping-state] option").each(function() { this.selected = (this.text == state); });
+        $('input[name=shippingaddress]').val($('input[name=billingaddress]').val());
+        $('input[name=shippingnumber]').val($('input[name=billingnumber]').val());
+        $('input[name=shippingcomplement]').val($('input[name=billingcomplement]').val());
+        $('input[name=shippingzip]').val($('input[name=billingzip]').val());
+        $('input[name=shippingcity]').val($('input[name=billingcity]').val());
+        var country = $('select[name=billingcountry] option:selected').html().trim();
+        $("select[name=shippingcountry] option").each(function() { this.selected = (this.text == country); });
+        var state = $('select[name=billingstate] option:selected').html().trim();
+        $("select[name=shippingstate] option").each(function() { this.selected = (this.text == state); });
 
     });
 	
-    $('[name=billing-country]').change(function(){ 
-        $.get("/admin238/customer/call-states",{country:$('[name=billing-country]').val()},function(data){
-        	$("select[name=billing-state]").html(data);
-        	$("select[name=billing-state]").prop('disabled',false);
-        	$("select[name=shipping-state]").html(data);
-        	$("select[name=shipping-state]").prop('disabled',false);        	
+    $('[name=billingcountry]').change(function(){ 
+        $.get("/admin238/customer/call-states",{country:$('[name=billingcountry]').val()},function(data){
+        	$("select[name=billingstate]").html(data);
+        	$("select[name=billingstate]").prop('disabled',false);
+        	$("select[name=shippingstate]").html(data);
+        	$("select[name=shippingstate]").prop('disabled',false); 
+        	var pais = $('[name=billingcountry]').val();           
+            $("select[name=shippingcountry] option[value="+pais+"]").attr('selected',true);      	
         });
     });
 
-    $('[name=billing-state]').change(function(){        
-        	$("input[name=billing-city]").prop('disabled',false);
-        	$("input[name=shipping-city]").prop('disabled',false);
+    $('[name=billingstate]').change(function(){        
+        	$("input[name=shippingcity]").prop('disabled',false);
+        	var estado = $('[name=billingstate]').val();        	
+        	$("select[name=shippingstate] option[value="+estado+"]").attr('selected',true);
     });
     
 
-    $('[name=shipping-country]').change(function(){ 
-        $.get("/admin238/customer/call-states",{country:$('[name=shipping-country]').val()},function(data){
-        	$("select[name=shipping-state]").html(data);
-        	$("select[name=shipping-state]").prop('disabled',false);
+    $('[name=shippingcountry]').change(function(){ 
+        $.get("/admin238/customer/call-states",{country:$('[name=shippingcountry]').val()},function(data){
+        	$("select[name=shippingstate]").html(data);
+        	$("select[name=shippingstate]").prop('disabled',false);
         });
     }); 
 
-    $('[name=shipping-state]').change(function(){        
-    	$("input[name=shipping-city]").prop('disabled',false);
+    $('[name=shippingstate]').change(function(){        
+    	$("input[name=shippingcity]").prop('disabled',false);
     });
 
    
@@ -216,7 +219,13 @@ $(document).ready(function(){
 			confirm:{
 				required:true,
 				equalTo:'[name=password]'
-			}
+			},
+			billingcountry:{
+			    required:true			    
+			},
+			billingstate:{
+                required:true               
+            }
 		},
 		messages:{
             name:{
@@ -234,6 +243,12 @@ $(document).ready(function(){
             confirm:{
                 required: 'Digite a senha novamente',
                 equalTo: 'Digite a senha novamente'
+            },
+            billingsountry:{
+                required: 'Escolha um país'
+            },
+            billingstate:{
+                required: 'Escolha um estado'
             }			
 		}
     });

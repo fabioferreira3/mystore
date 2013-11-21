@@ -39,13 +39,10 @@ class Admin_ProductController extends Zend_Controller_Action
 			$produtos = $tbProduct->getProducts(false,$maxItemsPerPage,$curPage);			
 			$totalItems = $produtos->getTotalItemCount();
 			$maxPages = ceil($totalItems / $maxItemsPerPage);
-	//		Zend_Debug::dump($this->_helper->Paginator->generate(1,$maxPages));exit;
-			$this->view->pagination = $this->_helper->Paginator->generate($curPage,$maxPages,$totalItems);
+	       	$this->view->pagination = $this->_helper->Paginator->generate($curPage,$maxPages,$totalItems);
 		    $this->view->products = $produtos;
 		}
-		catch(Exception $e){echo $e->getMessage();exit;}
-			
-		
+		catch(Exception $e){echo $e->getMessage();exit;}		
 	}
 	
 	public function addAction(){

@@ -29,6 +29,9 @@ if (isset($this->msgError)){
 <div class="row-fluid">
     <div class="span12">
         <h1 class="heading">Clientes<a href='/admin/customer/add' class='btn btn-add'>Adicionar</a></h1>
+        <div class="row-fluid paginator">
+        <?php echo $this->pagination;?>
+        </div>
         <table class="table table-bordered table-striped table_vam" >
             <thead>
                 <tr>
@@ -90,6 +93,9 @@ if (isset($this->msgError)){
                 
             </tbody>
         </table>
+        <div class="row-fluid paginator">
+        <?php echo $this->pagination;?>
+        </div>
     </div>
 </div>
 
