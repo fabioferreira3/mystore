@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * ProductPriceRange
  *
- * @Table(name="product_promotion")
+ * @Table(name="product_price_range")
  * @Entity
  */
 class DB_ProductPriceRange

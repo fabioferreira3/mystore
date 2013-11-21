@@ -56,16 +56,15 @@ class Admin_ProductController extends Zend_Controller_Action
 			
 			if(isset($params['product_id'])){
 				$product = ($params['product_id']);					
-			}else{
-				
+			}else{				
 				$tbProduct = new DB_Product;
 				$tbProduct->setName('Sem Nome');
+                $tbProduct->setStatus(0);
 				$tbProduct->setStore($store);
 				$this->em->persist($tbProduct);
 				$this->em->flush();
 				$product = $tbProduct->getId();
 				$this->getHelper('Redirector')->gotoUrl('/admin238/product/add?product_id=' . $product);
-				
 			}    		
     		
     		$session = new Zend_Session_Namespace('product');
@@ -391,9 +390,22 @@ class Admin_ProductController extends Zend_Controller_Action
 	}
 	
 	public function removeAction(){
+	    
 		try{    
     		$params = $this->getRequest()->getParams();
-    		$product = $this->repo->db('Product')->find($params['product_id']);
+            $tbProduct = new DB_Product();           
+            if($tbProduct->destroy($params['product_id'])){
+                $this->_helper->flashMessenger->addMessage('Produto excluído com sucesso!','success');        
+                $this->getHelper('Redirector')->gotoUrl('/admin238/product');
+            }else{
+                $this->_helper->flashMessenger->addMessage('Erro ao excluir produto!','error');        
+                $this->getHelper('Redirector')->gotoUrl('/admin238/product');
+            }
+            if($related != null){
+                foreach($related as $one){
+                    $this->em->remove($one);
+                }                
+            }
         }
         catch(Exception $e){echo $e->getMessage();exit;}
 	}
@@ -434,9 +446,10 @@ class Admin_ProductController extends Zend_Controller_Action
             
             if($results != null){
             	$data = array();         
-                $maker = $this->_helper->ProductTableMaker->create(false,true,$results);           
-                echo json_encode($maker);
-            }else{            	
+                $data['maker'] = $this->_helper->ProductTableMaker->create(false,true,$results);           
+                $data['pagination'] = $this->_helper->Paginator->generate(false,false,$results->getTotalItemCount());
+                echo json_encode($data);
+            }else{
                 $maker = $this->_helper->ProductTableMaker->create(false,true,false);
                 echo json_encode($maker);
             }          

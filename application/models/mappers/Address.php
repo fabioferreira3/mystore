@@ -103,7 +103,7 @@ class DB_Address
     /**
      * @var Client
      *
-     * @ManyToOne(targetEntity="DB_Client")
+     * @ManyToOne(targetEntity="DB_Client", inversedBy="address")
      * @JoinColumns({
      *   @JoinColumn(name="client_id", referencedColumnName="id")
      * })
@@ -362,5 +362,17 @@ class DB_Address
     public function getClient()
     {
         return $this->client;
+    }
+    
+    public function checkAddressTypeExist($addressTypeId){
+        
+         $em = Zend_Registry::getInstance()->entitymanager;
+         $data = $em->getRepository('Address')->findByAddressType($addressTypeId);
+         if($data != null){
+             return true;
+         }else{
+             return false;
+         }
+        
     }
 }

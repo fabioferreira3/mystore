@@ -7,6 +7,13 @@ class Zend_Controller_Action_Helper_Paginator extends Zend_Controller_Action_Hel
    public function generate($curPage, $maxPages, $totalItems = null){
    		
    	$html = '';
+    
+    if(!$curPage){
+        $curPage = 1;
+    }
+    if(!$maxPages){
+        $maxPages = 1;
+    }
    	if($totalItems){
    			$html .= '<div class="well clearfix pull-right">' . $totalItems . ' registro(s) encontrado(s)</div>'; 
    		}
@@ -21,7 +28,7 @@ class Zend_Controller_Action_Helper_Paginator extends Zend_Controller_Action_Hel
    		for($i=1;$i<=$maxPages;$i++){
    			if($curPage == $i){$html .= '<li class="active">';}else{$html .= '<li>';}  	
    			$html .= '<a href="?page=' . $i . '">' . $i . '</a>';
-   			$html .='</li>';   				
+   			$html .='</li>';
    		}
    		
    		if($maxPages != $curPage){   		

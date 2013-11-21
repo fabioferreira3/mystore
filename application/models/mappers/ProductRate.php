@@ -58,6 +58,16 @@ class DB_ProductRate
      * })
      */
     private $client;
+    
+    /**
+     * @var Product
+     *
+     * @ManyToOne(targetEntity="DB_Product")
+     * @JoinColumns({
+     *   @JoinColumn(name="product_id", referencedColumnName="id")
+     * })
+     */
+    private $product;
 
 
 
@@ -179,5 +189,27 @@ class DB_ProductRate
     public function getClient()
     {
         return $this->client;
+    }
+    
+    /**
+     * Set product
+     *
+     * @param DB_Product $product
+     * @return ProductRate
+     */
+    public function setProduct(\DB_Product $product = null)
+    {
+        $this->product = $product;
+        return $this;
+    }
+
+    /**
+     * Get product
+     *
+     * @return DB_Product
+     */
+    public function getProduct()
+    {
+        return $this->product;
     }
 }

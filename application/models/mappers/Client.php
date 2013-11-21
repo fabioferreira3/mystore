@@ -3,6 +3,7 @@
 
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Tools\Pagination\Paginator as Paginator;
 
 /**
  * Client
@@ -83,6 +84,13 @@ class DB_Client
      * @Column(name="cnpj", type="string", length=14, nullable=true)
      */
     private $cnpj;
+    
+    /**
+     * @var $address
+     *
+     * @OneToMany(targetEntity="DB_Address", mappedBy="client")
+     */
+    private $address;
 
     /**
      * @var boolean $gender
@@ -252,6 +260,15 @@ class DB_Client
     	return $this->keyConfirm;
     }
     
+    /**
+     * Get address
+     *
+     * @return string
+     */
+    public function getAddress()
+    {
+        return $this->address;
+    }    
 
     /**
      * Set dateBirth
@@ -472,53 +489,32 @@ class DB_Client
     public function getStore()
     {
         return $this->store;
+    }
+    
+    public function getClient($perPage = null,$currentPage = null,$clientId = null){
+        
+        if(!$perPage){
+            $perPage = 1000;
+        }
+        if(!$currentPage){
+            $currentPage = 1;
+        }
+        
+        $em = Zend_Registry::getInstance()->entitymanager;
+        $query = $em->createQueryBuilder()->select('c')->from('DB_Client','c');
+        if($clientId){
+            $query->where('c.id = :clientId');
+            $query->setParameter('clientId',$clientId);
+        }        
+        $query->orderBy('c.id','DESC');
+        
+        $paginator = new Paginator($query);         
+        $paginator_iter = $paginator->getIterator();        
+        $adapter =  new \Zend_Paginator_Adapter_Iterator($paginator_iter);        
+        $data = new \Zend_Paginator($adapter);        
+        $data->setItemCountPerPage($perPage)->setCurrentPageNumber($currentPage);
+        
+        return $data;
     }    
     
-	public function getDataAddress($clientId = null, $addressType = null){
-    	
-    	$em = Zend_Registry::getInstance()->entitymanager;
-    	$data = $em->createQueryBuilder()->select(array('a','b'))->from('DB_Address','a');
-    	if($addressType){
-    		$data = $data->innerjoin('a.client','b','WITH','a.addressType = :addressType');
-    		$data->setParameters(array('addressType' => $addressType));
-    	}else{
-    		$data = $data->innerjoin('a.client','b','WITH','a.addressType = 3');
-    	}
-    	
-    	if($clientId){
-    	    $data->where('b.id = :clientId');
-            $data->setParameters(array('clientId' => $clientId));
-            $result = $data->getQuery()->getOneOrNullResult();
-    	}else{
-    	    $result = $data->getQuery()->getResult();
-    	}
-    	return $result; 
-    }
-    
-    public function getAllAddresses($clientId){
-    	$em = Zend_Registry::getInstance()->entitymanager;
-    	$data = $em->getRepository('DB_Address')->findByClient($clientId);
-    	foreach($data as $addresstype){
-    		if($addresstype->getAddressType()->getName() == 'Cobrança'){
-    			$address['billing-street'] = $addresstype->getStreet();
-    			$address['billing-number'] = $addresstype->getNumber();
-    			$address['billing-complement'] = $addresstype->getComplement();
-    			$address['billing-zip'] = $addresstype->getZip();
-    			$address['billing-country'] = $addresstype->getCountry()->getId();
-    			$address['billing-state'] = $addresstype->getState()->getId();
-    			$address['billing-state-name'] = $addresstype->getState()->getName();
-    			$address['billing-city'] = $addresstype->getCity();
-    		}else{
-    			$address['shipping-street'] = $addresstype->getStreet();
-    			$address['shipping-number'] = $addresstype->getNumber();
-    			$address['shipping-complement'] = $addresstype->getComplement();
-    			$address['shipping-zip'] = $addresstype->getZip();
-    			$address['shipping-country'] = $addresstype->getCountry()->getId();
-    			$address['shipping-state'] = $addresstype->getState()->getId();
-    			$address['shipping-state-name'] = $addresstype->getState()->getName();
-    			$address['shipping-city'] = $addresstype->getCity();
-    		}    		
-    	}    	
-    	return $address;
-    }
 }

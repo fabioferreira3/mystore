@@ -486,7 +486,11 @@ class DB_Product
      */
     public function getPrice()
     {
-    	return $this->price->getPrice();
+        if($this->price !== null){
+            return $this->price->getPrice();
+        }else{
+            return false;
+        }
     }
     
     /**
@@ -496,7 +500,11 @@ class DB_Product
      */
     public function getCurrentQty()
     {
-    	return $this->stock->getCurrentQty();
+    	if($this->stock !== null){
+            return $this->stock->getCurrentQty();
+        }else{
+            return false;
+        }
     }
     
     /**
@@ -710,5 +718,87 @@ class DB_Product
         $data->setItemCountPerPage($perPage)->setCurrentPageNumber($currentPage);     
         
         return $data;
+    }
+
+    public function destroy($productId){
+        
+        try{
+        $em = Zend_Registry::getInstance()->entitymanager;
+        
+        $product = $em->getRepository('DB_Product')->find($productId);
+        $related = $em->getRepository('DB_ProductRelated')->findByMainProduct($productId);
+        $price = $em->getRepository('DB_ProductPrices')->findByProduct($productId);
+        $range = $em->getRepository('DB_ProductPriceRange')->findByProduct($productId);
+        $attributes = $em->getRepository('DB_ProductAttributesValue')->findByProduct($productId);
+        $stock = $em->getRepository('DB_ProductStock')->findByProduct($productId);
+        $images = $em->getRepository('DB_ProductImages')->findByProduct($productId);
+        $meta = $em->getRepository('DB_ProductMeta')->findByProduct($productId);
+        $promotion = $em->getRepository('DB_ProductPromotion')->findByProduct($productId);
+        $views = $em->getRepository('DB_ProductViews')->findByProduct($productId);
+        $rate = $em->getRepository('DB_ProductRate')->findByProduct($productId);
+        $categoryProduct = $em->getRepository('DB_CategoryProducts')->findByProduct($productId);
+        
+        if($related != null){
+            foreach($related as $one){
+                $this->em->remove($one);
+            }                
+        }
+        if($price != null){
+            foreach($price as $one){
+                $em->remove($one);
+            }                
+        }
+        if($range != null){
+            foreach($range as $one){
+                $em->remove($one);
+            }                
+        }
+        if($attributes != null){
+            foreach($attributes as $one){
+                $em->remove($one);
+            }                
+        }
+        if($stock != null){
+            foreach($stock as $one){
+                $em->remove($one);
+            }                
+        }
+        if($images != null){
+            foreach($images as $one){
+                $em->remove($one);
+            }                
+        }
+        if($meta != null){
+            foreach($meta as $one){
+                $em->remove($one);
+            }                
+        }
+        if($promotion != null){
+            foreach($promotion as $one){
+                $em->remove($one);
+            }                
+        }
+        if($views != null){
+            foreach($views as $one){
+                $em->remove($one);
+            }                
+        }
+        if($rate != null){
+            foreach($rate as $one){
+                $em->remove($one);
+            }                
+        }
+        if($categoryProduct != null){
+            foreach($categoryProduct as $one){
+                $em->remove($one);
+            }                                      
+        }
+        if($product != null){
+            $em->remove($product);                            
+        }
+        $em->flush();
+            return true;
+        }
+        catch(Exception $e){return $e->getMessage();}
     }
 }

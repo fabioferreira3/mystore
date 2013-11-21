@@ -27,7 +27,7 @@ if (isset($this->msgError)){
 }?>
 
 
-<form method="post" action="/admin238/customer/edit/id/<?php echo $this->entity->getClient()->getId();?>" id="addCustomer">
+<form method="post" action="/admin238/customer/edit/id/<?php echo $this->entity->getId();?>" id="addCustomer">
     <h1 class="heading">Editar Cliente</h1>
     <div class="row-fluid">
         <div class="span6">
@@ -36,25 +36,25 @@ if (isset($this->msgError)){
             <div class="row-fluid">
                 <div class="span6">                
                     <label for="name">Nome: </label> 
-                    <input class="span12" type="text" value="<?php echo $this->entity->getClient()->getFirstName();?>" name="name" required />
+                    <input class="span12" type="text" value="<?php echo $this->entity->getFirstName();?>" name="name" required />
                 </div>
                 <div class="span6">
                 	<label for="lastname">Sobrenome: </label> 
-                	<input class="span12" type="text" value="<?php echo $this->entity->getClient()->getLastName();?>" name="lastname" required/>
+                	<input class="span12" type="text" value="<?php echo $this->entity->getLastName();?>" name="lastname" required/>
                 </div>
             </div>
             <div class="row-fluid">
             <div class="span6">
             <label for="vat">CPF: </label> 
-            <input class="span7" type="text" value="<?php echo $this->entity->getClient()->getCpf();?>" name="cpf" required/> 
+            <input class="span7" type="text" value="<?php echo $this->entity->getCpf();?>" name="cpf" required/> 
             <label for="birth">Data de Nascimento: </label>
-            <input class="span6" type="text" value="<?php echo $this->entity->getClient()->getDateBirth()->format('d-m-Y');?>" name="birth" required/> 
+            <input class="span6" type="text" value="<?php echo $this->entity->getDateBirth()->format('d-m-Y');?>" name="birth" required/> 
             </div>
             <div class="span6">
             <label for="gender">Sexo: </label> 
             <select class="span7" name="gender" required>
-                <option value="0"<?php if($this->entity->getClient()->getGender() == 0){echo 'selected';};?>>Masculino</option>
-                <option value="1"<?php if($this->entity->getClient()->getGender() != 0){echo 'selected';};?>>Feminino</option>
+                <option value="0"<?php if($this->entity->getGender() == 0){echo 'selected';};?>>Masculino</option>
+                <option value="1"<?php if($this->entity->getGender() != 0){echo 'selected';};?>>Feminino</option>
             </select>
             </div>
             </div>
@@ -62,7 +62,7 @@ if (isset($this->msgError)){
         <div class="span6">
             <h3 class="heading">Dados de Acesso</h3>
             <label for="email">Email: </label> 
-            <input type="text" value="<?php echo $this->entity->getClient()->getEmail();?>" class="span8" name="email" required/>
+            <input type="text" value="<?php echo $this->entity->getEmail();?>" class="span8" name="email" required/>
             <label for="password">Nova Senha: </label>
             <input type="password" class="span4" value="" name="password" /> 
             
@@ -83,59 +83,61 @@ if (isset($this->msgError)){
 						<h4 class="heading">Endereço de Cobrança</h4>
 						
 						<label>Logradouro:</label> 
-							<input class="span6" type="text" name="billing-address" value="<?php if(isset($this->addresses['billing-street'])){echo $this->addresses['billing-street'];};?>"/> 
+							<input class="span6" type="text" name="billing-address" value="<?= $this->billing->getStreet();?>"/> 
 						<label>Número:</label>
-							<input class="span1" type="text" name="billing-number" value="<?php if(isset($this->addresses['billing-number'])){echo $this->addresses['billing-number'];};?>"/> 
+							<input class="span1" type="text" name="billing-number" value="<?php if($this->billing->getNumber() !== null){echo $this->billing->getNumber();};?>"/> 
 						<label>Complemento:</label> 
-							<input class="span2" type="text" name="billing-complement" value="<?php if(isset($this->addresses['billing-complement'])){echo $this->addresses['billing-complement'];};?>"/> 
+							<input class="span2" type="text" name="billing-complement" value="<?php if($this->billing->getComplement() !== null){echo $this->billing->getComplement();};?>"/> 
 						<label>CEP:</label> 
-						<input class="span2" type="text" name="billing-zip" value="<?php if(isset($this->addresses['billing-zip'])){echo $this->addresses['billing-zip'];};?>"/>
+						<input class="span2" type="text" name="billing-zip" value="<?php if($this->billing->getZip() !== null){echo $this->billing->getZip();};?>"/>
 						<label>País:</label> 
 							<select class="span2" name="billing-country">
 								<option value="0">Escolha</option>
 								<?php foreach ($this->countries as $country){?>								
-								<option value="<?php echo $country->getId(); ?>" <?php if(isset($this->addresses['billing-country']) && $country->getId() == $this->addresses['billing-country']){echo 'selected';};?>>
-									<?php echo $country->getName(); ?>
+								<option value="<?= $country->getId(); ?>" <?php if($this->billing->getCountry()->getId() !== null && $country->getId() == $this->billing->getCountry()->getId()){echo 'selected';};?>>
+									<?= $country->getName(); ?>
 								</option>
 								<?php } ?>
 							</select>
 						<label>Estado:</label>
 							<select class="span2" type="text" name="billing-state">
-								<option value="<?php echo $this->addresses['billing-state'];?>"><?php echo $this->addresses['billing-state-name'];?></option>
+							    <?php if($this->billing->getState() !== null){?>
+								<option value="<?= $this->billing->getState()->getId();?>"><?= $this->billing->getState()->getName();?></option>
+							    <?php }?>
 							</select>
 							 
 						<label>Cidade:</label>
-							<input class="span3" type="text" name="billing-city" value="<?php echo $this->addresses['billing-city']?>"/> 
+							<input class="span3" type="text" name="billing-city" value="<?= $this->billing->getCity();?>"/> 
 						
 					</div>
 					<div id="tab_br2" class="tab-pane">
 						<h4 class="heading">Endereço de Entrega</h4>
 						<label class="checkbox"><input type="checkbox" name="same-address"/>Mesmo endereço de cobrança</label>						
 						<label for="address">Logradouro:</label> 
-							<input class="span6" type="text" name="shipping-address" value="<?php if(isset($this->addresses['shipping-street'])){echo $this->addresses['shipping-street'];};?>"/> 
+							<input class="span6" type="text" name="shipping-address" value="<?php if($this->shipping->getStreet() !== null){echo $this->shipping->getStreet();};?>"/> 
 						<label for="numer">Número:</label>
-							<input class="span1" type="text" name="shipping-number" value="<?php if(isset($this->addresses['shipping-number'])){echo $this->addresses['shipping-number'];};?>"/> 
+							<input class="span1" type="text" name="shipping-number" value="<?php if($this->shipping->getNumber() !== null){echo $this->shipping->getNumber();};?>"/> 
 						<label for="complement">Complemento:</label> 
-							<input class="span2" type="text" name="shipping-complement" value="<?php if(isset($this->addresses['shipping-complement'])){echo $this->addresses['shipping-complement'];};?>"/> 
+							<input class="span2" type="text" name="shipping-complement" value="<?php if($this->shipping->getComplement() !== null){echo $this->shipping->getComplement();};?>"/> 
 						<label for="zip">CEP:</label> 
-							<input class="span2" type="text" name="shipping-zip" value="<?php if(isset($this->addresses['shipping-zip'])){echo $this->addresses['shipping-zip'];};?>"/> 
+							<input class="span2" type="text" name="shipping-zip" value="<?php if($this->shipping->getZip() !== null){echo $this->shipping->getZip();};?>"/> 
 						<label for="country">País:</label> 
 							<select class="span2" name="shipping-country" >
 								<option value="0">Escolha</option>
 								<?php foreach ($this->countries as $country){?>
-								<option value="<?php echo $country->getId(); ?>" <?php if(isset($this->addresses['shipping-country']) && $country->getId() == $this->addresses['shipping-country']){echo 'selected';};?>>
-									<?php echo $country->getName(); ?>
-								</option>
+								<option value="<?= $country->getId(); ?>" <?php if($this->shipping->getCountry()->getId() !== null && $country->getId() == $this->shipping->getCountry()->getId()){echo 'selected';};?>>
+                                    <?= $country->getName(); ?>
+                                </option>
 								<?php } ?>
 							</select>
 						<label>Estado:</label>
 							<select class="span2" type="text" name="shipping-state">
-							<?php if (isset($this->addresses['shipping-state'])){?>
-								<option value="<?php echo $this->addresses['shipping-state'];?>"><?php echo $this->addresses['shipping-state-name'];?></option>
+							<?php if ($this->shipping->getState() !== null){?>
+								<option value="<?= $this->shipping->getState()->getId();?>"><?= $this->shipping->getState()->getName();?></option>
 							<?php }?>
 							</select> 
 						<label for="city">Cidade:</label>
-							<input class="span3" type="text" name="shipping-city" value="<?php if(isset($this->addresses['shipping-city'])){echo $this->addresses['shipping-city'];};?>"/> 
+							<input class="span3" type="text" name="shipping-city" value="<?php if($this->shipping->getCity() !== null){echo $this->shipping->getCity();};?>"/> 
 					</div>					
 				</div>
 				<button onclick="formSend()" class="btn btn-gebo">Salvar</button>

@@ -7,6 +7,7 @@ class Admin_CustomerController extends Zend_Controller_Action
     private $repo;
     
     public function init(){
+        
         $this->layout = Zend_Layout::getMvcInstance();
         $this->layout->setLayout('adminLayout');
         $this->em = $this->_helper->EM->em();
@@ -22,8 +23,11 @@ class Admin_CustomerController extends Zend_Controller_Action
     
     public function indexAction(){
         try{
+      
          $tbClient = new DB_Client();
-         $this->view->clients = $tbClient->getDataAddress();
+         $clients = $tbClient->getClient();
+      //   Zend_Debug::dump($clients);exit;
+         $this->view->clients = $clients;
         }
         catch(Exception $e){echo $e->getMessage();exit;}
     }
@@ -164,11 +168,26 @@ class Admin_CustomerController extends Zend_Controller_Action
     }
     
     public function editAction(){
+        
         $params = $this->getRequest()->getParams();
-        $clientId = $params['value'];        
-        $tbClient = new DB_Client();        
-        $this->view->entity = $tbClient->getDataAddress($clientId);
-        $this->view->addresses = $tbClient->getAllAddresses($clientId);
+        $clientId = $params['value'];
+        $tbClient = new DB_Client();
+        $client = $this->repo->db('Client')->find($clientId);
+        $this->view->entity = $client;    
+        foreach($client->getAddress() as $address){            
+            if($address->getAddressType()->getId() == 2){
+                $shippingAddress = $address;
+            }else if($address->getAddressType()->getId() == 3){
+                $billingAddress = $address;
+            }
+        }
+        if(isset($shippingAddress) && $shippingAddress){
+            $this->view->shipping = $shippingAddress;
+        }
+        if(isset($billingAddress) && $billingAddress){
+            $this->view->billing = $billingAddress;
+        }
+      
         $countries = $this->repo->db('Country')->findAll();
         $this->view->countries = $countries;
         try{
@@ -185,9 +204,9 @@ class Admin_CustomerController extends Zend_Controller_Action
         	if($postvars['password'] != ''){
         		$clientEntity->setPassword(hash('sha256',$postvars['password']));
         	}        	
-        	$billingAddress = $tbClient->getDataAddress($clientId,3);
+        	$billingAddress = $tbClient(checkAddressTypeExist(3));
         	
-        	if($billingAddress != null){
+        	if($billingAddress != false){
         		$billingAddress->setStreet($postvars['billing-address']);
         		$billingAddress->setNumber($postvars['billing-number']);
         		$billingAddress->setComplement($postvars['billing-complement']);
