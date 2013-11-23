@@ -659,6 +659,28 @@ class DB_Client
             Zend_Controller_Action_HelperBroker::getStaticHelper('flashMessenger')->addMessage('Cliente cadastrado com sucesso!','success');
             return true;      
     }
+    
+    public function getClientsByFilter(array $params){
+    	
+    	$perPage = 1000;
+    	$currentPage = 1;
+    	
+    	$em = Zend_Registry::getInstance()->entitymanager;
+    	$query = $em->createQueryBuilder()->select('c')->from('DB_Client','c');
+    	if(isset($params['searchName']) && $params['searchName']){
+    		$query->where('c.firstName LIKE :name');
+    		$query->orWhere('c.lastName LIKE :name');
+    		$query->setParameter('name','%'.$params['searchName'].'%');
+    	}
+    	
+    	$paginator = new Paginator($query);
+    	$paginator_iter = $paginator->getIterator();
+    	$adapter =  new \Zend_Paginator_Adapter_Iterator($paginator_iter);
+    	$data = new \Zend_Paginator($adapter);
+    	$data->setItemCountPerPage($perPage)->setCurrentPageNumber($currentPage);
+    	
+    	return $data;
+    }
      
     
 }

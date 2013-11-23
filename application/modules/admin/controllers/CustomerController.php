@@ -22,9 +22,18 @@ class Admin_CustomerController extends Zend_Controller_Action
     }
     
     public function indexAction(){
-        try{      
-            $tbClient = new DB_Client();
-            $clients = $tbClient->getClient();
+        try{   
+
+        	$params = $this->getRequest()->getParams();
+        	if(isset($params['page'])){$curPage = $params['page'];}
+        	else{$curPage = 1;}
+        	
+        	$tbClient = new DB_Client();            
+            $maxItemsPerPage = 20;
+            $clients = $tbClient->getClient($maxItemsPerPage,$curPage);
+            $totalItems = $clients->getTotalItemCount();
+            $maxPages = ceil($totalItems / $maxItemsPerPage);
+            $this->view->pagination = $this->_helper->Paginator->generate($curPage,$maxPages,$totalItems);
             $this->view->clients = $clients;
         }
         catch(Exception $e){echo $e->getMessage();exit;}
@@ -118,14 +127,36 @@ class Admin_CustomerController extends Zend_Controller_Action
     public function callStatesAction(){
     	$params = $this->getRequest()->getParams();
     	$countryId = $params['country'];
-   	try{
-    	$states = $this->repo->db('State')->findByCountry($countryId);
-    	foreach ($states as $state){
-    		echo '<option value=' . $state->getId() . '>' . $state->getName() . '</option>';
+	   	try{
+	    	$states = $this->repo->db('State')->findByCountry($countryId);
+	    	foreach ($states as $state){
+	    		echo '<option value=' . $state->getId() . '>' . $state->getName() . '</option>';
+	    	}
+	    	exit;
+	   	}
+	    catch(Exception $e){echo $e->getMessage();}
+    }
+    
+    public function filterAction(){
+    	try{
+    		$params = $this->getRequest()->getParams();
+    		$tbClient = new DB_Client();
+    
+    		$results = $tbClient->getClientsByFilter($params);
+    	 //   Zend_Debug::dump($results);exit;
+    
+    		if($results != null){
+    			$data = array();
+    			$data['maker'] = $this->_helper->ClientTableMaker->create(false,true,$results);
+    			$data['pagination'] = $this->_helper->Paginator->generate(false,false,$results->getTotalItemCount());
+    			echo json_encode($data);
+    		}else{
+    			$maker = $this->_helper->ClientTableMaker->create(false,true,false);
+    			echo json_encode($maker);
+    		}
+    		exit;
     	}
-    	exit;
-   	}
-    catch(Exception $e){echo $e->getMessage();}
+    	catch(Exception $e){echo json_encode($e->getMessage());exit;}
     }
     
     
