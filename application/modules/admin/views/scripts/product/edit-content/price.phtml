@@ -5,9 +5,9 @@
 		<label>Preço Promocional</label>R$
 		<input type="text" class="span4 moneyme" name="promotional_price" value="<?php if($this->promotion){echo $this->promotion->getPrice();}?>"/>
 		<label>Promoção De:</label>
-		<input type="text" class="span4 dateme" name="promotion_since" value="<?php if($this->promotion && $this->promotion->getDateFrom()){echo $this->promotion->getDateFrom()->format('d/m/Y');}?>"/>
+		<input type="text" class="span4 date" name="promotion_since" value="<?php if($this->promotion && $this->promotion->getDateFrom()){echo $this->promotion->getDateFrom()->format('d/m/Y');}?>"/>
 		<label>Promoção Até:</label>
-		<input type="text" class="span4 dateme" name="promotion_until" value="<?php if($this->promotion && $this->promotion->getDateTo()){echo $this->promotion->getDateTo()->format('d/m/Y');}?>"/>
+		<input type="text" class="span4 date" name="promotion_until" value="<?php if($this->promotion && $this->promotion->getDateTo()){echo $this->promotion->getDateTo()->format('d/m/Y');}?>"/>
 	</div>
 	<div class="span8">		
 		<div class="row-fluid">

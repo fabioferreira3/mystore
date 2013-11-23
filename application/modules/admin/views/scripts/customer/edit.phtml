@@ -48,7 +48,7 @@ if (isset($this->msgError)){
             <label for="vat">CPF: </label> 
             <input class="span7" type="text" value="<?php echo $this->entity->getCpf();?>" name="cpf" required/> 
             <label for="birth">Data de Nascimento: </label>
-            <input class="span6" type="text" value="<?php echo $this->entity->getDateBirth()->format('d-m-Y');?>" name="birth" required/> 
+            <input class="span6 date" type="text" value="<?php echo $this->entity->getDateBirth()->format('d-m-Y');?>" name="birth" required/> 
             </div>
             <div class="span6">
             <label for="gender">Sexo: </label> 

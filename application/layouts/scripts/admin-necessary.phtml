@@ -3,7 +3,8 @@
             <link rel="stylesheet" href="<?php echo $this->baseUrl();?>/assets/admin/bootstrap/css/bootstrap-responsive.min.css" />
         <!-- tooltips-->
             <link rel="stylesheet" href="<?php echo $this->baseUrl();?>/assets/admin/lib/qtip2/jquery.qtip.min.css" />
-        
+        <!-- datepicker-->
+         	<link rel="stylesheet" href="<?php echo $this->baseUrl();?>/assets/admin/lib/datepicker/datepicker.css" />
         <!-- gebo color theme-->
             <link rel="stylesheet" href="<?php echo $this->baseUrl();?>/assets/admin/css/custom.css" id="link_theme" />
         <!-- main styles -->
@@ -50,7 +51,7 @@
             <!-- scrollbar -->
             <script src="<?php echo $this->baseUrl();?>/assets/admin/lib/antiscroll/antiscroll.js"></script>
             <script src="<?php echo $this->baseUrl();?>/assets/admin/lib/antiscroll/jquery-mousewheel.js"></script>
-           <script src="<?php echo $this->baseUrl();?>/assets/admin/lib/UItoTop/jquery.ui.totop.min.js"></script> 
+            <script src="<?php echo $this->baseUrl();?>/assets/admin/lib/UItoTop/jquery.ui.totop.min.js"></script> 
             
             <!-- mobile nav -->
             <script src="<?php echo $this->baseUrl();?>/assets/admin/js/selectNav.js"></script>
@@ -64,6 +65,9 @@
             <script src="<?php echo $this->baseUrl();?>/assets/admin/lib/colorbox/jquery.colorbox.min.js"></script>
             <!-- datatable -->
             <script src="<?php echo $this->baseUrl();?>/assets/admin/lib/datatables/jquery.dataTables.min.js"></script>
+            <!-- datepicker-->
+         	<script src="<?php echo $this->baseUrl();?>/assets/admin/lib/datepicker/bootstrap-datepicker.min.js"></script>
+         	<script src="<?php echo $this->baseUrl();?>/assets/admin/lib/datepicker/locales/bootstrap-datepicker.br.js"></script>
             <!-- additional sorting for datatables -->
             <script src="<?php echo $this->baseUrl();?>/assets/admin/lib/datatables/jquery.dataTables.sorting.js"></script>
             <script src="<?php echo $this->baseUrl();?>/assets/admin/lib/datatables/extras/TableTools/media/js/TableTools.min.js"></script>
@@ -101,4 +105,20 @@
                 <script src="<?php echo $this->baseUrl();?>/assets/admin/js/jquery.fileupload-ui.js"></script>
                 <script src="<?php echo $this->baseUrl();?>/assets/admin/js/main.js"></script>
             <?php }?>
+            
+            <script type="text/javascript">
+            $(document).ready(function(){
+            	
+            	gebo_datepicker = {
+	        			init: function() {	        
+	        				;				
+	        				$('.date').datepicker({format: "dd/mm/yyyy"},{language:"pt-BR"}).on('changeDate',function(ev){
+	        					$('.datepicker').hide();
+	        					});			
+	        			}
+	        		};
+	
+	        	gebo_datepicker.init();
+            });
+            </script>
            

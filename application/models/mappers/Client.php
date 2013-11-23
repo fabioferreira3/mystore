@@ -667,10 +667,39 @@ class DB_Client
     	
     	$em = Zend_Registry::getInstance()->entitymanager;
     	$query = $em->createQueryBuilder()->select('c')->from('DB_Client','c');
-    	if(isset($params['searchName']) && $params['searchName']){
-    		$query->where('c.firstName LIKE :name');
+    	$query->innerjoin('c.address','ad','WITH','c.id = ad.client');
+    	if(isset($params['status']) && $params['status']){
+    		$query->where('c.status = :status');
+    		$query->setParameter('status',$params['status']);
+    	}
+    	if(isset($params['name']) && $params['name']){
+    		$query->andWhere('c.firstName LIKE :name');
     		$query->orWhere('c.lastName LIKE :name');
-    		$query->setParameter('name','%'.$params['searchName'].'%');
+    		$query->setParameter('name','%'.$params['name'].'%');
+    	}
+    	if(isset($params['email']) && $params['email']){
+    		$query->andWhere('c.email LIKE :email');
+    		$query->setParameter('email','%'.$params['email'].'%');
+    	}
+    	if(isset($params['state']) && $params['state']){
+    		$query->innerjoin('ad.state','st','WITH','st.name LIKE :state');
+    		$query->setParameter('state','%'.$params['state'].'%');
+    	}
+    	if(isset($params['country']) && $params['country']){
+    		$query->innerjoin('ad.country','ct','WITH','ct.name LIKE :country');
+    		$query->setParameter('country','%'.$params['country'].'%');
+    	}
+    	if(isset($params['dateSince']) && $params['dateSince']){ 
+    		$dateSince = str_replace('/','-',$params['dateSince']); 
+    		$dateSince = new DateTime($dateSince);  		
+    		$query->andWhere('c.dateCreate >= :dateSince');
+    		$query->setParameter('dateSince',$dateSince->format('Y-m-d'));
+    	}
+    	if(isset($params['lastLogin']) && $params['lastLogin']){
+    		$lastLogin = str_replace('/','-',$params['lastLogin']);
+    		$lastLogin = new DateTime($lastLogin);
+    		$query->andWhere('c.lastLogin >= :lastLogin');
+    		$query->setParameter('lastLogin',$lastLogin->format('Y-m-d'));
     	}
     	
     	$paginator = new Paginator($query);

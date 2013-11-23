@@ -226,7 +226,6 @@ if (isset($this->msgError)){
         
         $('#gap_form').wrap('<form id="productForm" action="/admin238/product/add?product_id=<?= $this->productId; ?>" method="post" ></form>');
         
-        $('.dateme').mask('00/00/0000');
         $('.moneyme').mask('000.000.000.000.000,00', {
             reverse : true
         });
