@@ -27,7 +27,17 @@ class Zend_Controller_Action_Helper_ClientTableMaker extends Zend_Controller_Act
            		 $html.='<td>'. $row->getDateCreate()->format('d/m/Y') .'</td>';
            		 $html.='<td>'. $lastLogin .'</td>';
            		 $html.='<td>' . $status .'</td>';
-           		 $html.='<td><a href="/admin238/customer/edit/id/'. $row->getId() .'" class="sepV_a" title="Editar"><i class="icon-pencil"></i></a></td>';
+           		 $html.='<td>
+           		 		<a href="/admin238/customer/edit/id/'. $row->getId() .'" class="sepV_a" title="Editar">
+           		 				<i class="icon-pencil"></i>           		 		</a>';
+           		 if($row->getStatus() != 0){$html.='<a href="/admin238/customer/disable/id/'. $row->getId() .'" title="Desativar">                        
+                            <i class="splashy-gem_remove"></i>                          
+                        </a>';}else{
+                        $html.=' <a href="/admin238/customer/enable/id/'. $row->getId() .'" title="Ativar">
+                            <i class="splashy-okay"></i>
+                        </a>';
+           		 			  }	
+                 $html.='</td>';
                  $html.= "</tr>";
             }
         }

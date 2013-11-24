@@ -3,14 +3,15 @@
 
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Tools\Pagination\Paginator as Paginator;
 
 /**
  * Order
  *
- * @Table(name="order")
+ * @Table(name="orders")
  * @Entity
  */
-class DB_Order
+class DB_Orders
 {
     /**
      * @var integer $id
@@ -60,11 +61,11 @@ class DB_Order
     private $store;
 
     /**
-     * @var Order
+     * @var OrderStatus
      *
-     * @ManyToOne(targetEntity="DB_Order")
+     * @ManyToOne(targetEntity="DB_OrderStatus")
      * @JoinColumns({
-     *   @JoinColumn(name="order_status_id", referencedColumnName="order_status_id")
+     *   @JoinColumn(name="order_status_id", referencedColumnName="id")
      * })
      */
     private $orderStatus;
@@ -80,17 +81,12 @@ class DB_Order
     private $client;
     
     /**
-     * @var PaymentType
+     * @var string $value
      *
-     * @ManyToOne(targetEntity="DB_PaymentTypes")
-     * @JoinColumns({
-     *   @JoinColumn(name="payment_type_id", referencedColumnName="id")
-     * })
+     * @Column(name="value", type="string", nullable=true)
      */
-    private $paymentType;
-
-
-
+    private $value;
+    
     /**
      * Get id
      *
@@ -105,7 +101,7 @@ class DB_Order
      * Set orderCod
      *
      * @param string $orderCod
-     * @return Order
+     * @return Orders
      */
     public function setOrderCod($orderCod)
     {
@@ -127,7 +123,7 @@ class DB_Order
      * Set dateCreate
      *
      * @param datetime $dateCreate
-     * @return Order
+     * @return Orders
      */
     public function setDateCreate($dateCreate)
     {
@@ -149,7 +145,7 @@ class DB_Order
      * Set dateUpd
      *
      * @param datetime $dateUpd
-     * @return Order
+     * @return Orders
      */
     public function setDateUpd($dateUpd)
     {
@@ -171,7 +167,7 @@ class DB_Order
      * Set emailSent
      *
      * @param boolean $emailSent
-     * @return Order
+     * @return Orders
      */
     public function setEmailSent($emailSent)
     {
@@ -193,7 +189,7 @@ class DB_Order
      * Set store
      *
      * @param DB_Store $store
-     * @return Order
+     * @return Orders
      */
     public function setStore(\DB_Store $store = null)
     {
@@ -214,10 +210,10 @@ class DB_Order
     /**
      * Set orderStatus
      *
-     * @param DB_Order $orderStatus
-     * @return Order
+     * @param DB_Orders $orderStatus
+     * @return Orders
      */
-    public function setOrderStatus(\DB_Order $orderStatus = null)
+    public function setOrderStatus(\DB_Orders $orderStatus = null)
     {
         $this->orderStatus = $orderStatus;
         return $this;
@@ -226,7 +222,7 @@ class DB_Order
     /**
      * Get orderStatus
      *
-     * @return DB_Order 
+     * @return DB_Orders 
      */
     public function getOrderStatus()
     {
@@ -237,7 +233,7 @@ class DB_Order
      * Set client
      *
      * @param DB_Client $client
-     * @return Order
+     * @return Orders
      */
     public function setClient(\DB_Client $client = null)
     {
@@ -255,25 +251,61 @@ class DB_Order
         return $this->client;
     }
     
-    /**
-     * Set paymentType
+ /**
+     * Set value
      *
-     * @param DB_PaymentTypes $paymentType
-     * @return 
+     * @param string $value
+     * @return Orders
      */
-    public function setPaymentType(\DB_PaymentTypes $paymentType = null)
+    public function setValue($value)
     {
-        $this->paymentType = $paymentType;
+        $this->value = $value;
         return $this;
     }
 
     /**
-     * Get paymentType
+     * Get value
      *
-     * @return DB_PaymentTypes 
+     * @return string 
      */
-    public function getPaymentType()
+    public function getValue()
     {
-        return $this->paymentType;
+        return $this->value;
     }
+    
+    public function getOrders(array $params = null){
+    	
+    	$em = Zend_Registry::getInstance()->entitymanager;
+    	$query = $em->createQueryBuilder();
+    	$query->select('o')->from('DB_Orders','o');
+    	return $query->getQuery()->getResult();
+    	if(isset($params['orderId']) && $params['orderId'] != ''){
+    		$query->where('o.id > 0');
+    	}
+    	if(isset($params['perPage'])){
+    		$perPage = $params['perPage'];
+    	}else{
+    		$perPage = 100;
+    	}
+    	if(isset($params['currentPage'])){
+    		$currentPage = $params['currentPage'];
+    	}else{
+    		$currentPage = 1;
+    	}
+    	
+    	$paginator = new Paginator($query);
+    	$paginator_iter = $paginator->getIterator();
+    	$adapter =  new \Zend_Paginator_Adapter_Iterator($paginator_iter);
+    	$data = new \Zend_Paginator($adapter);
+    	$data->setItemCountPerPage($perPage)->setCurrentPageNumber($currentPage);
+    	
+    	return $data;
+    	
+    }
+    
+    public function generateTable($data){
+    	
+    }
+    
+    
 }
