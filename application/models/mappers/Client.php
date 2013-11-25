@@ -710,6 +710,68 @@ class DB_Client
     	
     	return $data;
     }
+    
+    public function generateTable($data,array $conditions = null){
+    	
+    	if(isset($conditions['dates']) && $conditions['dates'] === false){
+    		$condDates = false;
+    	}else{
+    		$condDates = true;
+    	}
+    	if(isset($conditions['selectType']) && $conditions['selectType'] === 'radio'){
+    		$condSelect = 'radio';
+    	}else{
+    		$condSelect = 'checkbox';
+    	}
+    	if(isset($conditions['status']) && $conditions['status'] === false){
+    		$condStatus = false;
+    	}else{
+    		$condStatus = true;
+    	}
+    	if(isset($conditions['actions']) && $conditions['actions'] === false){
+    		$condActions = false;
+    	}else{
+    		$condActions = true;
+    	}
+    	$html = '';
+    	    	
+    	if($data){
+    		foreach($data as $row){
+    			if($row->getStatus() == 0){$status = 'Inativo';}else{$status = 'Ativo';}
+    			if($row->getLastLogin() !== null){$lastLogin = $row->getLastLogin()->format('d/m/Y');}else{$lastLogin = '';}
+    			$html.='<tr>';
+    			$html.='<td><input type="'.$condSelect.'" name="row_sel" class="row_sel" /></td>';
+    			$html.='<td>'. $row->getFirstName() . ' ' . $row->getLastName() .'</td>';
+    			$html.='<td>'. $row->getEmail() .'</td>';
+    			$html.='<td>'. $row->getAddress()[0]->getState()->getName() .'</td>';
+    			$html.='<td>'. $row->getAddress()[0]->getCountry()->getName() .'</td>';
+    			if($condDates){
+    				$html.='<td>'. $row->getDateCreate()->format('d/m/Y') .'</td>';
+    				$html.='<td>'. $lastLogin .'</td>';
+    			}
+    			if($condStatus){
+    				$html.='<td>' . $status .'</td>';
+    			}    
+    			if($condActions){			
+	    			$html.='<td>
+	           		 		<a href="/admin238/customer/edit/id/'. $row->getId() .'" class="sepV_a" title="Editar">
+	           		 				<i class="icon-pencil"></i>           		 		</a>';
+	    			if($row->getStatus() != 0){$html.='<a href="/admin238/customer/disable/id/'. $row->getId() .'" title="Desativar">
+	                            <i class="splashy-gem_remove"></i>
+	                        </a>';}else{
+	    	                        $html.=' <a href="/admin238/customer/enable/id/'. $row->getId() .'" title="Ativar">
+	                            <i class="splashy-okay"></i>
+	                        </a>';
+	    			}
+    			}
+    			$html.='</td>';
+    			$html.= "</tr>";
+    		}
+    	}
+    	
+    	return $html;
+    	
+    }
      
     
 }

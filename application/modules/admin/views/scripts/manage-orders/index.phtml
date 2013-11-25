@@ -27,7 +27,7 @@ if (isset($this->msgError)){
 
 <div class="row-fluid">
 	<div class="span12">
-		<h1 class="heading">Gerenciar Pedidos<button class="btn add-new"><a href="/admin238/manage-orders/add">Criar Pedido</a></button></h1>
+		<h1 class="heading">Gerenciar Pedidos<button class="btn add-new">Criar Pedido</button></h1>
 		<div class="row-fluid">
 			<div class="span2">
 				<div class="dt_actions">
@@ -56,15 +56,17 @@ if (isset($this->msgError)){
 				<tr>
 					<th class="table_checkbox"><input type="checkbox"
                         name="select_rows" class="select_rows" data-tableid="dt_gal" /></th>
-					<th class="span2">Pedido</th>
+                    <th class="span1">ID</th>
+					<th class="span1">Pedido</th>
+					<th class="span1">Cliente</th>
 					<th class="span1">Data</th>
-					<th class="span1">Atualizado</th>
-					<th class="span2">Cliente</th>
+					<th class="span1">Atualizado</th>					
 					<th class="span1">Valor</th>
 					<th class="span2">Status</th>
 					<th class="span1">Ação</th>
 				</tr>
 				<tr>
+					<th></th>
 					<th></th>
 					<th><input type="text" class="span12" name="searchOrder" placeholder="Pedido..."/></th>
 					<th><input type="text" class="span12 date" name="searchDate" placeholder="Data..."/></th>
@@ -83,36 +85,49 @@ if (isset($this->msgError)){
 					<th><button class="btn btn-gebo" id="search">Buscar</button></th>
 				</tr>
 			</thead>
-			<tbody>
-				<?php foreach($this->orders as $order){
-					$status = $order->getOrderStatus()->getId();
-					$actions = '';				
-					$status = 3;
-				if($status === 1 || $status === 2 || $status === 4){
-					if($status === 1 || $status === 4){
-						$actions .= '<button class="btn span12">Aprovar</button>';
-					}
-					if($status === 2){
-						$actions .= '<button class="btn span12">Enviar</button>';
-					}
-					$actions .= '<button class="btn span12">Cancelar</button>';
-				}
-				if($status === 3 || $status === 5){
-					$actions .= '<button class="btn span12">Recomprar</button>';
-				}
-				?>
-				<tr>
-					<td></td>
-					<td>#<?= $order->getOrderCod(); ?></td>
-					<td><?= $order->getDateCreate()->format('d/m/Y - H:i');?></td>
-					<td><?= $order->getDateUpd()->format('d/m/Y - H:i');?></td>
-					<td><?= $order->getClient()->getFirstName() . ' ' . $order->getClient()->getLastName(); ?></td>
-					<td>R$ <?= $order->getValue(); ?></td>
-					<td><?= $order->getOrderStatus()->getName(); ?></td>
-					<td><?= $actions;?></td>
-				</tr>
-				<?php }?>
-			</tbody>
+			<?= $this->table; ?>
 		</table>
+		<div class="row-fluid paginator">
+			<?php echo $this->pagination;?>
+		</div>
 	</div>
 </div>
+
+<script type="text/javascript">
+	$('button.add-new').on('click',function(){
+		 var accept = confirm('Deseja criar um novo pedido?');
+		 if(accept){
+			 window.location.replace("/admin238/manage-orders/add?create"); 
+		 }else{
+			 e.preventDefault();
+			 return false;
+		 }
+	});
+	$('button.confirm').on('click',function(){
+		
+	});	
+	$('button.cancel').on('click',function(){
+		
+	});
+	$('button.rebuy').on('click',function(){
+		
+	});
+	$('button.edit').on('click',function(){
+		
+	});
+	$('button.remove').on('click',function(e){
+		 var accept = confirm('Deseja mesmo remover este pedido?');
+		 if(accept){
+			 var orderId = $(this).attr('value'); 
+			 window.location.replace("/admin238/manage-orders/remove?orderid=" + orderId); 
+		 }else{
+			 e.preventDefault();
+			 return false;
+		 }
+		 
+	});
+	$('button.send').on('click',function(){
+		
+	});
+		
+</script>

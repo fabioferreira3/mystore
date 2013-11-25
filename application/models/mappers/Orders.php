@@ -210,10 +210,10 @@ class DB_Orders
     /**
      * Set orderStatus
      *
-     * @param DB_Orders $orderStatus
+     * @param DB_OrdersStatus $orderStatus
      * @return Orders
      */
-    public function setOrderStatus(\DB_Orders $orderStatus = null)
+    public function setOrderStatus(\DB_OrderStatus $orderStatus = null)
     {
         $this->orderStatus = $orderStatus;
         return $this;
@@ -278,7 +278,7 @@ class DB_Orders
     	$em = Zend_Registry::getInstance()->entitymanager;
     	$query = $em->createQueryBuilder();
     	$query->select('o')->from('DB_Orders','o');
-    	return $query->getQuery()->getResult();
+    	
     	if(isset($params['orderId']) && $params['orderId'] != ''){
     		$query->where('o.id > 0');
     	}
@@ -304,6 +304,75 @@ class DB_Orders
     }
     
     public function generateTable($data){
+    	
+    	$html = '';
+    	$html .='<tbody>';
+    	foreach($data as $order){
+    		$status = $order->getOrderStatus()->getId();
+    		$orderId = $order->getId();
+    		if($order->getClient() !== null ){;
+    			$name = $order->getClient()->getFirstName() . ' ' . $order->getClient()->getLastName();
+    		}else{
+    			$name = '';
+    		}
+    		$actions = '';
+    		if($status === 1 || $status === 2 || $status === 4){
+    			if($status === 1 || $status === 4){
+    				$actions .= '<button value="'. $orderId . '" class="btn span12 confirm">Aprovar</button>';
+    			}
+    			if($status === 2){
+    				$actions .= '<button value="'. $orderId . '" class="btn span12 send">Enviar</button>';
+    			}
+    			$actions .= '<button value="'. $orderId . '" class="btn span12 cancel">Cancelar</button>';
+    		}
+    		if($status === 3 || $status === 5){
+    			$actions .= '<button value="'. $orderId . '" class="btn span12 rebuy">Recomprar</button>';
+    		}
+    		if($status === 7){
+    			$actions .= '<button value="'. $orderId . '" class="btn span12 edit">Editar</button>';
+    			$actions .= '<button value="'. $orderId . '" class="btn span12 remove">Excluir</button>';
+    		}
+    		$html.=			'<tr>
+    						<td><input type="checkbox" value="'. $order->getId() .'"/></td>';
+    		$html.=			'<td>'. $order->getId() .'</td>';
+    		$html.=			'<td>#'. $order->getOrderCod() .'</td>';
+    		$html.=			'<td>'. $name .'</td>';
+    		$html.=			'<td>'. $order->getDateCreate()->format('d/m/Y - H:i') .'</td>';
+    		$html.=			'<td>'. $order->getDateUpd()->format('d/m/Y - H:i') .'</td>';    		
+    		$html.=			'<td>R$ '. $order->getValue() .'</td>';
+    		$html.=			'<td>'. $order->getOrderStatus()->getName() .'</td>';
+    		$html.=			'<td>'. $actions .'</td>';
+    		$html.=			'</tr>';
+    		$html.=			'</tbody>';    					 
+    	}
+    	
+    	return $html;
+    				
+    }
+    
+    public function getLastOrderCod(){
+    	
+    	$em = Zend_Registry::getInstance()->entitymanager;
+    	$query = $em->createQueryBuilder();
+    	$query->select('o')->from('DB_Orders','o');
+    	$query->orderBy('o.id', 'DESC');
+    	$query->setMaxResults('1');
+    	
+    	return $query->getQuery()->getSingleResult()->getOrderCod();
+    }
+    
+    public function destroy($orderId){
+    	
+    	$em = Zend_Registry::getInstance()->entitymanager;
+    	$order = $em->getRepository('DB_Orders')->find($orderId);
+    	
+    	if($order->getOrderStatus()->getId() === 7){    		
+	    	$em->remove($order);
+	    	$em->flush();
+	    	return true;
+    	}else{
+    		return false;
+    	}	
     	
     }
     
