@@ -138,16 +138,28 @@ class Admin_CustomerController extends Zend_Controller_Action
     }
     
     public function filterAction(){
+    	
     	try{
     		$params = $this->getRequest()->getParams();
     		$tbClient = new DB_Client();
     
     		$results = $tbClient->getClientsByFilter($params);
-    	 //   Zend_Debug::dump($results);exit;
-    
+    		$conditions = array();
+    		if(isset($params['actions'])){
+    			$conditions['actions'] = false;
+    		}
+    		if(isset($params['dates'])){
+    			$conditions['dates'] = false;
+    		}
+    		if(isset($params['selectType'])){
+    			$conditions['selectType'] = $params['selectType'];
+    		}
+    	
+    //	    Zend_Debug::dump($conditions);exit;
+    		
     		if($results != null){
-    			$data = array();
-    			$data['maker'] = $this->_helper->ClientTableMaker->create(false,true,$results);
+    			$data = array();    			
+    			$data['maker'] = $tbClient->generateTable($results,$conditions);
     			$data['pagination'] = $this->_helper->Paginator->generate(false,false,$results->getTotalItemCount());
     			echo json_encode($data);
     		}else{

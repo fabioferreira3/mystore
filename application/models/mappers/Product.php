@@ -801,4 +801,74 @@ class DB_Product
         }
         catch(Exception $e){return $e->getMessage();}
     }
+    
+    public function generateTable($params,array $conditions = null){
+    	
+    	$html = '';    	
+    	
+    	if($params){
+    		foreach($params as $row){
+    			
+    			// Define o url path do thumbnail do produto 
+    			if ($row->getImages()[0] !== null && $row->getImages()[0]){
+    				$imagePath = '/images/catalog/' . $row->getId() . '/' . $row->getImages()[0]->getName();
+    				$thumbPath = '/images/catalog/' . $row->getId() . '/thumbnail/' . $row->getImages()[0]->getName();
+    			};
+    			
+    			// Se existir preço cadastrado, mostra-o
+    			if($row->getPrice() !== null && $row->getPrice()){
+    				$price = 'R$' . $row->getPrice();
+    			}
+    			$editUrl = '/admin238/product/edit?product_id=' . $row->getId();
+    			if($row->getStatus() == '1'){
+    				$status = '<a href="/admin238/product/disable?product_id='.$row->getId().'">
+                     <i class="splashy-gem_okay"></i>Ativo';}else{
+    	                     $status = '<a href="/admin238/product/enable?product_id='.$row->getId().'"><i class="splashy-gem_remove"></i>Desabilitado</a>';}
+    	                     $html.= "<tr class='result'>";
+    	                     
+    	                     // Mostra ou oculta select do produto
+    	                     if(!isset($conditions['noselect'])){
+    	                     	$html.= "<td>" . '<input type="checkbox" name="row_sel" class="row_sel" value="' . $row->getId() . '"/></td>';
+    	                     }
+    	                     // Mostra ou oculta o id do produto    	                     
+    	                     if(!isset($conditions['noid'])){
+    	                     	$html.= "<td>" . $row->getId() . "</td>";
+    	                     }
+    	                     
+    	                     // Mostra ou oculta a thumbnail do produto
+    	                     if(!isset($conditions['noimage'])){
+    	                     	$html.= "<td style='width: 60px'><a href='" . $imagePath . "' title='' class='cbox_single thumbnail'> <img alt='' src='" . $thumbPath . "' style='height: 50px; width: 50px'></a></td>";
+    	                     }
+    	                     
+    	                     $html.= "<td>" . $row->getName() . "</td>";
+    	                     $html.= "<td>" . $row->getSku() . "</td>";
+    	                     $html.= "<td>" . $price . "</td>";
+    	                     $html.= "<td>" . $row->getCurrentQty() . "</td>";
+    	                     
+    	                     // Mostra ou oculta o status do produto
+    	                     if(!isset($conditions['nostatus'])){
+    	                     	$html.= "<td>" . $status . "</td>";
+    	                     }
+    	                     
+    	                     // Mostra ou oculta ícone 'Editar Produto' 
+    	                     if(!isset($conditions['noactions'])){
+    	                     	$html.= "<td><a href='" . $editUrl . "' class='sepV_a' title='Editar'><i class='icon-pencil'></i></a> <a href='#' title='Remover'><i class='icon-trash'></i></a></td>";
+    	                     }  
+
+    	                     // Cria campo para inserir quantidade do produto no pedido
+    	                     if(isset($conditions['inputQty'])){
+    	                     	$html.= '<td><input type="text" class="inputQty span12"/></td>';
+    	                     }
+    	                     
+    	                     // Adiciona botão para inserir produto no pedido
+    	                     if(isset($conditions['addButton'])){
+    	                     	$html.= '<td><button class="btn addProduct">+</button></td>';
+    	                     }
+    	                     
+    	                     $html.= "</tr>";
+    		}
+    	}
+    	
+    	return $html;
+    }
 }

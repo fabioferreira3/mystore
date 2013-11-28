@@ -437,13 +437,20 @@ class Admin_ProductController extends Zend_Controller_Action
         try{
             $params = $this->getRequest()->getParams();
             $tbProduct = new DB_Product();          
+            $conditions = array();
+            if($params['noid']){ $conditions['noid'] = true; }
+            if($params['nostatus']){ $conditions['nostatus'] = true; }
+            if($params['noactions']){ $conditions['noactions'] = true; }
+            if($params['inputQty']){ $conditions['inputQty'] = true; }
+            if($params['addButton']){ $conditions['addButton'] = true; }
             
             $results = $tbProduct->getProductsByFilter($params);
            // Zend_Debug::dump($results);exit;
             
             if($results != null){
-            	$data = array();         
-                $data['maker'] = $this->_helper->ProductTableMaker->create(false,true,$results);           
+            	$data = array();     
+            	$data['data'] = $results;    
+                $data['maker'] = $tbProduct->generateTable($results,$conditions);           
                 $data['pagination'] = $this->_helper->Paginator->generate(false,false,$results->getTotalItemCount());
                 echo json_encode($data);
             }else{

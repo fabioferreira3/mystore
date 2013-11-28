@@ -1,34 +1,122 @@
 <div class="row-fluid">
 	<h1 class="heading">Editar Pedido - #<?= $this->data->getOrderCod();?></h1>	
 	<div class="row-fluid">
-	Escolha um cliente:
+		<h2 class="heading">Escolha um cliente:</h2>
+		<table class="table table-bordered table-striped table_vam customerResults" >
+	            <thead>
+	                <tr>
+	                    <th></th>
+	                    <th><input type="text" class="span12" name="searchName" placeholder="Nome..."/></th>
+	                    <th><input type="text" class="span12" name="searchEmail" placeholder="Email..."/></th>
+	                    <th><input type="text" class="span12" name="searchState" placeholder="Estado..."/></th>
+	                    <th><input type="text" class="span12" name="searchCountry" placeholder="País..."/></th>
+	                    <th><button class="btn btn-gebo" id="searchCustomer">Buscar</button></th>
+	                </tr>
+	                <tr>
+	                    <th></th>
+	                    <th>Nome</th>
+	                    <th>Email</th>
+	                    <th>Estado</th>
+	                    <th>País</th>                 
+	                    <th></th>                    
+	                </tr>               
+	           </thead>
+	           <tbody>
+	           		<?= $this->clientTable;?>
+	           </tbody>  
+	    </table>
+    	<button class="btn customerSelection" disabled>Próximo Passo</button>
+    </div>   
+    <div class="row-fluid">
+    	<div id="productSection" style="display:none">
+    		<h2 class="heading">Informações dos Produtos</h2>
+		    <table class="table table-bordered table-striped table_vam product-results">
+		    	<thead>
+		    		<tr>
+		    			<th colspan="2"></th>
+		    			<th><input type="text" class="span12" name="productName" placeholder="Nome..."/></th>
+	                	<th><input type="text" class="span12" name="productSku" placeholder="SKU..."/></th>
+	                	<th colspan="4"><button class="btn btn-gebo" id="searchProduct">Buscar</button></th>
+	               </tr>
+		    		<tr>
+		    			<th class="span1"><input type="checkbox" id="selectAll"/></th>
+		    			<th class="span1">Imagem</th>
+		    			<th class="span6">Nome do Produto</th>
+		    			<th class="span2">SKU</th>
+		    			<th>Preço Unitário</th>
+		    			<th colspan="2" class="span1">Quantidade</th>
+		    			<th>Ação</th>
+		    		</tr>
+		    		<tr>
+		    			<th></th>
+		    			<th></th>
+		    			<th></th>
+		    			<th></th>
+		    			<th></th>
+		    			<th>Disponível</th>
+		    			<th>Pedido</th>
+		    			<th></th>
+		    		</tr>
+		    		
+		    	</thead>
+		    	<tbody id="productResults">		    		
+		    	</tbody>
+		    </table>
+	    </div>
 	</div>
-	<div class="row-fluid">
-	 <table class="table table-bordered table-striped table_vam customerResults" >
-            <thead>
-                <tr>
-                    <th></th>
-                    <th><input type="text" class="span12" name="searchName" placeholder="Nome..."/></th>
-                    <th><input type="text" class="span12" name="searchEmail" placeholder="Email..."/></th>
-                    <th><input type="text" class="span12" name="searchState" placeholder="Estado..."/></th>
-                    <th><input type="text" class="span12" name="searchCountry" placeholder="País..."/></th>
-                    
-                    <th><button class="btn btn-gebo" id="searchCustomer">Buscar</button></th>
-                </tr>
-                <tr>
-                    <th></th>
-                    <th>Nome</th>
-                    <th>Email</th>
-                    <th>Estado</th>
-                    <th>País</th>                 
-                    <th></th>
-                    
-                </tr>
-           </thead>
-           <tbody>
-           	<?= $this->clientTable;?>
-           </tbody>  
-    </table>
-    </div>
+    
+</div>
 	
 </div>
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+
+			
+	$('button#searchCustomer').on('click',function(){
+			 
+		var name = $('input[name="searchName"]').val();
+		var email = $('input[name="searchEmail"]').val();
+		var state = $('input[name="searchState"]').val();
+		var country = $('input[name="searchCountry"]').val();
+		var dateSince = $('input[name="searchSince"]').val();
+		var lastLogin = $('input[name="searchLastLogin"]').val();
+		var status = $('select[name="searchStatus"]').val();      
+		var actions = false;	
+		var dates = false;
+		var selectType = 'radio';
+		
+		getClientTable(name,email,state,country,dateSince,lastLogin,status,actions,dates,selectType);
+		
+	});	
+
+	$('.row_sel').on('change',function(){
+		$('button.customerSelection').attr('disabled',false);
+	});
+	
+	$('button.customerSelection').on('click',function(){
+		var i = 0;		
+		if($('.row_sel').is(':checked')){
+			i++;
+		}	
+		if(i == 0){
+			alert('Você precisa escolher um cliente!');
+		}else{			
+			$('#productSection').show();
+			$(this).hide();
+		}
+	});	
+
+	$('#searchProduct').on('click',function(){
+		var name = $('input[name="productName"]').val();
+		var sku = $('input[name="productSku"]').val();
+		getProductTable(name,sku,1,null,null,null,null,true,true,true,true,true);
+	});
+
+	
+		
+});
+	
+	
+</script>

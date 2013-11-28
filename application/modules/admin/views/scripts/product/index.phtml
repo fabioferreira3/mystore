@@ -147,38 +147,16 @@ $('a.remove-product').on('click',function(event){
 });
 
 $('button.search').on('click',function(){
-    
-    $('.wait h1').html('Estou procurando...');
-    $('body').addClass('loading');
-    
-    var name = $('input[name="search_name"]').val();
-    var sku = $('input[name="search_sku"]').val();
-    var status = $('select[name="search_status"]').val();
-    var stockFrom =  $('input[name="search_stock_from"]').val();
-    var stockTo =  $('input[name="search_stock_to"]').val();
-    var priceFrom =  $('input[name="search_price_from"]').val();
-    var priceTo =  $('input[name="search_price_to"]').val();
 
-   
-    $.ajax({
-        url: "/admin238/product/filter",
-        type:"GET",
-        data:{name:name, sku:sku, status:status, priceFrom:priceFrom, priceTo:priceTo, stockFrom:stockFrom, stockTo:stockTo},
-        contentType: "application/json; charset=utf-8",
-        dataType:"json",
-        success: function (data) {
-           $('body').removeClass('loading');
-           $('tr.result').remove();
-           $('div.paginator').empty();
-           $('div.paginator').append(data.pagination);
-           $('table.product-results tbody').append(data.maker);          
-        },
-        error: function(request,error){
-            $('body').removeClass('loading');          
-            console.log(arguments);
-            $.sticky(error, {autoclose : 5000, position: "top-right", type:"st-error" });
-        }
-    });
+	 var name = $('input[name="search_name"]').val();
+	 var sku = $('input[name="search_sku"]').val();
+	 var status = $('select[name="search_status"]').val();
+	 var stockFrom =  $('input[name="search_stock_from"]').val();
+	 var stockTo =  $('input[name="search_stock_to"]').val();
+	 var priceFrom =  $('input[name="search_price_from"]').val();
+	 var priceTo =  $('input[name="search_price_to"]').val();
+	 
+	 getProductTable(name, sku,status,stockFrom,stockTo,priceFrom,priceTo);
 });
 
 
