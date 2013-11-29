@@ -88,6 +88,8 @@ if (isset($this->msgError)){
 							<input class="span1" type="text" name="billingnumber" value="<?php if($this->billing){if($this->billing->getNumber() !== null){echo $this->billing->getNumber();};}?>"/> 
 						<label>Complemento:</label> 
 							<input class="span2" type="text" name="billingcomplement" value="<?php if($this->billing){if($this->billing->getComplement() !== null){echo $this->billing->getComplement();};}?>"/> 
+						<label>Bairro:</label> 
+							<input class="span3" type="text" name="billingdistrict" value="<?php if($this->billing){if($this->billing->getDistrict() !== null){echo $this->billing->getDistrict();};}?>"/> 
 						<label>CEP:</label> 
 						<input class="span2" type="text" name="billingzip" value="<?php if($this->billing){if($this->billing->getZip() !== null){echo $this->billing->getZip();};}?>"/>
 						<label>País:</label> 
@@ -119,6 +121,8 @@ if (isset($this->msgError)){
 							<input class="span1" type="text" name="shippingnumber" value="<?php if($this->shipping){if($this->shipping->getNumber() !== null){echo $this->shipping->getNumber();};}?>"/> 
 						<label for="complement">Complemento:</label> 
 							<input class="span2" type="text" name="shippingcomplement" value="<?php if($this->shipping){if($this->shipping->getComplement() !== null){echo $this->shipping->getComplement();};}?>"/> 
+						<label>Bairro:</label> 
+							<input class="span3" type="text" name="shippingdistrict" value="<?php if($this->shipping){if($this->shipping->getDistrict() !== null){echo $this->shipping->getDistrict();};}?>"/> 
 						<label for="zip">CEP:</label> 
 							<input class="span2" type="text" name="shippingzip" value="<?php if($this->shipping){if($this->shipping->getZip() !== null){echo $this->shipping->getZip();};}?>"/> 
 						<label for="country">País:</label> 
@@ -160,6 +164,7 @@ $(document).ready(function(){
         $('input[name=shippingaddress]').val($('input[name=billingaddress]').val());
         $('input[name=shippingnumber]').val($('input[name=billingnumber]').val());
         $('input[name=shippingcomplement]').val($('input[name=billingcomplement]').val());
+        $('input[name=shippingdistrict]').val($('input[name=billingdistrict]').val());
         $('input[name=shippingzip]').val($('input[name=billingzip]').val());
         $('input[name=shippingcity]').val($('input[name=billingcity]').val());
         var country = $('select[name=billingcountry] option:selected').html().trim();

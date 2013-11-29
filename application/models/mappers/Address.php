@@ -34,16 +34,23 @@ class DB_Address
     /**
      * @var string $street
      *
-     * @Column(name="street", type="string", length=255, nullable=false)
+     * @Column(name="street", type="string", length=255, nullable=true)
      */
     private $street;
 
     /**
      * @var string $number
      *
-     * @Column(name="number", type="string", length=10, nullable=false)
+     * @Column(name="number", type="string", length=10, nullable=true)
      */
     private $number;
+    
+    /**
+     * @var string $district
+     *
+     * @Column(name="district", type="string", length=10, nullable=true)
+     */
+    private $district;
 
     /**
      * @var string $complement
@@ -208,6 +215,28 @@ class DB_Address
     public function getComplement()
     {
         return $this->complement;
+    }
+    
+    /**
+     * Set district
+     *
+     * @param string $district
+     * @return Address
+     */
+    public function setDistrict($district)
+    {
+    	$this->district = $district;
+    	return $this;
+    }
+    
+    /**
+     * Get district
+     *
+     * @return string
+     */
+    public function getDistrict()
+    {
+    	return $this->district;
     }
 
     /**

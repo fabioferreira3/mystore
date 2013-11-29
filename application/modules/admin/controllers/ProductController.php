@@ -461,6 +461,17 @@ class Admin_ProductController extends Zend_Controller_Action
         }
         catch(Exception $e){echo json_encode($e->getMessage());exit;}
     }	
+    
+    public function stockAction(){
+    	
+    	$tbProducts = new DB_Product();
+    	$conditions = array();
+    	$conditions['noselect'] = true;
+    	$conditions['noprice'] = true;
+    	$conditions['nostatus'] = true;
+    	$conditions['noactions'] = true;
+    	$this->view->products = $tbProducts->generateTable($tbProducts->getProducts(),$conditions);
+    }
 }
 
 ?>

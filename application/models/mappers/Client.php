@@ -590,6 +590,7 @@ class DB_Client
                         $billingAddress->setStreet($params['billingaddress']);
                         $billingAddress->setNumber($params['billingnumber']);
                         $billingAddress->setComplement($params['billingcomplement']);
+                        $billingAddress->setDistrict($params['billingdistrict']);
                         $billingCountry = $em->getRepository('DB_Country')->find($params['billingcountry']);
                         $billingAddress->setCountry($billingCountry);
                         $billingState = $em->getRepository('DB_State')->find($params['billingstate']);
@@ -602,6 +603,7 @@ class DB_Client
                             $billingAddress->setStreet($params['billingaddress']);
                             $billingAddress->setNumber($params['billingnumber']);
                             $billingAddress->setComplement($params['billingcomplement']);
+                            $billingAddress->setDistrict($params['billingdistrict']);
                             $billingAddress->setZip($params['billingzip']);
                             $billingCountry = $em->getRepository('DB_Country')->find($params['billingcountry']);
                             $billingAddress->setCountry($billingCountry);
@@ -628,6 +630,7 @@ class DB_Client
                         $shippingAddress->setStreet($params['shippingaddress']);
                         $shippingAddress->setNumber($params['shippingnumber']);
                         $shippingAddress->setComplement($params['shippingcomplement']);
+                        $shippingAddress->setDistrict($params['shippingdistrict']);
                         $shippingCountry = $em->getRepository('DB_Country')->find($params['shippingcountry']);
                         $shippingAddress->setCountry($billingCountry);
                         $shippingState = $em->getRepository('DB_State')->find($params['shippingstate']);
@@ -640,6 +643,7 @@ class DB_Client
                             $shippingAddress->setStreet($params['shippingaddress']);
                             $shippingAddress->setNumber($params['shippingnumber']);
                             $shippingAddress->setComplement($params['shippingcomplement']);
+                            $shippingAddress->setDistrict($params['shippingdistrict']);
                             $shippingAddress->setZip($params['shippingzip']);
                             $shippingCountry = $em->getRepository('DB_Country')->find($params['shippingcountry']);
                             $shippingAddress->setCountry($shippingCountry);
@@ -668,9 +672,14 @@ class DB_Client
     	$em = Zend_Registry::getInstance()->entitymanager;
     	$query = $em->createQueryBuilder()->select('c')->from('DB_Client','c');
     	$query->innerjoin('c.address','ad','WITH','c.id = ad.client');
+    	
     	if(isset($params['status']) && $params['status']){
     		$query->where('c.status = :status');
     		$query->setParameter('status',$params['status']);
+    	}
+    	if(isset($params['id']) && $params['id']){
+    		$query->andWhere('c.id  :id');
+    		$query->setParameter('id',$params['id']);
     	}
     	if(isset($params['name']) && $params['name']){
     		$query->andWhere('c.firstName LIKE :name');

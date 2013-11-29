@@ -832,7 +832,7 @@ class DB_Product
     	                     }
     	                     // Mostra ou oculta o id do produto    	                     
     	                     if(!isset($conditions['noid'])){
-    	                     	$html.= "<td>" . $row->getId() . "</td>";
+    	                     	$html.= "<td class='span1'>" . $row->getId() . "</td>";
     	                     }
     	                     
     	                     // Mostra ou oculta a thumbnail do produto
@@ -841,8 +841,12 @@ class DB_Product
     	                     }
     	                     
     	                     $html.= "<td>" . $row->getName() . "</td>";
-    	                     $html.= "<td>" . $row->getSku() . "</td>";
-    	                     $html.= "<td>" . $price . "</td>";
+    	                     if(!isset($conditions['nosku'])){
+    	                     	$html.= "<td>" . $row->getSku() . "</td>";
+    	                     }
+    	                     if(!isset($conditions['noprice'])){
+    	                     	$html.= "<td>" . $price . "</td>";
+    	                     }
     	                     $html.= "<td>" . $row->getCurrentQty() . "</td>";
     	                     
     	                     // Mostra ou oculta o status do produto
