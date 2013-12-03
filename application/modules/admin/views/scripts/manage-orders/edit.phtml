@@ -56,12 +56,27 @@
 		    			<th>Disponível</th>
 		    			<th>Pedido</th>
 		    			<th></th>
-		    		</tr>
-		    		
+		    		</tr>		    		
 		    	</thead>
 		    	<tbody id="productResults">		    		
 		    	</tbody>
 		    </table>
+		    <div id="productsSelected">
+		        <div class="row-fluid">
+		            <span class="span4">
+		                <input type="text" name="productName[]" class="span12"/>
+		            </span>
+		            <span class="span4">
+                        <input type="text" name="productSku" class="span12"/>
+                    </span>
+                    <span class="span2">
+                        <input type="text" name="productQty" class="span12"/>
+                    </span>
+                    <span class="span2">
+                        
+                    </span>		           
+		        </div>
+		    </div>
 	    </div>
 	</div>
     
@@ -113,9 +128,18 @@ $(document).ready(function(){
 		var sku = $('input[name="productSku"]').val();
 		getProductTable(name,sku,1,null,null,null,null,true,true,true,true,true);
 	});
-
 	
-		
+	$('body').on('click','button.addProduct',function(event){	   
+	   var i = 0;
+	   if($(this).parent().parent().find('input.inputQty').val() == ''){
+	       alert('Preencha uma quantidade!');
+	       event.preventDefault();
+	       return false;
+	   }else{
+	       
+	   }	   
+	   
+	});
 });
 	
 	
