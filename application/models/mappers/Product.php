@@ -666,8 +666,10 @@ class DB_Product
     
         $query = $em->createQueryBuilder();        
         $query->select('p')->from('DB_Product','p');
+       
         if($params['status'] != ''){
             $query->where('p.status = :status');
+            
             $query->setParameter('status',$params['status']);            
         }else{
             $query->where('p.status != 1234567');            
@@ -680,32 +682,28 @@ class DB_Product
             $query->andWhere('p.sku LIKE :sku');
             $query->setParameter('sku',"%".$params['sku']."%");            
         } 
-        if(isset($params['priceFrom']) && $params['priceFrom'] && !isset($params['priceTo'])){        	
+        if(isset($params['priceFrom']) && $params['priceTo'] && $params['priceTo'] != '' && $params['priceFrom'] != ''){
+        	$query->innerjoin('p.price','pr','WITH','pr.price <= :priceTo AND pr.price >= :priceFrom');
+        	$query->setParameters(array('priceFrom' => $params['priceFrom'], 'priceTo' => $params['priceTo']));
+        	
+        }else if(isset($params['priceFrom']) && $params['priceFrom']){        	
         	$query->innerjoin('p.price','pr','WITH','pr.price >= :priceFrom');
         	$query->setParameter('priceFrom',$params['priceFrom']);     
-        }
-        if(isset($params['priceTo']) && $params['priceTo'] && !isset($params['priceFrom'])){
+        }else if(isset($params['priceTo']) && $params['priceTo']){
         	$query->innerjoin('p.price','pr','WITH','pr.price <= :priceTo');
         	$query->setParameter('priceTo',$params['priceTo']);
-        }
-        if(isset($params['priceFrom']) && $params['priceFrom'] && isset($params['priceTo']) && $params['priceTo']){
-         	$query->innerjoin('p.price','pr','WITH','pr.price <= :priceTo AND pr.price >= :priceFrom');
-         	$query->setParameter('priceFrom',$params['priceFrom']);
-         	$query->setParameter('priceTo',$params['priceTo']);
-        }
-        if(isset($params['stockFrom']) && $params['stockFrom'] && !isset($params['stockTo'])){
-        	$query->innerjoin('p.stock','st','WITH','st.currentQty >= :stockFrom');
-        	$query->setParameter('stockFrom',$params['stockFrom']);
-        }
-        if(isset($params['stockTo']) && $params['stockTo'] && !isset($params['stockFrom'])){
-        	$query->innerjoin('p.stock','st','WITH','st.currentQty <= :stockTo');
-        	$query->setParameter('stockTo',$params['stockTo']);
-        }
-        if(isset($params['stockFrom']) && $params['stockFrom'] && isset($params['stockTo']) && $params['stockTo']){
-        	$query->innerjoin('p.stock','st','WITH','st.currentQty <= :stockTo AND st.currentQty >= :stockFrom');
-        	$query->setParameter('stockFrom',$params['stockFrom']);
-        	$query->setParameter('stockTo',$params['stockTo']);
-        }
+        }        
+       
+        if(isset($params['stockFrom']) && isset($params['stockTo']) && $params['stockTo'] != '' && $params['stockFrom'] != ''){
+           	$query->innerjoin('p.stock','st','WITH','st.currentQty <= :stockTo AND st.currentQty >= :stockFrom');
+        	$query->setParameters(array('stockFrom' => $params['stockFrom'], 'stockTo' => $params['stockTo']));
+        }else if(isset($params['stockFrom']) && $params['stockFrom']){
+        	$query->innerjoin('p.stock','st','WITH','st.currentQty >= :stockFrom');       
+        	$query->setParameter('stockFrom',$params['stockFrom']);      	
+        }else if(isset($params['stockTo']) && $params['stockTo']){
+        	$query->innerjoin('p.stock','st','WITH','st.currentQty <= :stockTo'); 
+        	$query->setParameter('stockTo',$params['stockTo']);        	
+        }       
         
         $query->orderBy('p.id','DESC');
         
@@ -830,7 +828,7 @@ class DB_Product
     	                     }
     	                     // Mostra ou oculta o id do produto    	                     
     	                     if(!isset($conditions['noid'])){
-    	                     	$html.= "<td>" . $row->getId() . "</td>";
+    	                     	$html.= "<td class='span1'>" . $row->getId() . "</td>";
     	                     }
     	                     
     	                     // Mostra ou oculta a thumbnail do produto
@@ -839,10 +837,19 @@ class DB_Product
     	                     }
     	                     
     	                     $html.= "<td>" . $row->getName() . "</td>";
-    	                     $html.= "<td>" . $row->getSku() . "</td>";
-    	                     $html.= "<td>" . $price . "</td>";
-    	                     $html.= "<td>" . $row->getCurrentQty() . "</td>";
-    	                     
+    	                     if(!isset($conditions['nosku'])){
+    	                     	$html.= "<td>" . $row->getSku() . "</td>";
+    	                     }
+    	                     if(!isset($conditions['noprice'])){
+    	                     	$html.= "<td>" . $price . "</td>";
+    	                     }
+    	                     if(!isset($conditions['nostock'])){
+    	                     	if(isset($conditions['editStock'])){
+    	                     		$html.= "<td colspan='2'><input type='text' value='" . $row->getCurrentQty() . "' class='editStock span4'/></td>";
+    	                     	}else{
+    	                     		$html.= "<td colspan='2'>" . $row->getCurrentQty() . "</td>";
+    	                     	}    	                     	
+    	                     }
     	                     // Mostra ou oculta o status do produto
     	                     if(!isset($conditions['nostatus'])){
     	                     	$html.= "<td>" . $status . "</td>";
