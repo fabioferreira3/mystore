@@ -443,6 +443,7 @@ class Admin_ProductController extends Zend_Controller_Action
             if($params['noactions']){ $conditions['noactions'] = true; }
             if($params['inputQty']){ $conditions['inputQty'] = true; }
             if($params['addButton']){ $conditions['addButton'] = true; }
+            if($params['noprice']){ $conditions['noprice'] = true; }
             
             $results = $tbProduct->getProductsByFilter($params);
            // Zend_Debug::dump($results);exit;
@@ -470,6 +471,7 @@ class Admin_ProductController extends Zend_Controller_Action
     	$conditions['noprice'] = true;
     	$conditions['nostatus'] = true;
     	$conditions['noactions'] = true;
+    	$conditions['editStock'] = true;
     	$this->view->products = $tbProducts->generateTable($tbProducts->getProducts(),$conditions);
     }
 }
