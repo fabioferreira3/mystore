@@ -113,8 +113,8 @@ if (isset($this->msgError)){
 	$('button.rebuy').on('click',function(){
 		
 	});
-	$('button.edit').on('click',function(){
-		
+	$('button.edit').on('click',function(){	    
+	    window.location.replace("/admin238/manage-orders/edit?orderid="+$(this).parent().parent().find('td input').val());
 	});
 	$('button.remove').on('click',function(e){
 		 var accept = confirm('Deseja mesmo remover este pedido?');

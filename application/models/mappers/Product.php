@@ -814,7 +814,7 @@ class DB_Product
     			// Se existir preço cadastrado, mostra-o
     			if($row->getPrice() !== null && $row->getPrice()){
     				$price = 'R$' . $row->getPrice();
-    			}
+    			};
     			$editUrl = '/admin238/product/edit?product_id=' . $row->getId();
     			if($row->getStatus() == '1'){
     				$status = '<a href="/admin238/product/disable?product_id='.$row->getId().'">
@@ -828,27 +828,26 @@ class DB_Product
     	                     }
     	                     // Mostra ou oculta o id do produto    	                     
     	                     if(!isset($conditions['noid'])){
-    	                     	$html.= "<td class='span1'>" . $row->getId() . "</td>";
+    	                     	$html.= "<td class='span1 productId'>" . $row->getId() . "</td>";
     	                     }
-    	                     
     	                     // Mostra ou oculta a thumbnail do produto
     	                     if(!isset($conditions['noimage'])){
     	                     	$html.= "<td style='width: 60px'><a href='" . $imagePath . "' title='' class='cbox_single thumbnail'> <img alt='' src='" . $thumbPath . "' style='height: 50px; width: 50px'></a></td>";
     	                     }
     	                     
-    	                     $html.= "<td>" . $row->getName() . "</td>";
+    	                     $html.= "<td class='productName'>" . $row->getName() . "</td>";
     	                     if(!isset($conditions['nosku'])){
-    	                     	$html.= "<td>" . $row->getSku() . "</td>";
+    	                     	$html.= "<td class='productSku'>" . $row->getSku() . "</td>";
     	                     }
     	                     if(!isset($conditions['noprice'])){
-    	                     	$html.= "<td>" . $price . "</td>";
+    	                     	$html.= "<td class='productPrice'>" . $price . "</td>";
     	                     }
     	                     if(!isset($conditions['nostock'])){
     	                     	if(isset($conditions['editStock'])){
-    	                     		$html.= "<td colspan='2'><input type='text' value='" . $row->getCurrentQty() . "' class='editStock span4'/></td>";
+    	                     		$html.= "<td><input type='text' value='" . $row->getCurrentQty() . "' class='editStock span4'/></td>";
     	                     	}else{
-    	                     		$html.= "<td colspan='2'>" . $row->getCurrentQty() . "</td>";
-    	                     	}    	                     	
+    	                     		$html.= "<td class='qty'>" . $row->getCurrentQty() . "</td>";
+    	                     	}
     	                     }
     	                     // Mostra ou oculta o status do produto
     	                     if(!isset($conditions['nostatus'])){
@@ -858,7 +857,7 @@ class DB_Product
     	                     // Mostra ou oculta ícone 'Editar Produto' 
     	                     if(!isset($conditions['noactions'])){
     	                     	$html.= "<td><a href='" . $editUrl . "' class='sepV_a' title='Editar'><i class='icon-pencil'></i></a> <a href='#' title='Remover'><i class='icon-trash'></i></a></td>";
-    	                     }  
+    	                     }
 
     	                     // Cria campo para inserir quantidade do produto no pedido
     	                     if(isset($conditions['inputQty'])){
