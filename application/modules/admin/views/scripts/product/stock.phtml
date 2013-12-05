@@ -26,7 +26,10 @@
 							<input type="text" name="search_stock_from" value="" class="span12" />
 							<input type="text" name="search_stock_to" value="" class="span12" />
 						</td>						
-						<td><button class="btn search">Buscar</button></td>
+						<td>
+							<button class="btn search">Buscar</button>
+							<button class="btn save">Salvar</button>
+						</td>
 					</tr>
 				<?= $this->products;?>
 			</tbody>
@@ -45,6 +48,40 @@ $('button.search').on('click',function(){
 	 var stockFrom =  $('input[name="search_stock_from"]').val();
 	 var stockTo =  $('input[name="search_stock_to"]').val();	 
 	 
-	 getProductTable(name,sku,1,stockFrom,stockTo,'','',false,true,false,false);
+	 getProductTable(name,sku,1,stockFrom,stockTo,'','',true,true,true,true,null,null,true);
+});
+
+$('button.save').on('click',function(){
+
+	$('.wait h1').html('Salvando estoque dos produtos...');
+	$('body').addClass('loading');	
+
+	var productid = new Array();
+	var productstock = new Array();
+	var i = 0;
+	$('input.editStock').each(function(){
+		productid[i] = $(this).parent().parent().first().find('td input').val();
+		productstock[i] = $(this).val();
+		i++;
+	});
+
+	 $.ajax({
+	        url: "/admin238/product/update-stock",
+	        type:"GET",
+	        data:{productid:productid, 
+		          productstock:productstock
+	        	  },
+	        contentType: "application/json; charset=utf-8",
+	        dataType:"json",
+	        success: function (data) {
+	           $('body').removeClass('loading');	           
+	           alert(data);
+	        },
+	        error: function(request,error){
+	            $('body').removeClass('loading');          
+	            console.log(arguments);
+	            $.sticky(error, {autoclose : 5000, position: "top-right", type:"st-error" });
+	        }
+	  });
 });
 </script>

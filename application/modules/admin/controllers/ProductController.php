@@ -444,6 +444,7 @@ class Admin_ProductController extends Zend_Controller_Action
             if($params['inputQty']){ $conditions['inputQty'] = true; }
             if($params['addButton']){ $conditions['addButton'] = true; }
             if($params['noprice']){ $conditions['noprice'] = true; }
+            if($params['editStock']){ $conditions['editStock'] = true; }
             
             $results = $tbProduct->getProductsByFilter($params);
            // Zend_Debug::dump($results);exit;
@@ -465,14 +466,27 @@ class Admin_ProductController extends Zend_Controller_Action
     
     public function stockAction(){
     	
-    	$tbProducts = new DB_Product();
-    	$conditions = array();
-    	$conditions['noselect'] = true;
-    	$conditions['noprice'] = true;
-    	$conditions['nostatus'] = true;
-    	$conditions['noactions'] = true;
-    	$conditions['editStock'] = true;
-    	$this->view->products = $tbProducts->generateTable($tbProducts->getProducts(),$conditions);
+    	
+    }
+    
+    public function updateStockAction(){
+    	
+    	try{
+	    	$params = $this->getRequest()->getParams();
+	    	    	
+	    	$i = 0;
+	    	foreach($params['productid'] as $product){
+	    		$tbProductStock = $this->repo->db('ProductStock')->findOneByProduct($product);
+	    		$tbProductStock->setCurrentQty($params['productstock'][$i]);
+	    		$this->em->persist($tbProductStock);
+	    		$this->em->flush();
+	    		$i++;
+	    	}    	
+	    		echo json_encode('Estoque Atualizado com Sucesso!');
+	    		exit;
+	    	}
+    	catch(Exception $e){echo json_encode($e->getMessage());exit;}
+    	
     }
 }
 

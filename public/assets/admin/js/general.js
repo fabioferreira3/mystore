@@ -61,7 +61,8 @@ function getProductTable(
 			nostatus = null,
 			noactions = null,
 			inputQty = null,
-			addButton = null){
+			addButton = null,
+			editStock = null){
     
 	    $('.wait h1').html('Estou procurando...');
 	    $('body').addClass('loading');
@@ -81,7 +82,8 @@ function getProductTable(
 	        	  nostatus:nostatus,
 	        	  noactions:noactions,
 	        	  inputQty:inputQty,
-	        	  addButton:addButton},
+	        	  addButton:addButton,
+	        	  editStock:editStock},
 	        contentType: "application/json; charset=utf-8",
 	        dataType:"json",
 	        success: function (data) {
