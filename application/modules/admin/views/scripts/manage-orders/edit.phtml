@@ -74,12 +74,13 @@
 		                    </tr>
 		                </thead>
 		                <tbody>
-		                    <tr>
-		                        <td><input type="text" class="span12 productName"/></td>
+		                    
+		                   <!--      <td><input type="text" class="span12 productName"/></td>
 		                        <td><input type="text" class="span12 productSku"/></td>
 		                        <td><input type="text" class="span12 productQty"/></td>
 		                        <td><a href="#" class="removeProduct"><i class="splashy-gem_remove"></i></a></td>
-		                    </tr>
+		                   -->
+		                    
 		                </tbody>
 		            </table>    
                     	           
@@ -144,10 +145,19 @@ $(document).ready(function(){
 	       event.preventDefault();
 	       return false;
 	   }else{
+		   var productId = $(this).parent().parent().find('input.row_sel').val();
+		   var productName = $(this).parent().parent().find('td.productName').html();
+		   var productSku = $(this).parent().parent().find('td.productSku').html();
+		   var productQty = $(this).parent().parent().find('input.inputQty').val();		   
+		   var content = '<tr><td><input type="hidden" class="span12 productid" value="'+productId+'"/>'+productName+'</td><td>'+productSku+'</td><td>'+productQty+'</td><td><a class="removeProduct"><i class="splashy-gem_remove"></i></a></td></tr>';
 	       $('div#productsSelected').show();
-	       $('div#productsSelected table tbody tr').append();
+	       $('div#productsSelected table tbody').append(content);
 	   }
 	   
+	});
+
+	$('body').on('click','a.removeProduct',function(event){
+		$(this).parent().parent().remove();
 	});
 });
 	

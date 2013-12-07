@@ -62,7 +62,9 @@ function getProductTable(
 			noactions = null,
 			inputQty = null,
 			addButton = null,
-			editStock = null){
+			editStock = null,
+			noselect = null,
+			nocheckbox = null){
     
 	    $('.wait h1').html('Estou procurando...');
 	    $('body').addClass('loading');
@@ -83,7 +85,9 @@ function getProductTable(
 	        	  noactions:noactions,
 	        	  inputQty:inputQty,
 	        	  addButton:addButton,
-	        	  editStock:editStock
+	        	  editStock:editStock,
+	        	  noselect:noselect,
+	        	  nocheckbox:nocheckbox
 	        	  },
 	        contentType: "application/json; charset=utf-8",
 	        dataType:"json",
