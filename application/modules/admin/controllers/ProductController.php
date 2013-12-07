@@ -445,10 +445,11 @@ class Admin_ProductController extends Zend_Controller_Action
             if($params['addButton']){ $conditions['addButton'] = true; }
             if($params['noprice']){ $conditions['noprice'] = true; }
             if($params['editStock']){ $conditions['editStock'] = true; }
+            if($params['noselect']){ $conditions['noselect'] = true; }
+            if($params['nocheckbox']){ $conditions['nocheckbox'] = true; }
             
             $results = $tbProduct->getProductsByFilter($params);
-           // Zend_Debug::dump($results);exit;
-            
+                       
             if($results != null){
             	$data = array();     
             	$data['data'] = $results;    

@@ -83,7 +83,8 @@ function getProductTable(
 	        	  noactions:noactions,
 	        	  inputQty:inputQty,
 	        	  addButton:addButton,
-	        	  editStock:editStock},
+	        	  editStock:editStock
+	        	  },
 	        contentType: "application/json; charset=utf-8",
 	        dataType:"json",
 	        success: function (data) {
