@@ -29,7 +29,7 @@
     </div>   
     <div class="row-fluid">
     	<div id="productSection" style="display:none">
-    		<h2 class="heading">Informações dos Produtos</h2>
+    		<h2 class="heading">Adicionar Produtos</h2>
 		    <table class="table table-bordered table-striped table_vam product-results">
 		    	<thead>
 		    		<tr>
@@ -61,20 +61,28 @@
 		    	<tbody id="productResults">		    		
 		    	</tbody>
 		    </table>
-		    <div id="productsSelected">
+		    <div id="productsSelected" style="display:none;">
+		        <h2 class="heading">Produtos do Pedido</h2>
 		        <div class="row-fluid">
-		            <span class="span4">
-		                <input type="text" name="productName[]" class="span12"/>
-		            </span>
-		            <span class="span4">
-                        <input type="text" name="productSku" class="span12"/>
-                    </span>
-                    <span class="span2">
-                        <input type="text" name="productQty" class="span12"/>
-                    </span>
-                    <span class="span2">
-                        
-                    </span>		           
+		            <table class="table table-bordered table-striped table_vam">
+		                <thead>
+		                    <tr>
+		                        <th class="span12">Nome</th>
+		                        <th class="span3">SKU</th>
+		                        <th class="span3">Qtd</th>
+		                        <th>Remover</th>
+		                    </tr>
+		                </thead>
+		                <tbody>
+		                    <tr>
+		                        <td><input type="text" class="span12 productName"/></td>
+		                        <td><input type="text" class="span12 productSku"/></td>
+		                        <td><input type="text" class="span12 productQty"/></td>
+		                        <td><a href="#" class="removeProduct"><i class="splashy-gem_remove"></i></a></td>
+		                    </tr>
+		                </tbody>
+		            </table>    
+                    	           
 		        </div>
 		    </div>
 	    </div>
@@ -126,7 +134,7 @@ $(document).ready(function(){
 	$('#searchProduct').on('click',function(){
 		var name = $('input[name="productName"]').val();
 		var sku = $('input[name="productSku"]').val();
-		getProductTable(name,sku,1,null,null,null,null,true,true,true,true,true);
+		getProductTable(name,sku,1,null,null,null,null,true,null,true,true,true,true);
 	});
 	
 	$('body').on('click','button.addProduct',function(event){	   
@@ -136,8 +144,9 @@ $(document).ready(function(){
 	       event.preventDefault();
 	       return false;
 	   }else{
-	       
-	   }	   
+	       $('div#productsSelected').show();
+	       $('div#productsSelected table tbody tr').append();
+	   }
 	   
 	});
 });
