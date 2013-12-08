@@ -140,12 +140,26 @@ $(document).ready(function(){
 	
 	$('body').on('click','button.addProduct',function(event){	   
 	   var i = 0;
-	   if($(this).parent().parent().find('input.inputQty').val() == ''){
+	   var productId = $(this).parent().parent().find('input.row_sel').val();
+	   var inputQty = $(this).parent().parent().find('input.inputQty').val();
+	   var currentQty = $(this).parent().parent().find('td.qty').html();
+	   if(inputQty == ''){
 	       alert('Preencha uma quantidade!');
 	       event.preventDefault();
 	       return false;
-	   }else{
-		   var productId = $(this).parent().parent().find('input.row_sel').val();
+	   }else if(inputQty > currentQty){
+		   alert('Quantidade não disponível!');
+	       event.preventDefault();
+	       return false;
+	   }
+	   else{	
+		   $('div#productsSelected table tbody').find('input.productid').each(function(event){
+			   if($(this).val() == productId){
+				   alert('Este produto já consta na seleção do pedido!');
+			       event.preventDefault();
+			       return false;
+			   }
+		   });	   
 		   var productName = $(this).parent().parent().find('td.productName').html();
 		   var productSku = $(this).parent().parent().find('td.productSku').html();
 		   var productQty = $(this).parent().parent().find('input.inputQty').val();		   
@@ -158,6 +172,9 @@ $(document).ready(function(){
 
 	$('body').on('click','a.removeProduct',function(event){
 		$(this).parent().parent().remove();
+		if($('div#productsSelected table tbody').children().length < 1){
+			$('div#productsSelected').hide();
+		}
 	});
 });
 	
