@@ -71,6 +71,9 @@ class Admin_ManageOrdersController extends Zend_Controller_Action
 	public function editAction(){
 		try{
 			$params = $this->getRequest()->getParams();
+			$countries = $this->repo->db('Country')->findAll();
+			$this->view->countries = $countries;
+			
 			if(isset($params['orderid']) && $params['orderid'] != ''){
 				$data = $this->repo->db('Orders')->find($params['orderid']);
 				$this->view->data = $data;

@@ -421,4 +421,46 @@ class DB_Address
         
         return $query->getQuery()->getSingleResult();
     }
+    
+    public function getAddressesByClient($clientId){
+    	
+    	$em = Zend_Registry::getInstance()->entitymanager;
+    	$results = $em->getRepository('DB_Address')->findByClient($clientId);
+    	
+    	$address = $this->AddressToArray($results);
+    	
+    	return $address;
+    	
+    }
+    
+    protected function AddressToArray($object){
+    	
+    	$address = array();
+    	
+    	foreach($object as $result){
+    		if($result->getAddressType()->getId() == '2'){
+    			$address['shipping']['receiver'] = $result->getClient()->getFirstName() . ' ' . $result->getClient()->getLastName();
+    			$address['shipping']['address'] = $result->getStreet();
+    			$address['shipping']['number'] = $result->getNumber();
+    			$address['shipping']['complement'] = $result->getComplement();
+    			$address['shipping']['district'] = $result->getDistrict();
+    			$address['shipping']['zipcode'] = $result->getZip();
+    			$address['shipping']['city'] = $result->getCity();
+    			$address['shipping']['state'] = $result->getState()->getId();
+    			$address['shipping']['country'] = $result->getCountry()->getId();
+    		}else if($result->getAddressType()->getId() == '3'){
+    			$address['billing']['receiver'] = $result->getClient()->getFirstName() . ' ' . $result->getClient()->getLastName();
+    			$address['billing']['address'] = $result->getStreet();
+    			$address['billing']['number'] = $result->getNumber();
+    			$address['billing']['complement'] = $result->getComplement();
+    			$address['billing']['district'] = $result->getDistrict();
+    			$address['billing']['zipcode'] = $result->getZip();
+    			$address['billing']['city'] = $result->getCity();
+    			$address['billing']['state'] = $result->getState()->getId();
+    			$address['billing']['country'] = $result->getCountry()->getId();
+    		}
+    	}
+    	
+    	return $address;
+    }
 }

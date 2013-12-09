@@ -749,7 +749,7 @@ class DB_Client
     			if($row->getStatus() == 0){$status = 'Inativo';}else{$status = 'Ativo';}
     			if($row->getLastLogin() !== null){$lastLogin = $row->getLastLogin()->format('d/m/Y');}else{$lastLogin = '';}
     			$html.='<tr>';
-    			$html.='<td><input type="'.$condSelect.'" name="row_sel" class="row_sel" /></td>';
+    			$html.='<td><input type="'.$condSelect.'" name="row_sel" class="row_sel" value="'. $row->getId() . '" /></td>';
     			$html.='<td>'. $row->getFirstName() . ' ' . $row->getLastName() .'</td>';
     			$html.='<td>'. $row->getEmail() .'</td>';
     			$html.='<td>'. $row->getAddress()[0]->getState()->getName() .'</td>';
