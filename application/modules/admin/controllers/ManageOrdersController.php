@@ -90,7 +90,7 @@ class Admin_ManageOrdersController extends Zend_Controller_Action
 				exit;
 			}
 		}
-		catch(Exception $e){echo $e->getMessage();exit;	}
+		catch(Exception $e){echo $e->getMessage();exit;}
 	}
 	
 	public function removeAction(){
