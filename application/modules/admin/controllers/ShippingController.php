@@ -49,14 +49,12 @@ class Admin_ShippingController extends Zend_Controller_Action{
 	}
 	
 	public function correiosAction(){
+
 		try{
 		$shipping = new Application_Model_Correios();
 		$shipping->setConfig();
-		$wsdlCorreios = 'ws.correios.com.br/calculador/CalcPrecoPrazo.asmx?WSDL';
-		$client = new SoapClient($wsdlCorreios);
-		exit;
-		}
-		catch(Exception $e){echo $e->getMessage();exit;}
+		$wsdlCorreios = 'http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx?WSDL';
+				
 		$request = array(
 				'nCdEmpresa'  => $shipping->getCdEmpresa(),
 				'sDsSenha'  => $shipping->getDsSenha(),
@@ -76,12 +74,25 @@ class Admin_ShippingController extends Zend_Controller_Action{
 				'nIndicaCalculo'  => $shipping->getIndicaCalculo()					
 		);
 		
-	/*	$client = new Zend_Http_Client('http://ws.correios.com.br/calculador/CalcPrecoPrazo.aspx');
+		$client = new SoapClient($wsdlCorreios, array(
+           'trace' => true,
+           'exceptions' => true,
+           'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP,
+           'connection_timeout' => 1000
+   ));
+		$response = $client->CalcPrecoPrazo($request);
+		$objeto = $response->CalcPrecoPrazoResult->Servicos->cServico;
+		Zend_Debug::dump($objeto->Valor);exit;
+		
+		}
+		catch(Exception $e){echo $e->getMessage();exit;}
+		/*
+		$client = new Zend_Http_Client('http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx');
 		$client->setMethod(Zend_Http_Client::POST);
-	//	$client->setHeaders('Content-Type: application/x-www-form-urlencoded; charset=ISO-8859-1');
-		$client->setParameterPost(array(
+		$client->setHeaders('Content-Type: application/x-www-form-urlencoded; charset=ISO-8859-1');
+		$client->setParameterGet(array(
 				'nCdEmpresa'  => $shipping->getCdEmpresa(),
-				'sDsSenha'  => $shipping->getDsSenha(),
+				//'sDsSenha'  => $shipping->getDsSenha(),
 				'nCdServico'  => $shipping->getCdServico(),
 				'sCepOrigem'  => $shipping->getCepOrigem(),
 				'sCepDestino'  => $shipping->getCepDestino(),
@@ -99,7 +110,9 @@ class Admin_ShippingController extends Zend_Controller_Action{
 		));
 		$response = $client->request();
 		$data = simplexml_load_string($response->getBody());
-		Zend_Debug::dump($response);exit;*/
+		Zend_Debug::dump($response);exit;
+		}
+		catch(Exception $e){echo $e->getMessage();exit;}*/
 		
 	}
 	
