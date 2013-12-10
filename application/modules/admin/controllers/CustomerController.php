@@ -171,6 +171,16 @@ class Admin_CustomerController extends Zend_Controller_Action
     	catch(Exception $e){echo json_encode($e->getMessage());exit;}
     }
     
+    public function getAddressesAction(){
+    	try{
+	    	$params = $this->getRequest()->getParams();
+	    	$tbAddress = new DB_Address();    	
+    		echo json_encode($tbAddress->getAddressesByClient($params['clientid']));
+    		exit;
+    	}
+    	catch(Exception $e){echo json_encode($e->getMessage());exit;}
+    }
+    
     
     
 }

@@ -824,7 +824,12 @@ class DB_Product
     	                     
     	                     // Mostra ou oculta select do produto
     	                     if(!isset($conditions['noselect'])){
-    	                     	$html.= "<td>" . '<input type="checkbox" name="row_sel" class="row_sel" value="' . $row->getId() . '"/></td>';
+    	                     	if(!isset($conditions['nocheckbox'])){
+    	                     		$html.= "<td>" . '<input type="checkbox" name="row_sel" class="row_sel" value="' . $row->getId() . '"/></td>';
+    	                     	}else{
+    	                     		$html.= "<td>" . '<input type="hidden" name="row_sel" class="row_sel" value="' . $row->getId() . '"/></td>';
+    	                     	}
+    	                     	
     	                     }
     	                     // Mostra ou oculta o id do produto    	                     
     	                     if(!isset($conditions['noid'])){
