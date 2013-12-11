@@ -167,10 +167,7 @@ class Application_Model_Correios{
 		
 		$this->setCdEmpresa('');
 		$this->setDsSenha('');
-		$this->setCdServico('40010');
-		$this->setCepOrigem('09655000');
-		$this->setCepDestino('09080140');
-		$this->setVlPeso('1');
+		$this->setCdServico('40010,41106');
 		$this->setCdFormato(1);
 		$this->setVlComprimento('16');
 		$this->setVlAltura('16');
@@ -181,6 +178,60 @@ class Application_Model_Correios{
 		$this->setCdAvisoRecebimento('N');
 		$this->setStrRetorno('XML');
 		$this->setIndicaCalculo('3');
+	}
+	
+	public function getPrecoPrazo($cepOrigem, $cepDestino, $peso = '0.5'){
+		
+		$this->setConfig();
+		$this->setCepOrigem($cepOrigem);
+		$this->setCepDestino($cepDestino);
+		$this->setVlPeso($peso);
+			
+		$wsdlCorreios = 'http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx?WSDL';
+			
+		$request = array(
+				'nCdEmpresa'  => $this->getCdEmpresa(),
+				'sDsSenha'  => $this->getDsSenha(),
+				'nCdServico'  => $this->getCdServico(),
+				'sCepOrigem'  => $this->getCepOrigem(),
+				'sCepDestino'  => $this->getCepDestino(),
+				'nVlPeso'  => $this->getVlPeso(),
+				'nCdFormato'  => $this->getCdFormato(),
+				'nVlComprimento'  => $this->getVlComprimento(),
+				'nVlAltura'  => $this->getVlAltura(),
+				'nVlLargura'  => $this->getVlLargura(),
+				'nVlDiametro'  => $this->getVlDiametro(),
+				'sCdMaoPropria'  => $this->getCdMaoPropria(),
+				'nVlValorDeclarado'  => $this->getVlValorDeclarado(),
+				'sCdAvisoRecebimento'  => $this->getCdAvisoRecebimento(),
+				'StrRetorno'  => $this->getStrRetorno(),
+				'nIndicaCalculo'  => $this->getIndicaCalculo()
+		);
+			
+		$client = new SoapClient($wsdlCorreios, array(
+				'trace' => true,
+				'exceptions' => true,
+				'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP,
+				'connection_timeout' => 1000
+		));
+		$response = $client->CalcPrecoPrazo($request);
+		$objeto = $response->CalcPrecoPrazoResult->Servicos->cServico;
+		$result = array();
+		
+		$i=0;
+		foreach ($objeto as $obj){
+			$result[$i]['codigo'] = $obj->Codigo;
+			if($obj->Codigo == '40010'){
+				$result[$i]['nome'] = 'SEDEX';
+			}else if($obj->Codigo == '41106'){
+				$result[$i]['nome'] = 'PAC';
+			}
+			$result[$i]['valor'] = $obj->Valor;
+			$result[$i]['prazo'] = $obj->PrazoEntrega;
+			$i++;
+		}
+	
+		return $result;
 	}
 	
 }

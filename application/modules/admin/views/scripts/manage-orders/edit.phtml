@@ -129,8 +129,7 @@
 				 			<label>Cidade</label><input type="text" name="billingCity"/>
 				 			<label>Estado</label><select class="span2" name="billingState"></select>
 				 		</div>
-				 	</div>
-				 	<button class="btn addressSelection" >Próximo Passo</button>			 		
+				 	</div>				 				 		
 			 	</div>			 				 
 			 </div>
 			 <div class="row-fluid">
@@ -138,11 +137,9 @@
 				 	<div id="shipSelection">
 				 		<h2 class="heading">Frete</h2>
 				 		
-				 			<table class="table table-bordered table-striped">
-				 				<tr>
-				 					<td class="span1"><input type="radio" value=""/></td>
-				 					<td class="span6">Correios</td>
-				 				</tr>
+				 			<table class="table table-bordered table-striped shippingMethods">
+				 				<td><h4>Correios</h4></td></tr>
+				 				
 				 			</table>
 				 		
 				 	</div>
@@ -153,7 +150,7 @@
 				 		
 				 			<table class="table table-bordered table-striped">
 				 				<tr>
-				 					<td class="span1"><input type="radio" value=""/></td>
+				 					<td class="span1"><input type="radio" value="" checked/></td>
 				 					<td class="span6">Pagseguro</td>
 				 				</tr>
 				 			</table>				 			
@@ -199,6 +196,41 @@ function fillAddresses(data){
     	$("select[name=billingState]").val(data.billing.state);   	
     });
 	
+}
+
+function getPrecoPrazo(cepDestino){
+
+	$('.wait h1').html('Calculando frete...');
+	$('body').addClass('loading');
+	
+	$.ajax({
+        url: "/admin238/shipping/correios",
+        type:"GET",
+        data:{cepDestino:cepDestino, json:1},
+        contentType: "application/json; charset=utf-8",
+        dataType:"json",
+        success: function (data) {		        
+	       for(i=0;i<=data.length;i++){
+	    	   $('table.shippingMethods').append(
+	    	    	
+	    	   );   
+			/*<tr>
+				<td class="span1"><input type="radio" value="" name="shippingType"/></td>
+				<td class="span6">SEDEX</td>
+			</tr>
+			<tr>
+				<td class="span1"><input type="radio" value="" name="shippingType"/></td>
+				<td class="span6">PAC</td>
+			</tr>*/
+	       }
+	       $('body').removeClass('loading'); 
+        },
+        error: function(request,error){
+            $('body').removeClass('loading');          
+            console.log(arguments);
+            $.sticky(error, {autoclose : 5000, position: "top-right", type:"st-error" });
+        }
+  });
 }
 
 $(document).ready(function(){
@@ -273,9 +305,15 @@ $(document).ready(function(){
 			$(this).hide();
 		}
 	});	
-
+	
 	$('button.productSelection').on('click',function(){
 		$('div#addressSelection').show();
+		if($('input[name="shippingZipCode"]').val() != ''){
+			var cep = $('input[name="shippingZipCode"]').val();
+			getPrecoPrazo(cep);
+		}else{
+			
+		}
 		$(this).hide();
 	});
 

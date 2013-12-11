@@ -50,39 +50,14 @@ class Admin_ShippingController extends Zend_Controller_Action{
 	
 	public function correiosAction(){
 
-		try{
-		$shipping = new Application_Model_Correios();
-		$shipping->setConfig();
-		$wsdlCorreios = 'http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx?WSDL';
-				
-		$request = array(
-				'nCdEmpresa'  => $shipping->getCdEmpresa(),
-				'sDsSenha'  => $shipping->getDsSenha(),
-				'nCdServico'  => $shipping->getCdServico(),
-				'sCepOrigem'  => $shipping->getCepOrigem(),
-				'sCepDestino'  => $shipping->getCepDestino(),
-				'nVlPeso'  => $shipping->getVlPeso(),
-				'nCdFormato'  => $shipping->getCdFormato(),
-				'nVlComprimento'  => $shipping->getVlComprimento(),
-				'nVlAltura'  => $shipping->getVlAltura(),
-				'nVlLargura'  => $shipping->getVlLargura(),
-				'nVlDiametro'  => $shipping->getVlDiametro(),
-				'sCdMaoPropria'  => $shipping->getCdMaoPropria(),
-				'nVlValorDeclarado'  => $shipping->getVlValorDeclarado(),
-				'sCdAvisoRecebimento'  => $shipping->getCdAvisoRecebimento(),
-				'StrRetorno'  => $shipping->getStrRetorno(),
-				'nIndicaCalculo'  => $shipping->getIndicaCalculo()					
-		);
-		
-		$client = new SoapClient($wsdlCorreios, array(
-           'trace' => true,
-           'exceptions' => true,
-           'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP,
-           'connection_timeout' => 1000
-   ));
-		$response = $client->CalcPrecoPrazo($request);
-		$objeto = $response->CalcPrecoPrazoResult->Servicos->cServico;
-		Zend_Debug::dump($objeto->Valor);exit;
+		try{			
+			$params = $this->getRequest()->getParams();
+			$correios = new Application_Model_Correios();
+			
+			if(isset($params['json'])){
+				echo json_encode($correios->getPrecoPrazo('09655000',$params['cepDestino']));
+				exit;
+			}		
 		
 		}
 		catch(Exception $e){echo $e->getMessage();exit;}
