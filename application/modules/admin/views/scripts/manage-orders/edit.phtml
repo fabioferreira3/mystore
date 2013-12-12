@@ -355,6 +355,7 @@ $(document).ready(function(){
 		   productTotal = productTotal[1] * productQty;		   
 		   
 		   var content = '<tr><td><input type="hidden" class="span12 productid" value="'+productId+'"/>'+productName+'</td><td>'+productSku+'</td><td>'+productPrice+'</td><td>'+productQty+'</td><td class="productTotal">R$ '+parseFloat(productTotal,10).toFixed(2)+'</td><td><a class="removeProduct"><i class="splashy-gem_remove"></i></a></td></tr>';
+
 	       $('div#productsSelected').show();
 	       $('div#productsSelected table tbody').append(content);
 	       $('div#productsSelected table tbody').find('td.productTotal').each(function(){
