@@ -58,37 +58,8 @@ class Admin_ShippingController extends Zend_Controller_Action{
 				echo json_encode($correios->getPrecoPrazo('09655000',$params['cepDestino']));
 				exit;
 			}		
-		
 		}
-		catch(Exception $e){echo $e->getMessage();exit;}
-		/*
-		$client = new Zend_Http_Client('http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx');
-		$client->setMethod(Zend_Http_Client::POST);
-		$client->setHeaders('Content-Type: application/x-www-form-urlencoded; charset=ISO-8859-1');
-		$client->setParameterGet(array(
-				'nCdEmpresa'  => $shipping->getCdEmpresa(),
-				//'sDsSenha'  => $shipping->getDsSenha(),
-				'nCdServico'  => $shipping->getCdServico(),
-				'sCepOrigem'  => $shipping->getCepOrigem(),
-				'sCepDestino'  => $shipping->getCepDestino(),
-				'nVlPeso'  => $shipping->getVlPeso(),
-				'nCdFormato'  => $shipping->getCdFormato(),
-				'nVlComprimento'  => $shipping->getVlComprimento(),
-				'nVlAltura'  => $shipping->getVlAltura(),
-				'nVlLargura'  => $shipping->getVlLargura(),
-				'nVlDiametro'  => $shipping->getVlDiametro(),
-				'sCdMaoPropria'  => $shipping->getCdMaoPropria(),
-				'nVlValorDeclarado'  => $shipping->getVlValorDeclarado(),
-				'sCdAvisoRecebimento'  => $shipping->getCdAvisoRecebimento(),
-				'StrRetorno'  => $shipping->getStrRetorno(),
-				'nIndicaCalculo'  => $shipping->getIndicaCalculo()					
-		));
-		$response = $client->request();
-		$data = simplexml_load_string($response->getBody());
-		Zend_Debug::dump($response);exit;
-		}
-		catch(Exception $e){echo $e->getMessage();exit;}*/
-		
+		catch(Exception $e){echo $e->getMessage();exit;}		
 	}
 	
 	public function returnAction(){
