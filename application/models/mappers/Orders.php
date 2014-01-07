@@ -88,6 +88,20 @@ class DB_Orders
     private $value;
     
     /**
+     * @var integer $gift
+     *
+     * @Column(name="gift", type="integer", nullable=true)
+     */
+    private $gift;
+    
+    /**
+     * @var string $giftMsg
+     *
+     * @Column(name="gift_msg", type="string", nullable=true)
+     */
+    private $giftMsg;
+    
+    /**
      * Get id
      *
      * @return integer 
@@ -251,7 +265,7 @@ class DB_Orders
         return $this->client;
     }
     
- /**
+    /**
      * Set value
      *
      * @param string $value
@@ -272,6 +286,51 @@ class DB_Orders
     {
         return $this->value;
     }
+    
+    /**
+     * Set gift
+     *
+     * @param integer $gift
+     * @return Orders
+     */
+    public function setGift($gift)
+    {
+        $this->gift = $gift;
+        return $this;
+    }
+
+    /**
+     * Get gift
+     *
+     * @return integer
+     */
+    public function getGift()
+    {
+        return $this->gift;
+    }
+    
+    /**
+     * Set giftMsg
+     *
+     * @param string $giftMsg
+     * @return Orders
+     */
+    public function setGiftMsg($giftMsg)
+    {
+        $this->giftMsg = $giftMsg;
+        return $this;
+    }
+
+    /**
+     * Get giftMsg
+     *
+     * @return string 
+     */
+    public function getGiftMsg()
+    {
+        return $this->giftMsg;
+    }
+    
     
     public function getOrders(array $params = null){
     	

@@ -139,7 +139,7 @@
 				 	<div id="shipSelection" style="display:none;">
 				 		<h2 class="heading">Frete</h2>				 		
 				 			<table class="table table-bordered table-striped shippingMethods">				 				
-				 				<tr><td><input type="radio" value="custom" name="shippingType" class="type"/></td><td>Customizado: R$ <input class="span4 moneyme" style="margin-bottom:0px;" type="text" name="customShippingCost" value="" /></td></tr>
+				 				<tr><td><input type="radio" value="custom" name="shippingType" class="type"/></td><td>Customizado: R$ <input class="span4 moneyme" style="margin-bottom:0px;" type="text" name="customShippingCost" value="" disabled/></td></tr>
 				 			</table>				 		
 				 	</div>
 			 	</div>
@@ -160,10 +160,17 @@
 				 					<td class="span1"><input type="radio" value="money" name="paymentType"/></td>
 				 					<td class="span6">Dinheiro</td>
 				 				</tr>
-				 			</table>				 			
-				 		
+				 			</table>				 		
 				 	</div>				 	
 			 	</div>			 	
+			 </div>
+			 <div class="row-fluid">
+			     <div class="span12" id="giftOptions" style="display:none;">
+			         <h2 class="heading">Opções de Presente</h2>
+			         <label><input name="is_gift" type="checkbox" style="margin-right:10px; margin-top:0px;"/>É Presente?</label>
+			         <h6>Mensagem:</h6>
+			         <textarea class="span6" name="gift_msg" disabled></textarea>
+			     </div>
 			 </div>
 			 <div class="row-fluid">
 			 	<button class="btn closeOrder" style="display:none;" disabled>Fechar Pedido</button>
@@ -279,10 +286,19 @@ function validateOrder(){
 }
 
 
-$(document).ready(function(){
-
+$(document).ready(function(){    
+    
 	$('.moneyme').mask('000.000.000.000.000,00', {
         reverse : true
+    });
+    
+    $('input[name="is_gift"]').on('click',function(){
+        if($('textarea[name="gift_msg"]').prop('disabled') == true){
+            $('textarea[name="gift_msg"]').prop('disabled',false);
+        }else{
+            $('textarea[name="gift_msg"]').empty();
+            $('textarea[name="gift_msg"]').prop('disabled',true);
+        }
     });
     		
 	$('button#searchCustomer').on('click',function(){
@@ -359,9 +375,10 @@ $(document).ready(function(){
 	});	
 	
 	$('button.productSelection').on('click',function(){
-		$('div#shipSelection').show();
+		$('div#shipSelection').show();		
 		$('div#paymentSelection').show();
 		$('div#addressSelection').show();
+		$('div#giftOptions').show();
 		if($('input[name="shippingZipCode"]').val() != ''){
 			var cep = $('input[name="shippingZipCode"]').val();
 			getPrecoPrazo(cep);				
