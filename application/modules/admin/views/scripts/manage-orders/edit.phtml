@@ -275,17 +275,33 @@ function validateOrder(){
 			}
 		}		
 			var clientId = $('table.customerResults').find('input.row_sel:checked').val();
-			var products = new Array();
+			var productsId = new Array();
+			var productsQtd = new Array();
 			
-			var i = 1;
-			$('#productsSelected tbody tr').each(function(){
-				
-				products[i]['id'] = $(this).find('input.productid').val();				
+			var i = 0;
+			$('#productsSelected tbody tr').each(function(){			   				
+				productsId[i] = $(this).find('input.productid').val();				                
+                productsQtd[i] = $(this).find('td.qtd').html();				
+				i++;
 			});
-			alert(products);
+			
+			$.ajax({
+                url: "/admin238/manage-orders/teste",
+                type:"GET",
+                data:{clientId:clientId,productsId:productsId, productsQtd:productsQtd},
+                contentType: "application/json; charset=utf-8",
+                dataType:"json",
+                success: function (data) {              
+                    console.log(data); 
+                },
+                error: function(request,error){                              
+                    console.log(arguments);
+                    $.sticky(error, {autoclose : 5000, position: "top-right", type:"st-error" });
+                }
+            });
+			
 	}
 }
-
 
 
 $(document).ready(function(){        
@@ -321,9 +337,9 @@ $(document).ready(function(){
 	});	
 
 	$('body').on('change','.row_sel',function(){
+	    
 		$('button.customerSelection').attr('disabled',false);
 		var clientid = $(this).val();
-
 		
 		$('.wait h1').html('Aguarde um momento...');
 		$('body').addClass('loading');
@@ -425,11 +441,12 @@ $(document).ready(function(){
 	   var productId = $(this).parent().parent().find('input.row_sel').val();
 	   var inputQty = $(this).parent().parent().find('input.inputQty').val();
 	   var currentQty = $(this).parent().parent().find('td.qty').html();
-	   if(inputQty == ''){
+	 
+	   if(inputQty == '' || parseInt(inputQty) == '0'){
 	       alert('Preencha uma quantidade!');
 	       event.preventDefault();
 	       return false;
-	   }else if(inputQty > currentQty){
+	   }else if(parseInt(inputQty) > parseInt(currentQty)){
 		   alert('Quantidade não disponível!');
 	       event.preventDefault();
 	       return false;
@@ -476,7 +493,6 @@ $(document).ready(function(){
 	});
 
 	// Fechamento do Pedido 
-	
 	
 	$('body').on('click','button.closeOrder',function(){
 		
