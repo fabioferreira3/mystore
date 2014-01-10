@@ -222,6 +222,94 @@ class DB_OrderAddresses
     }
     
     /**
+     * Set complement
+     *
+     * @param string $complement
+     * @return OrderAddresses
+     */
+    public function setComplement($complement)
+    {
+        $this->complement = $complement;
+        return $this;
+    }
+
+    /**
+     * Get complement
+     *
+     * @return string 
+     */
+    public function getComplement()
+    {
+        return $this->complement;
+    }
+    
+    /**
+     * Set zipcode
+     *
+     * @param string $zipcode
+     * @return OrderAddresses
+     */
+    public function setZipcode($zipcode)
+    {
+        $this->zipcode = $zipcode;
+        return $this;
+    }
+
+    /**
+     * Get zipcode
+     *
+     * @return string 
+     */
+    public function getZipcode()
+    {
+        return $this->zipcode;
+    }
+    
+    /**
+     * Set district
+     *
+     * @param string $district
+     * @return OrderAddresses
+     */
+    public function setDistrict($district)
+    {
+        $this->district = $district;
+        return $this;
+    }
+
+    /**
+     * Get district
+     *
+     * @return string 
+     */
+    public function getDistrict()
+    {
+        return $this->district;
+    }
+    
+    /**
+     * Set city
+     *
+     * @param string $city
+     * @return OrderAddresses
+     */
+    public function setCity($city)
+    {
+        $this->city = $city;
+        return $this;
+    }
+
+    /**
+     * Get city
+     *
+     * @return string 
+     */
+    public function getCity()
+    {
+        return $this->city;
+    }
+    
+    /**
      * Set state
      *
      * @param DB_State $state
