@@ -89,6 +89,7 @@
 				            </table>
 				        </div>
 				        <button class="btn productSelection" >Próximo Passo</button>
+				        <button class="btn productUndo" style="display:none;">Adicionar/Remover Itens</button>
 				</div>
 			</div>
 			 <div class="row-fluid">
@@ -279,6 +280,8 @@ function validateOrder(){
 }
 
 
+
+
 $(document).ready(function(){
 
 	$('.moneyme').mask('000.000.000.000.000,00', {
@@ -362,6 +365,9 @@ $(document).ready(function(){
 		$('div#shipSelection').show();
 		$('div#paymentSelection').show();
 		$('div#addressSelection').show();
+		$('button.productUndo').show();
+		$('div#productSection').hide();
+		$('a.removeProduct').hide();
 		if($('input[name="shippingZipCode"]').val() != ''){
 			var cep = $('input[name="shippingZipCode"]').val();
 			getPrecoPrazo(cep);				
@@ -369,6 +375,16 @@ $(document).ready(function(){
 			
 		}
 		$(this).hide();
+	});
+
+	$('button.productUndo').on('click',function(){
+		$('div#shipSelection').hide();
+		$('div#paymentSelection').hide();
+		$('div#addressSelection').hide();
+		$('button.productUndo').hide();
+		$('button.productSelection').show();
+		$('div#productSection').show();
+		$('a.removeProduct').show();
 	});
 
 	$($('input[name="shippingZipCode"]')).on('change',function(){

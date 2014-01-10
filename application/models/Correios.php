@@ -180,7 +180,7 @@ class Application_Model_Correios{
 		$this->setIndicaCalculo('3');
 	}
 	
-	public function getPrecoPrazo($cepOrigem, $cepDestino, $peso = '0.5'){
+	public function getPrecoPrazo($cepOrigem, $cepDestino, $peso = '0.8'){
 		
 		$this->setConfig();
 		$this->setCepOrigem($cepOrigem);
