@@ -95,6 +95,7 @@ class Admin_ManageOrdersController extends Zend_Controller_Action
 	}
 	
 	public function removeAction(){
+	    
 		try{				
 			$params = $this->getRequest()->getParams();
 			$tbOrders = new DB_Orders();
@@ -110,4 +111,14 @@ class Admin_ManageOrdersController extends Zend_Controller_Action
 		}
 		catch(Exception $e){echo $e->getMessage();exit;	}
 	}
+    
+    public function testeAction(){
+            
+        try{
+            $params = $this->getRequest()->getParams();
+            echo json_encode($params);
+            exit;
+        }
+        catch(Exception $e){echo $e->getMessage();exit; }
+    }
 }
