@@ -1,6 +1,7 @@
 <div class="row-fluid">
 	
 	<h1 class="heading">Editar Pedido - #<?= $this->data->getOrderCod();?></h1>	
+	<input id="orderId" type="hidden" value="<?= $this->orderId;?>"/>
 	<div class="row-fluid">
 	
 		<h2 class="heading">Escolha um cliente:</h2>
@@ -218,20 +219,35 @@ function fillAddresses(data){
 	
 }
 
-function getPrecoPrazo(cepDestino){
 
-	$('.wait h1').html('Calculando frete...');
-	$('body').addClass('loading');
-	$('table.shippingMethods tr.correios').remove();
-	$.ajax({
+
+function getPrecoPrazo(cepDestino){
+	
+	
+	return $.ajax({
         url: "/admin238/shipping/correios",
         type:"GET",
         data:{cepDestino:cepDestino, json:1},
         contentType: "application/json; charset=utf-8",
         dataType:"json",
         success: function (data) {     
-          		        
-	       for(i=0;i<=data.length-1;i++){
+        	$('body').removeClass('loading'); 
+          	return data;     	        
+        },
+        error: function(request,error){
+            $('body').removeClass('loading');          
+            console.log(arguments);
+            $.sticky(error, {autoclose : 5000, position: "top-right", type:"st-error" });
+        }
+  });
+	  
+	  
+}
+
+function populateShipping(data){
+	data.success(function (data) {
+		for(i=0;i<=data.length-1;i++){
+			  
 		       if(data[i].valor != '0,00'){
 			       if(data[i].codigo == '40010'){
 			    	   $('table.shippingMethods').append(
@@ -247,16 +263,11 @@ function getPrecoPrazo(cepDestino){
 		    	  alert('CEP não encontrado pelos Correios!');		
 		    	  break;    	   
 		       }	
-	       }
-	       $('body').removeClass('loading'); 
-        },
-        error: function(request,error){
-            $('body').removeClass('loading');          
-            console.log(arguments);
-            $.sticky(error, {autoclose : 5000, position: "top-right", type:"st-error" });
-        }
-  });
+	    }
+	});
+	
 }
+
 function validateOrder(){
 	
 	if($('input[name="shippingReceiver"]').val() == ''){
@@ -276,9 +287,35 @@ function validateOrder(){
 				return false;
 			}
 		}		
+		    var orderId = $('input#orderId').val();
 			var clientId = $('table.customerResults').find('input.row_sel:checked').val();
 			var productsId = new Array();
 			var productsQtd = new Array();
+			var shippingType = $('input[name="shippingType"]:checked').val();
+
+			// Endereço de Envio
+			
+			var shippingName = $('input[name="shippingReceiver"]').val();
+			var shippingAddress = $('input[name="shippingAddress"]').val();
+			var shippingNumber = $('input[name="shippingNumber"]').val();
+			var shippingComplement = $('input[name="shippingComplement"]').val();
+			var shippingDistrict = $('input[name="shippingDistrict"]').val();
+			var shippingZipcode = $('input[name="shippingZipCode"]').val();
+			var shippingCity = $('input[name="shippingCity"]').val();
+			var shippingState = $('select[name="shippingState"]').val();
+			var shippingCountry = $('select[name="shippingCountry"]').val();
+
+			// Endereço de Cobrança
+			
+			var billingName = $('input[name="billingReceiver"]').val();
+			var billingAddress = $('input[name="billingAddress"]').val();
+			var billingNumber = $('input[name="billingNumber"]').val();
+			var billingComplement = $('input[name="billingComplement"]').val();
+			var billingDistrict = $('input[name="billingDistrict"]').val();
+			var billingZipcode = $('input[name="billingZipCode"]').val();
+			var billingCity = $('input[name="billingCity"]').val();
+			var billingState = $('select[name="billingState"]').val();
+			var billingCountry = $('select[name="billingCountry"]').val();		
 			
 			var i = 0;
 			$('#productsSelected tbody tr').each(function(){			   				
@@ -286,11 +323,55 @@ function validateOrder(){
                 productsQtd[i] = $(this).find('td.qtd').html();				
 				i++;
 			});
+
+			var freteInfo = getPrecoPrazo(shippingZipcode);
+			
+			freteInfo.success(function (data) {
+			
+				for(i=0;i<=data.length-1;i++){					
+					if(shippingType == 'sedex'){
+						if(data[i].codigo == '40010'){
+					    	 freteValor = data[i].valor;
+					    	 break;	
+					    }
+					}else{
+						if(data[i].codigo == '41106'){
+					    	 freteValor = data[i].valor;
+					    	break;
+					    }
+					}			       	
+			    }
+			});
+			alert(freteValor);
 			
 			$.ajax({
                 url: "/admin238/manage-orders/teste",
                 type:"GET",
-                data:{clientId:clientId,productsId:productsId, productsQtd:productsQtd},
+                data:{
+                    orderId:orderId,
+                    clientId:clientId,
+                    productsId:productsId, 
+                    productsQtd:productsQtd,
+					shippingName : shippingName,
+					shippingAddress : shippingAddress,
+					shippingNumber : shippingNumber,
+					shippingComplement : shippingComplement,
+					shippingZipcode : shippingZipcode,
+					shippingDistrict : shippingDistrict,
+					shippingCity : shippingCity,
+					shippingState : shippingState,
+					shippingCountry : shippingCountry,
+					billingName : billingName,
+					billingAddress : billingAddress,
+					billingNumber : billingNumber,
+					billingComplement : billingComplement,
+					billingZipcode : billingZipcode,
+					billingDistrict : billingDistrict,
+					billingCity : billingCity,
+					billingState : billingState,
+					billingCountry : billingCountry
+					
+                },
                 contentType: "application/json; charset=utf-8",
                 dataType:"json",
                 success: function (data) {              
@@ -356,7 +437,7 @@ $(document).ready(function(){
 	        dataType:"json",
 	        success: function (data) {		        
 		        fillAddresses(data);		        
-	           $('body').removeClass('loading'); 
+	            $('body').removeClass('loading'); 
 	        },
 	        error: function(request,error){
 	            $('body').removeClass('loading');          
@@ -405,7 +486,10 @@ $(document).ready(function(){
 
 		if($('input[name="shippingZipCode"]').val() != ''){
 			var cep = $('input[name="shippingZipCode"]').val();
-			getPrecoPrazo(cep);				
+			$('.wait h1').html('Calculando frete...');
+			$('body').addClass('loading');	
+			$('table.shippingMethods tr.correios').remove();				
+			populateShipping(getPrecoPrazo(cep));				
 		}else{
 			
 		}
@@ -425,7 +509,10 @@ $(document).ready(function(){
 
 	$($('input[name="shippingZipCode"]')).on('change',function(){
 		var cep = $('input[name="shippingZipCode"]').val();
-		getPrecoPrazo(cep);			
+		$('.wait h1').html('Calculando frete...');
+		$('body').addClass('loading');
+		$('table.shippingMethods tr.correios').remove();
+		populateShipping(getPrecoPrazo(cep));			
 	});	
 
 	$('body').on('change','input[name="shippingType"]',function(){

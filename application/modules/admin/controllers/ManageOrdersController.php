@@ -85,6 +85,7 @@ class Admin_ManageOrdersController extends Zend_Controller_Action
 				$conditions['status'] = false;
 				$conditions['actions'] = false;
 				$conditions['selectType'] = 'radio';
+				$this->view->orderId = $params['orderid'];
 				$this->view->clientTable = $tbClient->generateTable($clientData,$conditions);
 			}else{
 				$this->getHelper('Redirector')->gotoUrl('/admin238/manage-orders');
