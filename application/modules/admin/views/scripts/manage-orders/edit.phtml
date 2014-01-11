@@ -324,25 +324,35 @@ function validateOrder(){
 				i++;
 			});
 
-			var freteInfo = getPrecoPrazo(shippingZipcode);
+			var freteInfo;
+			var freteValor;
+
+			if(shippingType != 'custom'){
+				
+				freteInfo = getPrecoPrazo(shippingZipcode);
+				
+				freteInfo.success(function (data) {
+				
+					for(i=0;i<=data.length-1;i++){					
+						if(shippingType == 'sedex'){
+							if(data[i].codigo == '40010'){
+						    	 freteValor = data[i].valor;
+						    	 break;	
+						    }
+						}else{
+							if(data[i].codigo == '41106'){
+						    	 freteValor = data[i].valor;
+						    	break;
+						    }
+						}			       	
+				    }
+					
+				});
+			}else{
+				freteValor = $('input[name="customShippingCost"]').val();
+				alert(freteValor);
+			}
 			
-			freteInfo.success(function (data) {
-			
-				for(i=0;i<=data.length-1;i++){					
-					if(shippingType == 'sedex'){
-						if(data[i].codigo == '40010'){
-					    	 freteValor = data[i].valor;
-					    	 break;	
-					    }
-					}else{
-						if(data[i].codigo == '41106'){
-					    	 freteValor = data[i].valor;
-					    	break;
-					    }
-					}			       	
-			    }
-			});
-			alert(freteValor);
 			
 			$.ajax({
                 url: "/admin238/manage-orders/teste",
@@ -516,7 +526,12 @@ $(document).ready(function(){
 	});	
 
 	$('body').on('change','input[name="shippingType"]',function(){
-		
+
+		if($('input[name="shippingType"]:checked').val() == 'custom'){
+			$('input[name="customShippingCost"]').prop('disabled',false);
+		}else{
+			$('input[name="customShippingCost"]').prop('disabled',true);
+		}
 		$('button.closeOrder').prop('disabled',false);
 		$('button.closeOrder').show();		
 	});		
