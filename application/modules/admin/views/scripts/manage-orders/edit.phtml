@@ -268,6 +268,7 @@ function populateShipping(data){
 	
 }
 
+
 function validateOrder(){
 	
 	if($('input[name="shippingReceiver"]').val() == ''){
@@ -324,35 +325,36 @@ function validateOrder(){
 				i++;
 			});
 
-			var freteInfo;
-			var freteValor;
+			var freightInfo;
+			var freightCost;
 
 			if(shippingType != 'custom'){
 				
-				freteInfo = getPrecoPrazo(shippingZipcode);
-				
-				freteInfo.success(function (data) {
-				
+				freightInfo = getPrecoPrazo(shippingZipcode);
+				freightInfo.success(function (data) {
+					
 					for(i=0;i<=data.length-1;i++){					
 						if(shippingType == 'sedex'){
 							if(data[i].codigo == '40010'){
-						    	 freteValor = data[i].valor;
-						    	 break;	
+								var bla = data[i].valor;
+								alert(bla);
+								break;		    	
 						    }
 						}else{
 							if(data[i].codigo == '41106'){
-						    	 freteValor = data[i].valor;
-						    	break;
+						    	var bla = data[i].valor;		
+						    	alert(bla);
+								break;    	
 						    }
-						}			       	
+						}						       	
 				    }
-					
-				});
+				   						
+				});		
+				
 			}else{
-				freteValor = $('input[name="customShippingCost"]').val();
-				alert(freteValor);
+				freightCost = $('input[name="customShippingCost"]').val();				
 			}
-			
+			console.log(freightCost);
 			
 			$.ajax({
                 url: "/admin238/manage-orders/teste",
@@ -379,7 +381,9 @@ function validateOrder(){
 					billingDistrict : billingDistrict,
 					billingCity : billingCity,
 					billingState : billingState,
-					billingCountry : billingCountry
+					billingCountry : billingCountry,
+					freightType: shippingType,
+					freightCost: freightCost
 					
                 },
                 contentType: "application/json; charset=utf-8",
@@ -387,12 +391,11 @@ function validateOrder(){
                 success: function (data) {              
                     console.log(data); 
                 },
-                error: function(request,error){                              
+                error: function(request,error){
                     console.log(arguments);
                     $.sticky(error, {autoclose : 5000, position: "top-right", type:"st-error" });
                 }
-            });
-			
+            });			
 	}
 }
 
