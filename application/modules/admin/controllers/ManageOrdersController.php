@@ -70,6 +70,7 @@ class Admin_ManageOrdersController extends Zend_Controller_Action
 	}
 	
 	public function editAction(){
+		
 		try{
 			$params = $this->getRequest()->getParams();
 			$countries = $this->repo->db('Country')->findAll();
@@ -113,13 +114,15 @@ class Admin_ManageOrdersController extends Zend_Controller_Action
 		catch(Exception $e){echo $e->getMessage();exit;	}
 	}
     
-    public function testeAction(){
+    public function saveAction(){
             
         try{
             $params = $this->getRequest()->getParams();
-            echo json_encode($params);
+            $tbOrders = new DB_Orders();
+            $tbOrders->saveOrder($params);
+            echo json_encode('ok');
             exit;
         }
-        catch(Exception $e){echo $e->getMessage();exit; }
+        catch(Exception $e){echo json_encode($e->getMessage());exit; }
     }
 }

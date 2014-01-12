@@ -81,11 +81,45 @@ class DB_Orders
     private $client;
     
     /**
-     * @var string $value
+     * @var string $productPrice
      *
-     * @Column(name="value", type="string", nullable=true)
+     * @Column(name="products_price", type="string", nullable=true)
      */
-    private $value;
+    private $productPrice;
+    
+    /**
+     * @var string $freightCost
+     *
+     * @Column(name="freight_cost", type="string", nullable=true)
+     */
+    private $freightCost;
+    
+    /**
+     * @var string $totalPrice
+     *
+     * @Column(name="total_price", type="string", nullable=true)
+     */
+    private $totalPrice;
+    
+    /**
+     * @var ShippingType
+     *
+     * @ManyToOne(targetEntity="DB_ShippingType")
+     * @JoinColumns({
+     *   @JoinColumn(name="shipping_type", referencedColumnName="id")
+     * })
+     */
+    private $shippingType;
+    
+    /**
+     * @var PaymentType
+     *
+     * @ManyToOne(targetEntity="DB_PaymentTypes")
+     * @JoinColumns({
+     *   @JoinColumn(name="payment_type", referencedColumnName="id")
+     * })
+     */
+    private $paymentType;
     
     /**
      * @var integer $gift
@@ -266,25 +300,113 @@ class DB_Orders
     }
     
     /**
-     * Set value
+     * Set productPrice
      *
-     * @param string $value
+     * @param string $productPrice
      * @return Orders
      */
-    public function setValue($value)
+    public function setProductPrice($productPrice)
     {
-        $this->value = $value;
+        $this->productPrice = $productPrice;
         return $this;
     }
 
     /**
-     * Get value
+     * Get productPrice
      *
      * @return string 
      */
-    public function getValue()
+    public function getProductPrice()
     {
-        return $this->value;
+        return $this->productPrice;
+    }
+    
+    /**
+     * Set freightCost
+     *
+     * @param string $freightCost
+     * @return Orders
+     */
+    public function setFreightCost($freightCost)
+    {
+    	$this->freightCost = $freightCost;
+    	return $this;
+    }
+    
+    /**
+     * Get freightCost
+     *
+     * @return string
+     */
+    public function getFreightCost()
+    {
+    	return $this->freightCost;
+    }
+    
+    /**
+     * Set totalPrice
+     *
+     * @param string $totalPrice
+     * @return Orders
+     */
+    public function setTotalPrice($totalPrice)
+    {
+    	$this->totalPrice = $totalPrice;
+    	return $this;
+    }
+    
+    /**
+     * Get totalPrice
+     *
+     * @return string
+     */
+    public function getTotalPrice()
+    {
+    	return $this->totalPrice;
+    }
+    
+    /**
+     * Set shippingType
+     *
+     * @param DB_ShippingType $shippingType
+     * @return Orders
+     */
+    public function setShippingType(\DB_ShippingType $shippingType = null)
+    {
+    	$this->shippingType = $shippingType;
+    	return $this;
+    }
+    
+    /**
+     * Get shippingType
+     *
+     * @return DB_Client
+     */
+    public function getShippingType()
+    {
+    	return $this->shippingType;
+    }
+    
+    /**
+     * Set paymentType
+     *
+     * @param DB_PaymentTypes $paymentType
+     * @return Orders
+     */
+    public function setPaymentType(\DB_PaymentTypes $paymentType = null)
+    {
+    	$this->paymentType = $paymentType;
+    	return $this;
+    }
+    
+    /**
+     * Get paymentType
+     *
+     * @return DB_Client
+     */
+    public function getPaymentType()
+    {
+    	return $this->paymentType;
     }
     
     /**
@@ -418,6 +540,46 @@ class DB_Orders
     	$query->setMaxResults('1');
     	
     	return $query->getQuery()->getSingleResult()->getOrderCod();
+    }
+    
+    public function saveOrder($params){
+    	
+    	$em = Zend_Registry::getInstance()->entitymanager;
+    	$order = $em->getRepository('DB_Orders')->find($params['orderId']);    	
+    	$client = $em->getRepository('DB_Client')->find($params['clientId']);
+    	
+    	if($params['paymentType'] == 'pagseguro'){
+    		$paymentType = $em->getRepository('DB_PaymentTypes')->find(1);
+    	}else if($params['paymentType'] == 'transfer'){
+    		$paymentType = $em->getRepository('DB_PaymentTypes')->find(2);
+    	}else if($params['paymentType'] == 'money'){
+    		$paymentType = $em->getRepository('DB_PaymentTypes')->find(3);
+    	}
+    	
+    	if($params['shippingType'] == 'sedex'){
+    		$shippingType = $em->getRepository('DB_ShippingType')->find(1);
+    	}else if($params['shippingType'] == 'pac'){
+    		$shippingType = $em->getRepository('DB_ShippingType')->find(3);
+    	}else if($params['shippingType'] == 'custom'){
+    		$shippingType = $em->getRepository('DB_ShippingType')->find(2);
+    	}    	
+    	
+    	$order->setClient($client);
+    	$order->setProductPrice($params['productPrice']);
+    	$order->setFreightCost($params['freightCost']);
+    	$order->setTotalPrice($params['totalPrice']);
+    	$order->setShippingType($shippingType);
+    	$order->setPaymentType($paymentType);
+    	
+    	if($params['gift'] == 1){
+    		$order->setGift(1);
+    		$order->setGiftMsg($params['giftMsg']);
+    	}else{
+    		$order->setGift(0);
+    	}
+    	
+    	$em->persist($order);
+    	$em->flush($order);
     }
     
     public function destroy($orderId){

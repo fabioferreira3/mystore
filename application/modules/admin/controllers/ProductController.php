@@ -489,6 +489,8 @@ class Admin_ProductController extends Zend_Controller_Action
     	catch(Exception $e){echo json_encode($e->getMessage());exit;}
     	
     }
+    
+    
 }
 
 ?>

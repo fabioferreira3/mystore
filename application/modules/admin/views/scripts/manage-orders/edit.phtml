@@ -293,6 +293,14 @@ function validateOrder(){
 			var productsId = new Array();
 			var productsQtd = new Array();
 			var shippingType = $('input[name="shippingType"]:checked').val();
+			var paymentType = $('input[name="paymentType"]:checked').val();
+			var gift = 0;
+			var giftMsg = '';
+
+			if($('input[name="is_gift"]').prop('checked') == true){
+				gift = 1;
+				giftMsg = $('textarea[name="gift_msg"]').val();
+			}
 
 			// Endereço de Envio
 			
@@ -325,8 +333,7 @@ function validateOrder(){
 				i++;
 			});
 
-			var freightInfo;
-			var freightCost;
+			var freightInfo;			
 
 			if(shippingType != 'custom'){
 				
@@ -336,66 +343,77 @@ function validateOrder(){
 					for(i=0;i<=data.length-1;i++){					
 						if(shippingType == 'sedex'){
 							if(data[i].codigo == '40010'){
-								var bla = data[i].valor;
-								alert(bla);
-								break;		    	
+								freightCost = data[i].valor;
+								break;														    	
 						    }
 						}else{
 							if(data[i].codigo == '41106'){
-						    	var bla = data[i].valor;		
-						    	alert(bla);
-								break;    	
+								freightCost = data[i].valor;
+								break;							    	
 						    }
 						}						       	
 				    }
-				   						
-				});		
+					freightCost = freightCost.replace(',','.');
+				    var productTotalPrice = $('th.productTotalPrice').html().split('R$ ');
+				    var totalPrice = parseFloat(productTotalPrice[1]) + parseFloat(freightCost);
+				    
+					
+					$.ajax({
+		                url: "/admin238/manage-orders/save",
+		                type:"GET",
+		                data:{
+		                    orderId:orderId,
+		                    clientId:clientId,
+		                    productsId:productsId, 
+		                    productsQtd:productsQtd,
+							shippingName : shippingName,
+							shippingAddress : shippingAddress,
+							shippingNumber : shippingNumber,
+							shippingComplement : shippingComplement,
+							shippingZipcode : shippingZipcode,
+							shippingDistrict : shippingDistrict,
+							shippingCity : shippingCity,
+							shippingState : shippingState,
+							shippingCountry : shippingCountry,
+							billingName : billingName,
+							billingAddress : billingAddress,
+							billingNumber : billingNumber,
+							billingComplement : billingComplement,
+							billingZipcode : billingZipcode,
+							billingDistrict : billingDistrict,
+							billingCity : billingCity,
+							billingState : billingState,
+							billingCountry : billingCountry,
+							freightType: shippingType,
+							freightCost: freightCost,
+							productPrice: parseFloat(productTotalPrice[1]),
+							totalPrice: totalPrice,
+							shippingType: shippingType,
+							paymentType: paymentType,
+							gift: gift,
+							giftMsg: giftMsg							
+		                },
+		                contentType: "application/json; charset=utf-8",
+		                dataType:"json",
+		                success: function (data) {              
+		                    console.log(data); 
+		                },
+		                error: function(request,error){
+		                    console.log(arguments);
+		                    $.sticky(error, {autoclose : 5000, position: "top-right", type:"st-error" });
+		                }	
+					
+				});
+				    				   						
+				});	
+
 				
 			}else{
 				freightCost = $('input[name="customShippingCost"]').val();				
 			}
-			console.log(freightCost);
 			
-			$.ajax({
-                url: "/admin238/manage-orders/teste",
-                type:"GET",
-                data:{
-                    orderId:orderId,
-                    clientId:clientId,
-                    productsId:productsId, 
-                    productsQtd:productsQtd,
-					shippingName : shippingName,
-					shippingAddress : shippingAddress,
-					shippingNumber : shippingNumber,
-					shippingComplement : shippingComplement,
-					shippingZipcode : shippingZipcode,
-					shippingDistrict : shippingDistrict,
-					shippingCity : shippingCity,
-					shippingState : shippingState,
-					shippingCountry : shippingCountry,
-					billingName : billingName,
-					billingAddress : billingAddress,
-					billingNumber : billingNumber,
-					billingComplement : billingComplement,
-					billingZipcode : billingZipcode,
-					billingDistrict : billingDistrict,
-					billingCity : billingCity,
-					billingState : billingState,
-					billingCountry : billingCountry,
-					freightType: shippingType,
-					freightCost: freightCost
+			
 					
-                },
-                contentType: "application/json; charset=utf-8",
-                dataType:"json",
-                success: function (data) {              
-                    console.log(data); 
-                },
-                error: function(request,error){
-                    console.log(arguments);
-                    $.sticky(error, {autoclose : 5000, position: "top-right", type:"st-error" });
-                }
-            });			
 	}
 }
 
