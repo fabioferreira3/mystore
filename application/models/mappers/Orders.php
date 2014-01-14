@@ -545,10 +545,12 @@ class DB_Orders
     public function saveOrder($params){
     	
     	$em = Zend_Registry::getInstance()->entitymanager;
-    	$order = $em->getRepository('DB_Orders')->find($params['orderId']);  
+    	$order = $em->getRepository('DB_Orders')->find($params['orderId']);   
+        
+        $dtNow = new DateTime();  	
     	
-    	$tbOrderProducts = new DB_OrderProducts();
-    	
+        // Grava info dos produtos do pedido
+        
     	foreach($params['productsId'] as $key => $value){
     		$product = $em->getRepository('DB_Product')->find($params['productsId'][$key]); 
     		$tbOrderProducts = new DB_OrderProducts();
@@ -558,16 +560,106 @@ class DB_Orders
     		$tbOrderProducts->setUnitPrice($params['unitsPrice'][$key]);
     		$em->persist($tbOrderProducts);
     		$em->flush();
-    	}   	
-    	
+    	}  
+        
+        // Info do Cliente
+        
     	if(isset($params['clientId'])){
     		$client = $em->getRepository('DB_Client')->find($params['clientId']);
     		$order->setClient($client);
-    	}  	
+    	}  	    
+        
+        if(isset($params['updateAddress']) && $params['updateAddress'] == 1){
+            
+            // Endereço de Envio
+                
+            $tbOrderAddresses = new DB_OrderAddresses();
+            $tbOrderAddresses->setOrder($order);
+            
+            $addressType = $em->getRepository('DB_AddressType')->find(2);
+            $tbOrderAddresses->setAddressType($addressType);
+            
+            if(isset($params['shippingName'])){
+                $tbOrderAddresses->setName($params['shippingName']);
+            }
+            if(isset($params['shippingAddress'])){
+                $tbOrderAddresses->setAddress($params['shippingAddress']);
+            }
+            if(isset($params['shippingNumber'])){
+                $tbOrderAddresses->setNumber($params['shippingNumber']);
+            }
+            if(isset($params['shippingComplement'])){
+                $tbOrderAddresses->setComplement($params['shippingComplement']);
+            }
+            if(isset($params['shippingDistrict'])){
+                $tbOrderAddresses->setDistrict($params['shippingDistrict']);
+            }
+            if(isset($params['shippingZipcode'])){
+                $tbOrderAddresses->setZipcode($params['shippingZipcode']);
+            }
+            if(isset($params['shippingCity'])){
+                $tbOrderAddresses->setCity($params['shippingCity']);
+            }
+            if(isset($params['shippingState'])){
+                $shippingState = $em->getRepository('DB_State')->find($params['shippingState']);
+                $tbOrderAddresses->setState($shippingState);
+            }
+            if(isset($params['shippingCountry'])){
+                $shippingCountry = $em->getRepository('DB_Country')->find($params['shippingCountry']);
+                $tbOrderAddresses->setCountry($shippingCountry);
+            }
+            
+            $em->persist($tbOrderAddresses);
+            $em->flush();
+            
+            
+            // Endereço de Cobrança
+                
+            $tbOrderAddresses = new DB_OrderAddresses();
+            $tbOrderAddresses->setOrder($order);
+            
+            $addressType = $em->getRepository('DB_AddressType')->find(3);
+            $tbOrderAddresses->setAddressType($addressType);
+            
+            if(isset($params['billingName'])){
+                $tbOrderAddresses->setName($params['billingName']);
+            }
+            if(isset($params['billingAddress'])){
+                $tbOrderAddresses->setAddress($params['billingAddress']);
+            }
+            if(isset($params['billingNumber'])){
+                $tbOrderAddresses->setNumber($params['billingNumber']);
+            }
+            if(isset($params['billingComplement'])){
+                $tbOrderAddresses->setComplement($params['billingComplement']);
+            }
+            if(isset($params['billingDistrict'])){
+                $tbOrderAddresses->setDistrict($params['billingDistrict']);
+            }
+            if(isset($params['billingZipcode'])){
+                $tbOrderAddresses->setZipcode($params['billingZipcode']);
+            }
+            if(isset($params['billingCity'])){
+                $tbOrderAddresses->setCity($params['billingCity']);
+            }
+            if(isset($params['shippingState'])){
+                $billingState = $em->getRepository('DB_State')->find($params['billingState']);
+                $tbOrderAddresses->setState($billingState);
+            }
+            if(isset($params['billingCountry'])){
+                $billingCountry = $em->getRepository('DB_Country')->find($params['billingCountry']);
+                $tbOrderAddresses->setCountry($billingCountry);
+            }
+            
+            $em->persist($tbOrderAddresses);
+            $em->flush();
+            
+        }   	
     	
-    	$dtNow = new DateTime();
-    	
+        // Info sobre Tipo de Pagamento
+        
     	if(isset($params['paymentType'])){
+    	    
     		if($params['paymentType'] == 'pagseguro'){
     			$paymentType = $em->getRepository('DB_PaymentTypes')->find(1);
     		}else if($params['paymentType'] == 'transfer'){
@@ -575,9 +667,13 @@ class DB_Orders
     		}else if($params['paymentType'] == 'money'){
     			$paymentType = $em->getRepository('DB_PaymentTypes')->find(3);
     		}
+            $order->setPaymentType($paymentType);
     	}
     	
+        // Info sobre Tipo de Frete
+        
     	if(isset($params['shippingType'])){
+    	    
     		if($params['shippingType'] == 'sedex'){
     			$shippingType = $em->getRepository('DB_ShippingType')->find(1);
     		}else if($params['shippingType'] == 'pac'){
@@ -585,12 +681,10 @@ class DB_Orders
     		}else if($params['shippingType'] == 'custom'){
     			$shippingType = $em->getRepository('DB_ShippingType')->find(2);
     		}
-    	}    		  	
+            $order->setShippingType($shippingType);
+    	}    	
     	
-    	if(isset($params['orderStatus'])){
-    		$statusRequested = $em->getRepository('DB_OrderStatus')->find($params['orderStatus']);
-    	}
-    	
+        // Info sobre Preços de Produtos e Frete
     	
     	if(isset($params['productPrice'])){
     		$order->setProductPrice($params['productPrice']);
@@ -600,20 +694,27 @@ class DB_Orders
     	}
     	if(isset($params['totalPrice'])){
     		$order->setTotalPrice($params['totalPrice']);
-    	}
+    	} 
+        
+        // Info sobre Presente
+        
+        if($params['gift'] == 1){
+            $order->setGift(1);
+            $order->setGiftMsg($params['giftMsg']);
+        }else{
+            $order->setGift(0);
+        }  	
+        
+        // Info sobre Status do pedido
+        
+        if(isset($params['orderStatus'])){
+            $statusRequested = $em->getRepository('DB_OrderStatus')->find($params['orderStatus']);
+        }
     	
-    	$order->setShippingType($shippingType);
-    	$order->setPaymentType($paymentType);
     	$order->setOrderStatus($statusRequested);
     	$order->setDateUpd($dtNow);
     	
-    	if($params['gift'] == 1){
-    		$order->setGift(1);
-    		$order->setGiftMsg($params['giftMsg']);
-    	}else{
-    		$order->setGift(0);
-    	}
-    	
+    	// Grava tudo no DB    	
     	
     	$em->persist($order);
     	$em->flush();
