@@ -55,6 +55,13 @@ class DB_OrderProducts
      * })
      */
     private $order;
+    
+    /**
+     * @var integer $status
+     *
+     * @Column(name="status", type="string", length=100, nullable=true)
+     */
+    private $status;
 
 
 
@@ -156,4 +163,27 @@ class DB_OrderProducts
     {
         return $this->order;
     }
+    
+     /**
+     * Set status
+     *
+     * @param integer $status
+     * @return OrderProducts
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+        return $this;
+    }
+
+    /**
+     * Get status
+     *
+     * @return integer 
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+    
 }

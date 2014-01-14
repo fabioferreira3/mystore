@@ -885,9 +885,20 @@ class DB_Product
         
         $em = Zend_Registry::getInstance()->entitymanager;
         $html = '';
+        $html .= '<thead><tr>';
+        if(isset($conditions['thumbnail'])){
+            $html .= '<th>Imagem</th>';
+        }
+        $html .= '<th>Nome do Item</th>';
+        $html .= '<th>SKU</th>';
+        $html .= '<th>Status do Item</th>';
+        $html .= '<th>Qtd</th>';
+        $html .= '<th>Preço Unitário</th>';
         
+        $html .= '</tr></thead>';
+        $html .= '<tbody';
         for($i = 0; $i <= count($params['products']) - 1; $i++){
-            $html .= '<table><tr>';
+            $html .= '<tr>';
             if(isset($conditions['thumbnail'])){
                 if ($params['products'][$i]->getProduct()->getImages()[0] !== null && $params['products'][$i]->getProduct()->getImages()[0]){
                     $imagePath = '/images/catalog/' . $params['products'][$i]->getId() . '/' . $params['products'][$i]->getProduct()->getImages()[0]->getName();
@@ -895,13 +906,31 @@ class DB_Product
                 };
                 $html.= "<td style='width: 60px'><a href='" . $imagePath . "' title='' class='cbox_single thumbnail'> <img alt='' src='" . $thumbPath . "' style='height: 50px; width: 50px'></a></td>";
             }
-            if(isset($conditions[''])){
-                
-            }
             
-            $html .= '</tr></table>';
+            if($params['products'][$i]->getStatus() == 1){
+                $itemStatus = 'Solicitado';
+            }else if($params['products'][$i]->getStatus() == 2){
+                $itemStatus = 'Enviado';
+            }else if($params['products'][$i]->getStatus() == 3){
+                $itemStatus = 'Devolvido';
+            }else if($params['products'][$i]->getStatus()){
+                $itemStatus = 'Reembolsado';
+            }
+            $html .= '<td>'. $params['products'][$i]->getProduct()->getName() .'</td>';
+            $html .= '<td>'. $params['products'][$i]->getProduct()->getSku() .'</td>';
+            $html .= '<td>'. $itemStatus .'</td>';
+            $html .= '<td>'. $params['products'][$i]->getQty() .'</td>';
+            $html .= '<td>'. $params['products'][$i]->getUnitPrice() .'</td>';
+            
+            $html .= '</tr>';
         }
-
+            $html .= '<tfoot><tr><th colspan="5"></th><th>Total do(s) Item(s): R$ '. $params['general']->getProductPrice() .'</th></tr>
+                             <tr><th colspan="5"></th><th>Frete: R$ '. $params['general']->getFreightCost() .'</th></tr>
+                             <tr><th colspan="5"></th><th>Total do Pedido: R$ '. $params['general']->getTotalPrice() .'</th></tr>
+                      </tfoot>';
+            
+            $html .= '</tbody>';
+            
     return $html;
         
     }

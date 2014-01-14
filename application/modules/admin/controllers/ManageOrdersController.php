@@ -149,14 +149,13 @@ class Admin_ManageOrdersController extends Zend_Controller_Action
             
     	    $params = $this->getRequest()->getParams();
             $tbOrder = new DB_Orders();
-            $data = $tbOrder->getOrderDetails($params['orderid']);
-          //  Zend_Debug::dump($data['products'][0]->getProduct()->getImages());exit;
+            $data = $tbOrder->getOrderDetails($params['orderid']);         
             $conditions['thumbnail'] = true;
-            echo $tbProduct->generateOrderProductsTable($data,$conditions);
-            exit;
+            
             if($data != false){
                 $this->view->data = $data; 
                 $this->view->client = $data['general']->getClient();
+                $this->view->productTable = $tbProduct->generateOrderProductsTable($data,$conditions);
             }else{
                 $this->getHelper('Redirector')->gotoUrl('/admin238/manage-orders');
             }
