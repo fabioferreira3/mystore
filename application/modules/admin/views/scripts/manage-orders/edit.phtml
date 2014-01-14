@@ -272,15 +272,25 @@ function populateShipping(data){
 function validateOrder(){
 	
 	if($('input[name="shippingReceiver"]').val() == ''){
-		alert('Preencha o nome completo do destinatário do pedido');
+		alert('Preencha o nome completo do destinatário de envio');
 	}else if($('input[name="shippingAddress"]').val() == ''){
-		alert('Preencha o endereço completo do destinatário do pedido');
+		alert('Preencha o endereço completo do destinatário de envio');
 	}else if($('input[name="shippingNumber"]').val() == ''){
-		alert('Preencha o número do endereço do destinatário do pedido');
+		alert('Preencha o número do endereço de envio');
 	}else if($('input[name="shippingZipCode"]').val() == ''){
-		alert('Preencha o CEP do endereço do destinatário do pedido');
+		alert('Preencha o CEP do endereço de envio');
 	}else if($('input[name="shippingCity"]').val() == ''){
-		alert('Preencha o nome da cidade do destinatário do pedido');
+		alert('Preencha o nome da cidade de envio');
+	}else if($('input[name="billingReceiver"]').val() == ''){
+		alert('Preencha o nome completo do destinatário de cobrança');
+	}else if($('input[name="billingAddress"]').val() == ''){
+		alert('Preencha o endereço completo de cobrança');
+	}else if($('input[name="billingNumber"]').val() == ''){
+		alert('Preencha o número do endereço de cobrança');
+	}else if($('input[name="billingZipCode"]').val() == ''){
+		alert('Preencha o CEP do endereço de cobrança');
+	}else if($('input[name="billingCity"]').val() == ''){
+		alert('Preencha o nome da cidade de cobrança');
 	}else{
 		if($('table.shippingMethods').find('input:checked').val() == 'custom'){
 			if($('table.shippingMethods input[name="customShippingCost"]').val() == ''){
@@ -292,6 +302,7 @@ function validateOrder(){
 			var clientId = $('table.customerResults').find('input.row_sel:checked').val();
 			var productsId = new Array();
 			var productsQtd = new Array();
+			var unitsPrice = new Array();
 			var shippingType = $('input[name="shippingType"]:checked').val();
 			var paymentType = $('input[name="paymentType"]:checked').val();
 			var gift = 0;
@@ -329,10 +340,12 @@ function validateOrder(){
 			var i = 0;
 			$('#productsSelected tbody tr').each(function(){			   				
 				productsId[i] = $(this).find('input.productid').val();				                
-                productsQtd[i] = $(this).find('td.qtd').html();				
+                productsQtd[i] = $(this).find('td.qtd').html();	
+                unitPriceSplit = $(this).find('td.unitPrice').html().split('R$');
+                unitsPrice[i] =  unitPriceSplit[1];				
 				i++;
 			});
-
+			
 			var freightInfo;			
 
 			if(shippingType != 'custom'){
@@ -366,6 +379,7 @@ function validateOrder(){
 		                    clientId:clientId,
 		                    productsId:productsId, 
 		                    productsQtd:productsQtd,
+		                    unitsPrice:unitsPrice,
 							shippingName : shippingName,
 							shippingAddress : shippingAddress,
 							shippingNumber : shippingNumber,
@@ -391,7 +405,8 @@ function validateOrder(){
 							shippingType: shippingType,
 							paymentType: paymentType,
 							gift: gift,
-							giftMsg: giftMsg							
+							giftMsg: giftMsg,
+							orderStatus: 1							
 		                },
 		                contentType: "application/json; charset=utf-8",
 		                dataType:"json",
@@ -595,7 +610,7 @@ $(document).ready(function(){
 		   
 		   productTotal = productTotal[1] * productQty;		   
 		   
-		   var content = '<tr><td><input type="hidden" class="span12 productid" value="'+productId+'"/>'+productName+'</td><td class="sku">'+productSku+'</td><td>'+productPrice+'</td><td class="qtd">'+productQty+'</td><td class="productTotal">R$ '+parseFloat(productTotal,10).toFixed(2)+'</td><td><a class="removeProduct"><i class="splashy-gem_remove"></i></a></td></tr>';
+		   var content = '<tr><td><input type="hidden" class="span12 productid" value="'+productId+'"/>'+productName+'</td><td class="sku">'+productSku+'</td><td class="unitPrice">'+productPrice+'</td><td class="qtd">'+productQty+'</td><td class="productTotal">R$ '+parseFloat(productTotal,10).toFixed(2)+'</td><td><a class="removeProduct"><i class="splashy-gem_remove"></i></a></td></tr>';
 
 	       $('div#productsSelected').show();
 	       $('div#productsSelected table tbody').append(content);

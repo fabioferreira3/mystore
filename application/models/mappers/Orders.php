@@ -458,7 +458,7 @@ class DB_Orders
     	
     	$em = Zend_Registry::getInstance()->entitymanager;
     	$query = $em->createQueryBuilder();
-    	$query->select('o')->from('DB_Orders','o');
+    	$query->select('o')->from('DB_Orders','o')->orderBy('o.id', 'DESC');
     	
     	if(isset($params['orderId']) && $params['orderId'] != ''){
     		$query->where('o.id > 0');
@@ -520,7 +520,7 @@ class DB_Orders
     		$html.=			'<td>'. $name .'</td>';
     		$html.=			'<td>'. $order->getDateCreate()->format('d/m/Y - H:i') .'</td>';
     		$html.=			'<td>'. $order->getDateUpd()->format('d/m/Y - H:i') .'</td>';    		
-    		$html.=			'<td>R$ '. $order->getValue() .'</td>';
+    		$html.=			'<td>R$ '. $order->getProductPrice() .'</td>';
     		$html.=			'<td>'. $order->getOrderStatus()->getName() .'</td>';
     		$html.=			'<td>'. $actions .'</td>';
     		$html.=			'</tr>';
@@ -545,31 +545,67 @@ class DB_Orders
     public function saveOrder($params){
     	
     	$em = Zend_Registry::getInstance()->entitymanager;
-    	$order = $em->getRepository('DB_Orders')->find($params['orderId']);    	
-    	$client = $em->getRepository('DB_Client')->find($params['clientId']);
+    	$order = $em->getRepository('DB_Orders')->find($params['orderId']);  
     	
-    	if($params['paymentType'] == 'pagseguro'){
-    		$paymentType = $em->getRepository('DB_PaymentTypes')->find(1);
-    	}else if($params['paymentType'] == 'transfer'){
-    		$paymentType = $em->getRepository('DB_PaymentTypes')->find(2);
-    	}else if($params['paymentType'] == 'money'){
-    		$paymentType = $em->getRepository('DB_PaymentTypes')->find(3);
+    	$tbOrderProducts = new DB_OrderProducts();
+    	
+    	foreach($params['productsId'] as $key => $value){
+    		$product = $em->getRepository('DB_Product')->find($params['productsId'][$key]); 
+    		$tbOrderProducts = new DB_OrderProducts();
+    		$tbOrderProducts->setOrder($order);
+    		$tbOrderProducts->setProduct($product);
+    		$tbOrderProducts->setQty($params['productsQtd'][$key]);
+    		$tbOrderProducts->setUnitPrice($params['unitsPrice'][$key]);
+    		$em->persist($tbOrderProducts);
+    		$em->flush();
+    	}   	
+    	
+    	if(isset($params['clientId'])){
+    		$client = $em->getRepository('DB_Client')->find($params['clientId']);
+    		$order->setClient($client);
+    	}  	
+    	
+    	$dtNow = new DateTime();
+    	
+    	if(isset($params['paymentType'])){
+    		if($params['paymentType'] == 'pagseguro'){
+    			$paymentType = $em->getRepository('DB_PaymentTypes')->find(1);
+    		}else if($params['paymentType'] == 'transfer'){
+    			$paymentType = $em->getRepository('DB_PaymentTypes')->find(2);
+    		}else if($params['paymentType'] == 'money'){
+    			$paymentType = $em->getRepository('DB_PaymentTypes')->find(3);
+    		}
     	}
     	
-    	if($params['shippingType'] == 'sedex'){
-    		$shippingType = $em->getRepository('DB_ShippingType')->find(1);
-    	}else if($params['shippingType'] == 'pac'){
-    		$shippingType = $em->getRepository('DB_ShippingType')->find(3);
-    	}else if($params['shippingType'] == 'custom'){
-    		$shippingType = $em->getRepository('DB_ShippingType')->find(2);
-    	}    	
+    	if(isset($params['shippingType'])){
+    		if($params['shippingType'] == 'sedex'){
+    			$shippingType = $em->getRepository('DB_ShippingType')->find(1);
+    		}else if($params['shippingType'] == 'pac'){
+    			$shippingType = $em->getRepository('DB_ShippingType')->find(3);
+    		}else if($params['shippingType'] == 'custom'){
+    			$shippingType = $em->getRepository('DB_ShippingType')->find(2);
+    		}
+    	}    		  	
     	
-    	$order->setClient($client);
-    	$order->setProductPrice($params['productPrice']);
-    	$order->setFreightCost($params['freightCost']);
-    	$order->setTotalPrice($params['totalPrice']);
+    	if(isset($params['orderStatus'])){
+    		$statusRequested = $em->getRepository('DB_OrderStatus')->find($params['orderStatus']);
+    	}
+    	
+    	
+    	if(isset($params['productPrice'])){
+    		$order->setProductPrice($params['productPrice']);
+    	}
+    	if(isset($params['freightCost'])){
+    		$order->setFreightCost($params['freightCost']);
+    	}
+    	if(isset($params['totalPrice'])){
+    		$order->setTotalPrice($params['totalPrice']);
+    	}
+    	
     	$order->setShippingType($shippingType);
     	$order->setPaymentType($paymentType);
+    	$order->setOrderStatus($statusRequested);
+    	$order->setDateUpd($dtNow);
     	
     	if($params['gift'] == 1){
     		$order->setGift(1);
@@ -578,8 +614,9 @@ class DB_Orders
     		$order->setGift(0);
     	}
     	
+    	
     	$em->persist($order);
-    	$em->flush($order);
+    	$em->flush();
     }
     
     public function destroy($orderId){
@@ -595,6 +632,16 @@ class DB_Orders
     		return false;
     	}	
     	
+    }
+    
+    public function checkRecord(){
+    	
+    	$em = Zend_Registry::getInstance()->entitymanager;
+    	$query = $em->createQueryBuilder();
+    	$query->select('o')->from('DB_Orders','o');
+    	$query->orderBy('o.id', 'DESC');
+    	$query->setMaxResults('1');
+    	return $query->getQuery()->getResult();
     }
     
     

@@ -35,13 +35,7 @@ class DB_OrderProducts
      */
     private $unitPrice;
 
-    /**
-     * @var string $totalPrice
-     *
-     * @Column(name="total_price", type="string", length=100, nullable=false)
-     */
-    private $totalPrice;
-
+   
     /**
      * @var Product
      *
@@ -55,7 +49,7 @@ class DB_OrderProducts
     /**
      * @var Order
      *
-     * @ManyToOne(targetEntity="DB_Order")
+     * @ManyToOne(targetEntity="DB_Orders")
      * @JoinColumns({
      *   @JoinColumn(name="order_id", referencedColumnName="id")
      * })
@@ -117,28 +111,7 @@ class DB_OrderProducts
     {
         return $this->unitPrice;
     }
-
-    /**
-     * Set totalPrice
-     *
-     * @param string $totalPrice
-     * @return OrderProducts
-     */
-    public function setTotalPrice($totalPrice)
-    {
-        $this->totalPrice = $totalPrice;
-        return $this;
-    }
-
-    /**
-     * Get totalPrice
-     *
-     * @return string 
-     */
-    public function getTotalPrice()
-    {
-        return $this->totalPrice;
-    }
+    
 
     /**
      * Set product
@@ -165,10 +138,10 @@ class DB_OrderProducts
     /**
      * Set order
      *
-     * @param DB_Order $order
+     * @param DB_Orders $order
      * @return OrderProducts
      */
-    public function setOrder(\DB_Order $order = null)
+    public function setOrder(\DB_Orders $order = null)
     {
         $this->order = $order;
         return $this;
