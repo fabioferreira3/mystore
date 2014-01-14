@@ -81,6 +81,20 @@ class DB_Orders
     private $client;
     
     /**
+     * @var $shippingAddress
+     *
+     * @OneToMany(targetEntity="DB_OrderAddresses", mappedBy="orders")
+     */
+    private $shippingAddress;
+    
+    /**
+     * @var $billingAddress
+     *
+     * @OneToMany(targetEntity="DB_OrderAddresses", mappedBy="orders")
+     */
+    private $billingAddress;
+    
+    /**
      * @var string $productPrice
      *
      * @Column(name="products_price", type="string", nullable=true)
@@ -300,6 +314,16 @@ class DB_Orders
     }
     
     /**
+     * Get shippingAddress
+     *
+     * @return string
+     */
+    public function getShippingAddress()
+    {
+        return $this->shippingAddress;
+    } 
+    
+    /**
      * Set productPrice
      *
      * @param string $productPrice
@@ -484,6 +508,25 @@ class DB_Orders
     	
     }
     
+    public function getOrderDetails($orderId){
+        
+        $em = Zend_Registry::getInstance()->entitymanager;
+        $order = $em->getRepository('DB_Orders')->find($orderId);
+        if($order->getOrderStatus($orderId) != 7){
+            
+            $orderDetails = Array();        
+            $orderDetails['general'] = $order;
+            $orderDetails['addresses'] = $em->getRepository('DB_OrderAddresses')->findByOrder($orderId);
+            $orderDetails['products'] = $em->getRepository('DB_OrderProducts')->findByOrder($orderId);
+        
+            return $orderDetails;
+            
+        }else{
+            return false;
+        }
+        
+    }
+    
     public function generateTable($data){
     	
     	$html = '';
@@ -499,12 +542,13 @@ class DB_Orders
     		$actions = '';
     		if($status === 1 || $status === 2 || $status === 4){
     			if($status === 1 || $status === 4){
-    				$actions .= '<button value="'. $orderId . '" class="btn span12 confirm">Aprovar</button>';
+    				$actions .= '<button value="'. $orderId . '" class="btn span12 confirm" style="margin-left:0;">Aprovar</button>';
+                    $actions .= '<button value="'. $orderId . '" class="btn span12 details" style="margin-left:0;">Detalhes</button>';
     			}
     			if($status === 2){
     				$actions .= '<button value="'. $orderId . '" class="btn span12 send">Enviar</button>';
     			}
-    			$actions .= '<button value="'. $orderId . '" class="btn span12 cancel">Cancelar</button>';
+    			$actions .= '<button value="'. $orderId . '" class="btn span12 cancel" style="margin-left:0;">Cancelar</button>';
     		}
     		if($status === 3 || $status === 5){
     			$actions .= '<button value="'. $orderId . '" class="btn span12 rebuy">Recomprar</button>';
@@ -513,7 +557,7 @@ class DB_Orders
     			$actions .= '<button value="'. $orderId . '" class="btn span12 edit">Editar</button>';
     			$actions .= '<button value="'. $orderId . '" class="btn span12 remove">Excluir</button>';
     		}
-    		$html.=			'<tr>
+    		$html.=			'<tr class="record">
     						<td><input type="checkbox" value="'. $order->getId() .'"/></td>';
     		$html.=			'<td>'. $order->getId() .'</td>';
     		$html.=			'<td>#'. $order->getOrderCod() .'</td>';
@@ -551,16 +595,22 @@ class DB_Orders
     	
         // Grava info dos produtos do pedido
         
-    	foreach($params['productsId'] as $key => $value){
-    		$product = $em->getRepository('DB_Product')->find($params['productsId'][$key]); 
-    		$tbOrderProducts = new DB_OrderProducts();
-    		$tbOrderProducts->setOrder($order);
-    		$tbOrderProducts->setProduct($product);
-    		$tbOrderProducts->setQty($params['productsQtd'][$key]);
-    		$tbOrderProducts->setUnitPrice($params['unitsPrice'][$key]);
-    		$em->persist($tbOrderProducts);
-    		$em->flush();
-    	}  
+        if(isset($params['productsId'])){
+        	foreach($params['productsId'] as $key => $value){
+        		$product = $em->getRepository('DB_Product')->find($params['productsId'][$key]); 
+        		$tbOrderProducts = new DB_OrderProducts();
+        		$tbOrderProducts->setOrder($order);
+        		$tbOrderProducts->setProduct($product);
+                if(isset($params['productsQtd'])){
+                    $tbOrderProducts->setQty($params['productsQtd'][$key]);
+                }
+                if(isset($params['unitsPrice'])){
+        		    $tbOrderProducts->setUnitPrice($params['unitsPrice'][$key]);
+                }
+        		$em->persist($tbOrderProducts);
+        		$em->flush();
+        	}
+        }
         
         // Info do Cliente
         
@@ -743,7 +793,7 @@ class DB_Orders
     	$query->orderBy('o.id', 'DESC');
     	$query->setMaxResults('1');
     	return $query->getQuery()->getResult();
-    }
+    }   
     
     
 }

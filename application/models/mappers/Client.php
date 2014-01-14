@@ -193,6 +193,18 @@ class DB_Client
         return $this->lastName;
     }
     
+    /**
+     * Get fullName
+     *
+     * @return string
+     */
+    public function getFullName()
+    {
+        $fullName = $this->getFirstName() . ' ' . $this->getLastName();
+        
+        return $fullName;
+    }
+    
     
     /**
      * Set email

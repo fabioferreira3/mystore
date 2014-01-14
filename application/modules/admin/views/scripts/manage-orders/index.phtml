@@ -95,7 +95,8 @@ if (isset($this->msgError)){
 </div>
 
 <script type="text/javascript">
-	$('button.add-new').on('click',function(){
+
+    $('button.add-new').on('click',function(){
 		 var accept = confirm('Deseja criar um novo pedido?');
 		 if(accept){
 			 window.location.replace("/admin238/manage-orders/add?create"); 
@@ -103,29 +104,29 @@ if (isset($this->msgError)){
 			 e.preventDefault();
 			 return false;
 		 }
-	});
-	$('button.confirm').on('click',function(){
-		
 	});	
+	$('button.details').on('click',function(){
+        window.location.replace("/admin238/manage-orders/details?orderid="+$(this).parent().parent().find('td input').val()); 
+    });
 	$('button.cancel').on('click',function(){
 		
 	});
 	$('button.rebuy').on('click',function(){
 		
 	});
-	$('button.edit').on('click',function(){	    
+	$('button.edit').on('click',function(){
 	    window.location.replace("/admin238/manage-orders/edit?orderid="+$(this).parent().parent().find('td input').val());
 	});
 	$('button.remove').on('click',function(e){
+	    
 		 var accept = confirm('Deseja mesmo remover este pedido?');
 		 if(accept){
-			 var orderId = $(this).attr('value'); 
+			 var orderId = $(this).attr('value');
 			 window.location.replace("/admin238/manage-orders/remove?orderid=" + orderId); 
 		 }else{
 			 e.preventDefault();
 			 return false;
 		 }
-		 
 	});
 	$('button.send').on('click',function(){
 		

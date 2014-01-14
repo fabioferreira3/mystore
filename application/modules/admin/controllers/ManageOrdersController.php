@@ -23,6 +23,7 @@ class Admin_ManageOrdersController extends Zend_Controller_Action
 	}
 	
 	public function indexAction(){
+	    
 		try{
 			$params = $this->getRequest()->getParams();
 			if(isset($params['page'])){$curPage = $params['page'];}
@@ -130,7 +131,7 @@ class Admin_ManageOrdersController extends Zend_Controller_Action
         try{
             $params = $this->getRequest()->getParams();
             
-       //     echo json_encode($params);
+       //   echo json_encode($params);
             $tbOrders = new DB_Orders();
             $tbOrders->saveOrder($params);
             echo json_encode('ok');
@@ -140,6 +141,27 @@ class Admin_ManageOrdersController extends Zend_Controller_Action
     }
     
     public function detailsAction(){
-    	
+        
+    	try{
+    	    
+            $tbProduct = new DB_Product();
+   
+            
+    	    $params = $this->getRequest()->getParams();
+            $tbOrder = new DB_Orders();
+            $data = $tbOrder->getOrderDetails($params['orderid']);
+          //  Zend_Debug::dump($data['products'][0]->getProduct()->getImages());exit;
+            $conditions['thumbnail'] = true;
+            echo $tbProduct->generateOrderProductsTable($data,$conditions);
+            exit;
+            if($data != false){
+                $this->view->data = $data; 
+                $this->view->client = $data['general']->getClient();
+            }else{
+                $this->getHelper('Redirector')->gotoUrl('/admin238/manage-orders');
+            }
+                                  
+    	}
+        catch(Exception $e){echo $e->getMessage();exit;}
     }
 }

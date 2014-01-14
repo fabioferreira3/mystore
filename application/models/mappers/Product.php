@@ -880,4 +880,29 @@ class DB_Product
     	
     	return $html;
     }
+
+    public function generateOrderProductsTable(array $params, array $conditions = null){
+        
+        $em = Zend_Registry::getInstance()->entitymanager;
+        $html = '';
+        
+        for($i = 0; $i <= count($params['products']) - 1; $i++){
+            $html .= '<table><tr>';
+            if(isset($conditions['thumbnail'])){
+                if ($params['products'][$i]->getProduct()->getImages()[0] !== null && $params['products'][$i]->getProduct()->getImages()[0]){
+                    $imagePath = '/images/catalog/' . $params['products'][$i]->getId() . '/' . $params['products'][$i]->getProduct()->getImages()[0]->getName();
+                    $thumbPath = '/images/catalog/' . $params['products'][$i]->getId() . '/thumbnail/' . $params['products'][$i]->getProduct()->getImages()[0]->getName();
+                };
+                $html.= "<td style='width: 60px'><a href='" . $imagePath . "' title='' class='cbox_single thumbnail'> <img alt='' src='" . $thumbPath . "' style='height: 50px; width: 50px'></a></td>";
+            }
+            if(isset($conditions[''])){
+                
+            }
+            
+            $html .= '</tr></table>';
+        }
+
+    return $html;
+        
+    }
 }

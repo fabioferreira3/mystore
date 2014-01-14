@@ -1,0 +1,176 @@
+<div class="row-fluid">
+    <div class="row-fluid">
+        <h1 class="heading">Detalhes do Pedido - #<?= $this->data['general']->getOrderCod();?></h1>
+        <h4>Data: <?= $this->data['general']->getDateCreate()->format('d/m/Y - H:i'); ?></h4>        
+    </div>
+    <div class="row-fluid">
+        <div class="span6">
+            <h3 class="heading">Dados Gerais</h3>
+            <table class="table table-condensed table-striped">                
+                <tbody>
+                    <tr>
+                        <td>Status:</td>                        
+                        <td><?= $this->data['general']->getOrderStatus()->getName();?></td>
+                    </tr>
+                    <tr>
+                        <td>Código:</td>
+                        <td><?= $this->data['general']->getOrderCod();?></td> 
+                    </tr>
+                    <tr>
+                        <td>Loja:</td>
+                        <td><?= $this->data['general']->getStore()->getName();?></td> 
+                    </tr>                    
+                </tbody>
+            </table>
+        </div>
+        <div class="span6">
+            <h3 class="heading">Dados do Cliente</h3>
+            <table class="table table-condensed table-striped">
+                <tbody>
+                    <tr>
+                        <td>Nome do Cliente:</td>
+                        <td><?= $this->client->getFullName();?></td>
+                    </tr>
+                    <tr>
+                        <td>Email:</td>
+                        <td><?= $this->client->getEmail();?></td>
+                    </tr>
+                    <tr>
+                        <td>CPF/CNPJ</td>
+                        <td><? if($this->client->getClientType() == 1){echo $this->client->getCpf();}else{echo $this->client->getCnpj();} ?></td>
+                    </tr>
+                    <tr>
+                        <td>Sexo</td>
+                        <td><? if($this->client->getGender() == 0){echo 'Masculino';}else{echo 'Feminino';} ?></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row-fluid">
+        <div class="span12">
+            <h3 class="heading">Itens do Pedido</h3>
+            <table class="table"></table>
+        </div>
+    </div>
+    <div class="row-fluid">
+        <div class="span6">
+            <h3 class="heading">Endereço de Envio</h3>
+                <table class="table table-condensed table-striped">
+                    <? foreach ($this->data['addresses'] as $row){
+                        if($row->getAddressType()->getId() == 2){    
+                    ?>
+                    <tr>
+                        <td>Nome Completo:</td>
+                        <td><?= $row->getName();?></td>
+                    </tr>
+                    <tr>
+                        <td>Endereço:</td>
+                        <td><?= $row->getAddress(); ?></td>
+                    </tr>
+                    <tr>
+                        <td>Número:</td>
+                        <td><?= $row->getNumber(); ?></td>
+                    </tr>
+                    <tr>
+                        <td>Complemento:</td>
+                        <td><?= $row->getComplement(); ?></td>
+                    </tr>
+                    <tr>
+                        <td>Bairro:</td>
+                        <td><?= $row->getDistrict(); ?></td>
+                    </tr>
+                    <tr>
+                        <td>CEP:</td>
+                        <td><?= $row->getZipcode(); ?></td>
+                    </tr>
+                    <tr>
+                        <td>Cidade:</td>
+                        <td><?= $row->getCity(); ?></td>
+                    </tr>
+                    <tr>
+                        <td>Estado:</td>
+                        <td><?= $row->getState()->getName(); ?></td>
+                    </tr>
+                    <tr>
+                        <td>País:</td>
+                        <td><?= $row->getCountry()->getName(); ?></td>
+                    </tr>
+                    <?}}?>
+                </table>
+        </div>
+        <div class="span6">
+            <h3 class="heading">Endereço de Cobrança</h3>
+                <table class="table table-condensed table-striped">
+                    <? foreach ($this->data['addresses'] as $row){
+                        if($row->getAddressType()->getId() == 3){    
+                    ?>
+                    <tr>
+                        <td>Nome Completo:</td>
+                        <td><?= $row->getName();?></td>
+                    </tr>
+                    <tr>
+                        <td>Endereço:</td>
+                        <td><?= $row->getAddress(); ?></td>
+                    </tr>
+                    <tr>
+                        <td>Número:</td>
+                        <td><?= $row->getNumber(); ?></td>
+                    </tr>
+                    <tr>
+                        <td>Complemento:</td>
+                        <td><?= $row->getComplement(); ?></td>
+                    </tr>
+                    <tr>
+                        <td>Bairro:</td>
+                        <td><?= $row->getDistrict(); ?></td>
+                    </tr>
+                    <tr>
+                        <td>CEP:</td>
+                        <td><?= $row->getZipcode(); ?></td>
+                    </tr>
+                    <tr>
+                        <td>Cidade:</td>
+                        <td><?= $row->getCity(); ?></td>
+                    </tr>
+                    <tr>
+                        <td>Estado:</td>
+                        <td><?= $row->getState()->getName(); ?></td>
+                    </tr>
+                    <tr>
+                        <td>País:</td>
+                        <td><?= $row->getCountry()->getName(); ?></td>
+                    </tr>
+                    <?}}?>
+                </table>
+        </div>
+    </div>
+    <div class="row-fluid">
+        <div class="span6">
+            <h3 class="heading">Forma de Pagamento</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Moeda</th>
+                        <th>Forma</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>BRL</td>
+                        <td><?= $this->data['general']->getPaymentType()->getName(); ?></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="span6">
+            <h3 class="heading">Forma de Envio</h3>
+                <table class="table">
+                    <tr>
+                        <td><?= $this->data['general']->getShippingType()->getName();?></td>
+                    </tr>
+                </table>
+        </div>        
+    </div>    
+    
+</div>
