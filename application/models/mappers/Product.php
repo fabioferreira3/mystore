@@ -901,8 +901,8 @@ class DB_Product
             $html .= '<tr>';
             if(isset($conditions['thumbnail'])){
                 if ($params['products'][$i]->getProduct()->getImages()[0] !== null && $params['products'][$i]->getProduct()->getImages()[0]){
-                    $imagePath = '/images/catalog/' . $params['products'][$i]->getId() . '/' . $params['products'][$i]->getProduct()->getImages()[0]->getName();
-                    $thumbPath = '/images/catalog/' . $params['products'][$i]->getId() . '/thumbnail/' . $params['products'][$i]->getProduct()->getImages()[0]->getName();
+                    $imagePath = '/images/catalog/' . $params['products'][$i]->getProduct()->getId() . '/' . $params['products'][$i]->getProduct()->getImages()[0]->getName();
+                    $thumbPath = '/images/catalog/' . $params['products'][$i]->getProduct()->getId() . '/thumbnail/' . $params['products'][$i]->getProduct()->getImages()[0]->getName();
                 };
                 $html.= "<td style='width: 60px'><a href='" . $imagePath . "' title='' class='cbox_single thumbnail'> <img alt='' src='" . $thumbPath . "' style='height: 50px; width: 50px'></a></td>";
             }
@@ -920,7 +920,7 @@ class DB_Product
             $html .= '<td>'. $params['products'][$i]->getProduct()->getSku() .'</td>';
             $html .= '<td>'. $itemStatus .'</td>';
             $html .= '<td>'. $params['products'][$i]->getQty() .'</td>';
-            $html .= '<td>'. $params['products'][$i]->getUnitPrice() .'</td>';
+            $html .= '<td>R$ '. $params['products'][$i]->getUnitPrice() .'</td>';
             
             $html .= '</tr>';
         }

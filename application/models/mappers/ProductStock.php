@@ -327,5 +327,21 @@ class DB_ProductStock
     {
     	return $this->isDecimal;
     }
+    
+    public function subQty($productId, $qty){
+    	
+    	$em = Zend_Registry::getInstance()->entitymanager;
+    	$stock = $em->getRepository('DB_ProductStock')->findOneByProduct($productId);
+    	$currentQty = $stock->getCurrentQty();
+    	$newQty = $currentQty - $qty;
+    	$stock->setCurrentQty($newQty);
+    	$em->persist($stock);
+    	$em->flush();
+    	
+    }
+    
+    public function sumQty($productId, $qty){
+    	
+    }
 
 }

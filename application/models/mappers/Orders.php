@@ -512,7 +512,7 @@ class DB_Orders
         
         $em = Zend_Registry::getInstance()->entitymanager;
         $order = $em->getRepository('DB_Orders')->find($orderId);
-        if($order->getOrderStatus($orderId) != 7){
+        if($order->getOrderStatus()->getId() != 7){
             
             $orderDetails = Array();        
             $orderDetails['general'] = $order;
@@ -542,8 +542,7 @@ class DB_Orders
     		$actions = '';
     		if($status === 1 || $status === 2 || $status === 4){
     			if($status === 1 || $status === 4){
-    				$actions .= '<button value="'. $orderId . '" class="btn span12 confirm" style="margin-left:0;">Aprovar</button>';
-                    $actions .= '<button value="'. $orderId . '" class="btn span12 details" style="margin-left:0;">Detalhes</button>';
+    				$actions .= '<button value="'. $orderId . '" class="btn span12 details" style="margin-left:0;">Detalhes</button>';
     			}
     			if($status === 2){
     				$actions .= '<button value="'. $orderId . '" class="btn span12 send">Enviar</button>';
@@ -601,15 +600,21 @@ class DB_Orders
         		$tbOrderProducts = new DB_OrderProducts();
         		$tbOrderProducts->setOrder($order);
         		$tbOrderProducts->setProduct($product);
+        		$tbOrderProducts->setStatus(1);
                 if(isset($params['productsQtd'])){
                     $tbOrderProducts->setQty($params['productsQtd'][$key]);
                 }
                 if(isset($params['unitsPrice'])){
         		    $tbOrderProducts->setUnitPrice($params['unitsPrice'][$key]);
                 }
-        		$em->persist($tbOrderProducts);
+                
+                $stock = new DB_ProductStock();
+                $stock->subQty($params['productsId'][$key],$params['productsQtd'][$key]);
+                
+        		$em->persist($tbOrderProducts);        	
         		$em->flush();
-        	}
+        	}  
+        	     	
         }
         
         // Info do Cliente
@@ -783,6 +788,18 @@ class DB_Orders
     		return false;
     	}	
     	
+    }
+    
+    public function cancel(array $ordersId){
+    	
+    	$em = Zend_Registry::getInstance()->entitymanager;
+    	foreach($ordersId as $id){
+    		$order = $em->getRepository('DB_Orders')->find($id);
+    		$cancelStatus = $em->getRepository('DB_OrderStatus')->find(3);
+    		$order->setOrderStatus($cancelStatus);
+    		$em->persist($order);
+    		$em->flush();
+    	}
     }
     
     public function checkRecord(){

@@ -140,18 +140,41 @@ class Admin_ManageOrdersController extends Zend_Controller_Action
         catch(Exception $e){echo json_encode($e->getMessage());exit; }
     }
     
+    public function cancelAction(){
+    	
+    	try{
+    		$params = $this->getRequest()->getParams();
+    		$ordersId = array();
+    		if(is_array($params['orderid'])){
+    			$i = 0;
+    			foreach ($params['orderid'] as $id){
+    				$ordersId[$i] = $id;
+    				$i++;
+    			}
+    		}else{
+    			$ordersId[0] = $params['orderid'];
+    		}
+    		
+    		$tbOrder = new DB_Orders();
+    		$tbOrder->cancel($ordersId);
+    		$this->_helper->flashMessenger->addMessage('Pedido cancelado com sucesso!','success');
+			$this->getHelper('Redirector')->gotoUrl('/admin238/manage-orders');
+    		
+    	}
+    	catch(Exception $e){echo $e->getMessage();exit;}
+    }
+    
     public function detailsAction(){
         
     	try{
     	    
-            $tbProduct = new DB_Product();
-   
+            $tbProduct = new DB_Product();   
             
     	    $params = $this->getRequest()->getParams();
             $tbOrder = new DB_Orders();
             $data = $tbOrder->getOrderDetails($params['orderid']);         
             $conditions['thumbnail'] = true;
-            
+        //    Zend_Debug::dump($data);exit;
             if($data != false){
                 $this->view->data = $data; 
                 $this->view->client = $data['general']->getClient();
