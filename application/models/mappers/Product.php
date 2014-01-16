@@ -804,11 +804,11 @@ class DB_Product
     	
     	if($params){
     		foreach($params as $row){
-    			
+    			$image = $row->getImages();
     			// Define o url path do thumbnail do produto 
-    			if ($row->getImages()[0] !== null && $row->getImages()[0]){
-    				$imagePath = '/images/catalog/' . $row->getId() . '/' . $row->getImages()[0]->getName();
-    				$thumbPath = '/images/catalog/' . $row->getId() . '/thumbnail/' . $row->getImages()[0]->getName();
+    			if ($image[0] !== null && $image[0]){
+    				$imagePath = '/images/catalog/' . $row->getId() . '/' . $image[0]->getName();
+    				$thumbPath = '/images/catalog/' . $row->getId() . '/thumbnail/' . $image[0]->getName();
     			};
     			
     			// Se existir preço cadastrado, mostra-o
@@ -900,9 +900,10 @@ class DB_Product
         for($i = 0; $i <= count($params['products']) - 1; $i++){
             $html .= '<tr>';
             if(isset($conditions['thumbnail'])){
-                if ($params['products'][$i]->getProduct()->getImages()[0] !== null && $params['products'][$i]->getProduct()->getImages()[0]){
-                    $imagePath = '/images/catalog/' . $params['products'][$i]->getProduct()->getId() . '/' . $params['products'][$i]->getProduct()->getImages()[0]->getName();
-                    $thumbPath = '/images/catalog/' . $params['products'][$i]->getProduct()->getId() . '/thumbnail/' . $params['products'][$i]->getProduct()->getImages()[0]->getName();
+            	$image = $params['products'][$i]->getProduct()->getImages();
+                if ($image[0] !== null && $image[0]){
+                    $imagePath = '/images/catalog/' . $params['products'][$i]->getProduct()->getId() . '/' . $image[0]->getName();
+                    $thumbPath = '/images/catalog/' . $params['products'][$i]->getProduct()->getId() . '/thumbnail/' . $image[0]->getName();
                 };
                 $html.= "<td style='width: 60px'><a href='" . $imagePath . "' title='' class='cbox_single thumbnail'> <img alt='' src='" . $thumbPath . "' style='height: 50px; width: 50px'></a></td>";
             }

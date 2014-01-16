@@ -760,12 +760,13 @@ class DB_Client
     		foreach($data as $row){
     			if($row->getStatus() == 0){$status = 'Inativo';}else{$status = 'Ativo';}
     			if($row->getLastLogin() !== null){$lastLogin = $row->getLastLogin()->format('d/m/Y');}else{$lastLogin = '';}
+    			$address = $row->getAddress();
     			$html.='<tr>';
     			$html.='<td><input type="'.$condSelect.'" name="row_sel" class="row_sel" value="'. $row->getId() . '" /></td>';
     			$html.='<td>'. $row->getFirstName() . ' ' . $row->getLastName() .'</td>';
     			$html.='<td>'. $row->getEmail() .'</td>';
-    			$html.='<td>'. $row->getAddress()[0]->getState()->getName() .'</td>';
-    			$html.='<td>'. $row->getAddress()[0]->getCountry()->getName() .'</td>';
+    			$html.='<td>'. $address[0]->getState()->getName() .'</td>';
+    			$html.='<td>'. $address[0]->getCountry()->getName() .'</td>';
     			if($condDates){
     				$html.='<td>'. $row->getDateCreate()->format('d/m/Y') .'</td>';
     				$html.='<td>'. $lastLogin .'</td>';

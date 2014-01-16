@@ -91,13 +91,15 @@ if (isset($this->msgError)){
 						</td>
 						<td><button class="btn search">Buscar</button></td>
 					</tr>
-				<?php foreach($this->products as $product){ ?>
-						
+				<?php foreach($this->products as $product){ 
+					$images = $product->getImages();
+				?>
+					 	
 					<tr class="result">
 		    			<td><input type="checkbox" name="row_sel" class="row_sel" value="<?= $product->getId();?>"/></td>
 		    			<td><?php echo $product->getId();?></td>
-		    			<td style="width: 60px"><a href="<?php if ($product->getImages()[0]){echo '/images/catalog/' . $product->getId() . '/' . $product->getImages()[0]->getName();};?>"
-		    				title="" class="cbox_single thumbnail"> <img alt="" src="<?php if ($product->getImages()[0]){echo '/images/catalog/' . $product->getId() . '/thumbnail/' . $product->getImages()[0]->getName();};?>" style="height: 50px; width: 50px">
+		    			<td style="width: 60px"><a href="<?php if ($images[0]){echo '/images/catalog/' . $product->getId() . '/' . $images[0]->getName();};?>"
+		    				title="" class="cbox_single thumbnail"> <img alt="" src="<?php if ($images[0]){echo '/images/catalog/' . $product->getId() . '/thumbnail/' . $images[0]->getName();};?>" style="height: 50px; width: 50px">
 		    			</a>
 		    			</td>
 		    			<td><?php echo $product->getName();?></td>
