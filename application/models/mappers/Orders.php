@@ -557,7 +557,7 @@ class DB_Orders
     			$actions .= '<button value="'. $orderId . '" class="btn span12 remove">Excluir</button>';
     		}
     		$html.=			'<tr class="record">
-    						<td><input type="checkbox" value="'. $order->getId() .'"/></td>';
+    						<td><input type="checkbox" class="orderid" value="'. $order->getId() .'"/></td>';
     		$html.=			'<td>'. $order->getId() .'</td>';
     		$html.=			'<td>#'. $order->getOrderCod() .'</td>';
     		$html.=			'<td>'. $name .'</td>';

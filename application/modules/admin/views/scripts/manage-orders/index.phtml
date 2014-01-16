@@ -34,8 +34,7 @@ if (isset($this->msgError)){
 					<div class="btn-group">
 						<button class="btn dropdown-toggle" data-toggle="dropdown">Ações em Massa <span class="caret"></span></button>
 							<ul class="dropdown-menu">
-								<li><a href="javascript:void(0)" class="select_rows">Selecionar Tudo</a></li>
-								<li><a href="javascript:void(0)" class="deselect_rows">Deselecionar Tudo</a></li>
+								<li><a onclick="cancelOrder()" class="select_rows">Cancelar</a></li>								
 							</ul>
 					</div>			
 				</div>						
@@ -131,5 +130,36 @@ if (isset($this->msgError)){
 	$('button.send').on('click',function(){
 		
 	});
+	
+	$('body').on('click','input.select_rows',function(){
+	    if($(this).prop('checked') != false){
+    	    $('input.orderid').each(function(){
+    	        $(this).prop('checked',true);    
+    	    });
+	    }else{
+	        $('input.orderid').each(function(){
+                $(this).prop('checked',false);    
+            });
+	    }
+	});
+	
+	function cancelOrder(){
+	    var accept = confirm('Deseja mesmo cancelar este(s) pedido(s)?');
+	    if(accept){
+	        var url = '/admin238/manage-orders/cancel?';
+    	    var orders = '';
+    	    $('input.orderid').each(function(){
+    	        if($(this).prop('checked') == true){
+    	            orders = orders + '&orderid[]=' + $(this).val();
+    	        }
+    	    });
+    	    url = url + orders;
+    	    var updatestock = confirm('Deseja retornar itens ao estoque?');
+    	    if(updatestock){
+    	        url = url + '&updatestock=1';
+    	    }
+	    }  
+	   window.location.replace(url); 
+	}
 		
 </script>
