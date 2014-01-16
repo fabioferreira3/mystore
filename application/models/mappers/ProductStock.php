@@ -342,6 +342,14 @@ class DB_ProductStock
     
     public function sumQty($productId, $qty){
     	
+        $em = Zend_Registry::getInstance()->entitymanager;
+        $stock = $em->getRepository('DB_ProductStock')->findOneByProduct($productId);
+        $currentQty = $stock->getCurrentQty();
+        $newQty = $currentQty + $qty;
+        $stock->setCurrentQty($newQty);
+        $em->persist($stock);
+        $em->flush();
+        
     }
 
 }

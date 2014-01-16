@@ -24,7 +24,7 @@ class Admin_ManageOrdersController extends Zend_Controller_Action
 	
 	public function indexAction(){
 	    
-		try{
+		try{		    
 			$params = $this->getRequest()->getParams();
 			if(isset($params['page'])){$curPage = $params['page'];}
 			else{$curPage = 1;}
@@ -154,10 +154,30 @@ class Admin_ManageOrdersController extends Zend_Controller_Action
     		}else{
     			$ordersId[0] = $params['orderid'];
     		}
+            if(isset($params['updatestock']) && $params['updatestock'] == 1){                
+                $updateStock = true;
+            }else{
+                $updateStock = false;
+            }
     		
     		$tbOrder = new DB_Orders();
-    		$tbOrder->cancel($ordersId);
-    		$this->_helper->flashMessenger->addMessage('Pedido cancelado com sucesso!','success');
+    		$results = $tbOrder->cancel($ordersId,$updateStock);
+    		if ($results['success'] > 0 && $results['failure'] > 0){
+    		    $this->_helper->flashMessenger->addMessage($results['success'] . ' pedido(s) cancelado(s) com sucesso, porém ' . $results['failure'] . ' pedido(s) não foram cancelado(s)','success');
+    		}else if($results['success'] > 0 && $results['failure'] <= 0){
+    		    if($results['success'] == 1){
+    		        $this->_helper->flashMessenger->addMessage('Pedido cancelado com sucesso!','success');
+    		    }else{
+    		        $this->_helper->flashMessenger->addMessage($results['success'] . ' pedidos cancelados com sucesso!','success');
+    		    }
+    		}else if($results['failure'] > 0 && $results['success'] <= 0){
+                if($results['failure'] == 1){
+                    $this->_helper->flashMessenger->addMessage('Este pedido não pode ser cancelado','error');
+                }else{
+                    $this->_helper->flashMessenger->addMessage($results['failure'] . ' pedidos não puderam ser cancelados!','error');
+                }
+            }       		
+    		
 			$this->getHelper('Redirector')->gotoUrl('/admin238/manage-orders');
     		
     	}
@@ -174,7 +194,7 @@ class Admin_ManageOrdersController extends Zend_Controller_Action
             $tbOrder = new DB_Orders();
             $data = $tbOrder->getOrderDetails($params['orderid']);         
             $conditions['thumbnail'] = true;
-        //    Zend_Debug::dump($data);exit;
+      
             if($data != false){
                 $this->view->data = $data; 
                 $this->view->client = $data['general']->getClient();

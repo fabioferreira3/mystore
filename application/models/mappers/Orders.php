@@ -790,16 +790,44 @@ class DB_Orders
     	
     }
     
-    public function cancel(array $ordersId){
+    public function cancel(array $ordersId, $updateStock = false){
     	
     	$em = Zend_Registry::getInstance()->entitymanager;
+        
+        $success = 0;
+        $failure = 0;
+        
     	foreach($ordersId as $id){
+    	    
     		$order = $em->getRepository('DB_Orders')->find($id);
-    		$cancelStatus = $em->getRepository('DB_OrderStatus')->find(3);
-    		$order->setOrderStatus($cancelStatus);
-    		$em->persist($order);
-    		$em->flush();
+            $actualStatus = $order->getOrderStatus()->getId();
+            if($actualStatus != 3 && $actualStatus != 5 && $actualStatus != 6){                
+            
+        		$cancelStatus = $em->getRepository('DB_OrderStatus')->find(3);
+        		$order->setOrderStatus($cancelStatus);
+                
+                if($updateStock){                
+                    $orderProduct = $em->getRepository('DB_OrderProducts')->findByOrder($id); 
+                                   
+                    foreach($orderProduct as $row){
+                        
+                        $stock = new DB_ProductStock();
+                        $stock->sumQty($row->getProduct(),$row->getQty());
+                    }                
+                }           
+                
+        		$em->persist($order);
+        		$em->flush();
+                $success++;
+            }else{
+                $failure++;
+            }
     	}
+        $results = array();
+        $results['success'] = $success;
+        $results['failure'] = $failure;
+        
+        return $results;
     }
     
     public function checkRecord(){
