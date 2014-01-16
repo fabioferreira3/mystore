@@ -547,7 +547,7 @@ class DB_Orders
     			if($status === 2){
     				$actions .= '<button value="'. $orderId . '" class="btn span12 send">Enviar</button>';
     			}
-    			$actions .= '<button value="'. $orderId . '" class="btn span12 cancel" style="margin-left:0;">Cancelar</button>';
+    			$actions .= '<button value="'. $orderId . '" class="btn span12 cancel" id="cancelOrder" style="margin-left:0;">Cancelar</button>';
     		}
     		if($status === 3 || $status === 5){
     			$actions .= '<button value="'. $orderId . '" class="btn span12 rebuy">Recomprar</button>';
@@ -563,7 +563,7 @@ class DB_Orders
     		$html.=			'<td>'. $name .'</td>';
     		$html.=			'<td>'. $order->getDateCreate()->format('d/m/Y - H:i') .'</td>';
     		$html.=			'<td>'. $order->getDateUpd()->format('d/m/Y - H:i') .'</td>';    		
-    		$html.=			'<td>R$ '. $order->getProductPrice() .'</td>';
+    		$html.=			'<td>R$ '. $order->getTotalPrice() .'</td>';
     		$html.=			'<td>'. $order->getOrderStatus()->getName() .'</td>';
     		$html.=			'<td>'. $actions .'</td>';
     		$html.=			'</tr>';

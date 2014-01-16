@@ -412,13 +412,14 @@ function validateOrder(){
 		                contentType: "application/json; charset=utf-8",
 		                dataType:"json",
 		                success: function (data) {              
-		                     
+		                     if(data == true){		                         
+		                         window.location.replace('/admin238/manage-orders'); 
+		                     }
 		                },
 		                error: function(request,error){
 		                    console.log(arguments);
 		                    $.sticky(error, {autoclose : 5000, position: "top-right", type:"st-error" });
-		                }	
-					
+		                }
 				});
 				    				   						
 				});	
@@ -642,6 +643,8 @@ $(document).ready(function(){
 		if($('div#productsSelected tbody tr').length < 1){
 			alert('Você não possui nenhum produto selecionado!');
 		}else{
+		    $('.wait h1').html('Aguarde...');
+            $('body').addClass('loading');
 			validateOrder();			
 		};		
 	});

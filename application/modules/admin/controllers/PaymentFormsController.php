@@ -104,7 +104,7 @@ class Admin_PaymentFormsController extends Zend_Controller_Action{
 			if($response->getStatus() == '200'){
 			$data = simplexml_load_string($response->getBody());
 			$code = $data->code;			
-			$this->getHelper('Redirector')->gotoUrl('https://pagseguro.uol.com.br/v2/checkout/payment.html?code=' . $code);
+		//	$this->getHelper('Redirector')->gotoUrl('https://pagseguro.uol.com.br/v2/checkout/payment.html?code=' . $code);
 			exit;
 			}else{
 				Zend_Debug::dump($response);exit;

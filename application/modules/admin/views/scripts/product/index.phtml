@@ -103,7 +103,7 @@ if (isset($this->msgError)){
 		    			<td><?php echo $product->getName();?></td>
 		    			<td><?php echo $product->getSku();?></td>
 		    			<td><?php if($product->getPrice()){ echo 'R$' . $product->getPrice();}?></td>
-		    			<td><?php if($product->getCurrentQty()){echo $product->getCurrentQty();}?></td>			
+		    			<td><?php if($product->getCurrentQty() || $product->getCurrentQty() === 0){echo $product->getCurrentQty();}?></td>			
 		    			<td><?php if($product->getStatus() == '1'){echo '<a href="/admin238/product/disable?product_id='.$product->getId().'"><i class="splashy-gem_okay"></i>Ativo';}else{ echo '<a href="/admin238/product/enable?product_id='.$product->getId().'"><i class="splashy-gem_remove"></i>Desabilitado</a>';}?></td>
 		    			<td><a href="<?= '/admin238/product/edit?product_id=' . $product->getId();?>" class="sepV_a" title="Editar"><i class="icon-pencil"></i>
 		    				</a> <a class="remove-product" href="/admin238/product/remove?product_id= <?= $product->getId();?>" title="Excluir"><i class="icon-trash"></i> </a>

@@ -83,6 +83,21 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 								'controller' => 'product'
 						))
 		);
+        $router->addRoute(
+                'payment_root',
+                new Zend_Controller_Router_Route('/pagamento/',
+                        array(  'module' => 'front',
+                                'controller' => 'payment',
+                                'action' => 'index'
+                        ))
+        );
+        $router->addRoute(
+                'payment_action',
+                new Zend_Controller_Router_Route('/pagamento/:action',
+                        array(  'module' => 'front',
+                                'controller' => 'payment'
+                        ))
+        );
 		
         $router->addRoute(
                 'admin_controller',

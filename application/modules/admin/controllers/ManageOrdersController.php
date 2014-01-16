@@ -131,10 +131,10 @@ class Admin_ManageOrdersController extends Zend_Controller_Action
         try{
             $params = $this->getRequest()->getParams();
             
-       //   echo json_encode($params);
             $tbOrders = new DB_Orders();
             $tbOrders->saveOrder($params);
-            echo json_encode('ok');
+            $this->_helper->flashMessenger->addMessage('Pedido criado/atualizado com sucesso!','success');
+            echo json_encode(true);
             exit;
         }
         catch(Exception $e){echo json_encode($e->getMessage());exit; }

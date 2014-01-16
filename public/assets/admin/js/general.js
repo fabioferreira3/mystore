@@ -106,3 +106,19 @@ function getProductTable(
 	    });
 	
 }
+
+$(document).ready(function(){ 
+$('body').on('click','button#cancelOrder',function(){
+    var url = '/admin238/manage-orders/cancel?';
+    var accept = confirm('Deseja mesmo cancelar este pedido?');
+    if(accept){
+        url = url + 'orderid[]=' + $(this).val();
+        var updatestock = confirm('Deseja repor o estoque dos itens deste pedido?');
+        if(updatestock){
+            url = url + '&updatestock=1';
+        }
+        window.location.replace(url);
+    } 
+});
+});
+    

@@ -7,22 +7,22 @@
     <div class="row-fluid">
     	<div class="span12 pull-left">    		
     		<?php if($this->data['general']->getOrderStatus()->getId() == 1 || $this->data['general']->getOrderStatus()->getId() == 4){?>
-	    		<button class="btn pull-left">Criar Fatura</button>
-	    		<button class="btn pull-left">Cancelar</button>
+	    		<button class="btn pull-left" id="createInvoice">Criar Fatura</button>
+	    		<button class="btn pull-left" id="cancelOrder" value="<?= $this->data['general']->getId();?>">Cancelar</button>
     		<?php }?>
     		<?php if($this->data['general']->getOrderStatus()->getId() == 2 || $this->data['general']->getOrderStatus()->getId() == 6){?>
-	    		<button class="btn pull-left">Visualizar Fatura</button>
-	    		<button class="btn pull-left">Entregas</button>
-	    		<button class="btn pull-left">Reembolsar</button>	    		
+	    		<button class="btn pull-left" id="viewInvoice">Visualizar Fatura</button>
+	    		<button class="btn pull-left" id="viewShippings">Entregas</button>
+	    		<button class="btn pull-left" id="reimburse">Reembolsar</button>	    		
     		<?php }?>
     		<?php if($this->data['general']->getOrderStatus()->getId() == 2){ ?>
-    			<button class="btn pull-left">Criar Envio</button>
+    			<button class="btn pull-left" id="createShipping">Criar Envio</button>
     		<?php }?>
     		
     		<button class="btn pull-left">Acessar Conta do Cliente</button>
     		
     		<?php if($this->data['general']->getOrderStatus()->getId() != 3){ ?>
-    			<button class="btn pull-left">Enviar Email</button>
+    			<button class="btn pull-left" id="sendEmail">Enviar Email</button>
     		<?php }?>
     		<button class="btn">Voltar</button>
     	</div>
@@ -201,3 +201,8 @@
     </div>    
     
 </div>
+
+<script type="text/javascript">
+    
+    
+</script>

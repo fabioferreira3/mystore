@@ -144,6 +144,7 @@ if (isset($this->msgError)){
 	});
 	
 	function cancelOrder(){
+	    
 	    var accept = confirm('Deseja mesmo cancelar este(s) pedido(s)?');
 	    if(accept){
 	        var url = '/admin238/manage-orders/cancel?';
