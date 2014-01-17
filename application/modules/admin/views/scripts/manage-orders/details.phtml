@@ -24,6 +24,36 @@ if (isset($this->msgError)){
 <?php }
     
 }?>
+<div class="modal hide fade" id="viewInvoices">
+	<div class="modal-header">
+		<button class="close" data-dismiss="modal">×</button>
+		<h3>Faturas para Consulta</h3>
+	</div>
+	<div class="modal-body">
+		<table class="table">
+			<thead>
+				<th>Código</th>
+				<th>Última Atualização</th>
+			</thead>
+			<tbody>
+				<?php if(isset($this->invoices)){ 
+					foreach($this->invoices as $invoice){ ?>
+					<tr>
+						<td><a href="/admin238/manage-orders/invoice?view=1&invoiceid=<?= $invoice->getId();?>"><?= $invoice->getInvoiceCod();?></a></td>
+						<td><?= $invoice->getDateUpd()->format('d/m/Y - H:i');?></td>
+					</tr>
+				<?php }
+				?>
+					
+				<?php }?>
+			</tbody>			
+		</table>
+	</div>
+	<div class="modal-footer">
+		<a class="btn" data-dismiss="modal" href="#">Fechar</a>
+	</div>
+</div>
+
 
 <div class="row-fluid">
     <div class="row-fluid">    
@@ -38,7 +68,7 @@ if (isset($this->msgError)){
 	    		<button class="btn pull-left" id="cancelOrder" value="<?= $this->data['general']->getId();?>">Cancelar</button>
     		<?php }?>
     		<?php if($this->data['general']->getOrderStatus()->getId() == 2 || $this->data['general']->getOrderStatus()->getId() == 6){?>
-	    		<button class="btn pull-left" id="viewInvoice">Visualizar Fatura(s)</button>
+	    		<a data-toggle="modal" data-backdrop="static" href="#viewInvoices"><button class="btn pull-left">Visualizar Fatura(s)</button></a>
 	    		<button class="btn pull-left" id="viewShippings">Visualizar Entrega(s)</button>
 	    		<button class="btn pull-left" id="reimburse">Reembolsar</button>	    		
     		<?php }?>
@@ -70,7 +100,11 @@ if (isset($this->msgError)){
                     <tr>
                         <td>Loja:</td>
                         <td><?= $this->data['general']->getStore()->getName();?></td> 
-                    </tr>                    
+                    </tr>   
+                    <tr>
+                    	<td>Última Atualização:</td>
+                    	<td><?= $this->data['general']->getDateUpd()->format('d/m/Y - H:i');?></td>
+                    </tr>                 
                 </tbody>
             </table>
         </div>
@@ -214,7 +248,7 @@ if (isset($this->msgError)){
                         <td>BRL</td>
                         <td><?= $this->data['general']->getPaymentType()->getName(); ?></td>
                     </tr>
-                    <?php if($this->data['general']->getPaymentType()->getId() == 1){ ?>
+                    <?php if($this->data['general']->getPaymentType()->getId() == 1 && $this->data['general']->getOrderStatus()->getId() == 1){ ?>
                     <tr>
                         <td><button class="btn" id="generatePagseguroLink">Gerar Link</button></td>
                         <td><input type="text" id="paymentLink" class="span12"/></td>

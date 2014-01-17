@@ -191,14 +191,18 @@ class Admin_ManageOrdersController extends Zend_Controller_Action
             $tbProduct = new DB_Product();   
             
     	    $params = $this->getRequest()->getParams();
-            $tbOrder = new DB_Orders();
-            $data = $tbOrder->getOrderDetails($params['orderid']);         
+            $tbOrder = new DB_Orders();            
+            $data = $tbOrder->getOrderDetails($params['orderid']); 
+            $invoices = $this->repo->db('Invoice')->findByOrder($params['orderid']);        
             $conditions['thumbnail'] = true;
       
             if($data != false){
                 $this->view->data = $data; 
                 $this->view->client = $data['general']->getClient();
                 $this->view->productTable = $tbProduct->generateOrderProductsTable($data,$conditions);
+                if($invoices != null){
+                	$this->view->invoices = $invoices;
+                }
             }else{
                 $this->getHelper('Redirector')->gotoUrl('/admin238/manage-orders');
             }
@@ -213,20 +217,50 @@ class Admin_ManageOrdersController extends Zend_Controller_Action
     		$params = $this->getRequest()->getParams();
     		$tbOrder = new DB_Orders();
     		$tbProduct = new DB_Product();
-    		$data = $tbOrder->getOrderDetails($params['orderid']);
     		$conditions['thumbnail'] = true;
     		
-    		if($data != false){
-    			$this->view->data = $data;
-    			$this->view->client = $data['general']->getClient();
-    			$this->view->productTable = $tbProduct->generateOrderProductsTable($data,$conditions);
-    		}else{
-    			$this->getHelper('Redirector')->gotoUrl('/admin238/manage-orders');
+    		// Traz informações pelo ID do Pedido (Somente para criação de nova fatura)
+    		
+    		if(isset($params['orderid'])){
+    			$data = $tbOrder->getOrderDetails($params['orderid']);
+    			if($data != false){
+    				$this->view->data = $data;    				
+    			}else{
+    				$this->_helper->flashMessenger->addMessage('Pedido não encontrado!','error');
+    				$this->getHelper('Redirector')->gotoUrl('/admin238/manage-orders');
+    			}
+    		}   		
+    		
+    		// Traz informações pelo ID da Fatura (Somente para visualização de determinada fatura)
+    		
+    		if(isset($params['invoiceid'])){
+    			$invoice = $this->repo->db('Invoice')->find($params['invoiceid']);
+    			if($invoice != null){
+	    			$data = $tbOrder->getOrderDetails($invoice->getOrder()->getId());
+	    			if($data != false){
+	    				$this->view->data = $data;
+	    				$this->view->invoice = $invoice;    
+	    				$this->view->type = 'view';				
+	    			}else{
+	    				$this->getHelper('Redirector')->gotoUrl('/admin238/manage-orders');
+	    			}
+    			}else{
+    				$this->_helper->flashMessenger->addMessage('Fatura não encontrada!','error');
+    				$this->getHelper('Redirector')->gotoUrl('/admin238/manage-orders');
+    			}
+    			
     		}
+    		
+    		$this->view->productTable = $tbProduct->generateOrderProductsTable($data,$conditions);
+    		$this->view->client = $data['general']->getClient();   	
+    		
+    		
     		if(isset($params['create']) && $params['create'] == 1){
-    			$title = 'Criar Fatura';
+    			$this->view->type = 'create';
+    			$title = 'Criar Fatura - Pedido #' . $data['general']->getOrderCod();
     		}else if(isset($params['view']) && $params['view'] == 1){
-    			$title = 'Fatura';
+    			$this->view->type = 'view';
+    			$title = 'Fatura #' . $invoice->getInvoiceCod();
     		}
     		$this->view->title = $title;
     		
@@ -240,6 +274,7 @@ class Admin_ManageOrdersController extends Zend_Controller_Action
     		$params = $this->getRequest()->getParams();    		
     		$tbInvoice = new DB_Invoice();    		
     		if($tbInvoice->create($params['orderid'],$params['comment'],$params['sendemail'])){
+    			
     			$this->_helper->flashMessenger->addMessage('Fatura criada com sucesso!','success');
     			echo json_encode(true);    			
     		}else{

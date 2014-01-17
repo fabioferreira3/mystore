@@ -840,7 +840,10 @@ class DB_Orders
     	$em = Zend_Registry::getInstance()->entitymanager;
     	$order = $em->getRepository('DB_Orders')->find($orderId);    	
     	$newStatus = $em->getRepository('DB_OrderStatus')->find($newStatusId);
+    	$dtNow = new DateTime();
+    	
     	$order->setOrderStatus($newStatus);
+    	$order->setDateUpd($dtNow);
     	
     	$em->persist($order);
     	$em->flush();
