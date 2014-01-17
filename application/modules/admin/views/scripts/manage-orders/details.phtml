@@ -1,3 +1,30 @@
+<?php 
+
+if (isset($this->msgSuccess)){
+   
+    foreach ($this->msgSuccess as $message){?>
+        <div class="alert alert-success">
+            <a class="close" data-dismiss="alert">×</a>
+            <?php echo $message; ?>
+        </div>
+         
+<?php }
+    
+}?>
+
+<?php 
+
+if (isset($this->msgError)){
+   
+      foreach ($this->msgError as $message){?>
+        <div class="alert alert-error">
+            <a class="close" data-dismiss="alert">×</a>
+            <?php echo $message; ?>
+        </div>         
+<?php }
+    
+}?>
+
 <div class="row-fluid">
     <div class="row-fluid">    
         <h1 class="heading">Detalhes do Pedido - #<?= $this->data['general']->getOrderCod();?></h1> 
@@ -11,8 +38,8 @@
 	    		<button class="btn pull-left" id="cancelOrder" value="<?= $this->data['general']->getId();?>">Cancelar</button>
     		<?php }?>
     		<?php if($this->data['general']->getOrderStatus()->getId() == 2 || $this->data['general']->getOrderStatus()->getId() == 6){?>
-	    		<button class="btn pull-left" id="viewInvoice">Visualizar Fatura</button>
-	    		<button class="btn pull-left" id="viewShippings">Entregas</button>
+	    		<button class="btn pull-left" id="viewInvoice">Visualizar Fatura(s)</button>
+	    		<button class="btn pull-left" id="viewShippings">Visualizar Entrega(s)</button>
 	    		<button class="btn pull-left" id="reimburse">Reembolsar</button>	    		
     		<?php }?>
     		<?php if($this->data['general']->getOrderStatus()->getId() == 2){ ?>

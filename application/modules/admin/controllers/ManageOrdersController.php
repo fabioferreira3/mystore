@@ -234,13 +234,20 @@ class Admin_ManageOrdersController extends Zend_Controller_Action
     	catch(Exception $e){echo $e->getMessage();exit;}
     }
     
-    public function saveInvoice(){
+    public function saveInvoiceAction(){
     	
     	try{
-    		$params = $this->getRequest()->getParams();
-    		
-    		
+    		$params = $this->getRequest()->getParams();    		
+    		$tbInvoice = new DB_Invoice();    		
+    		if($tbInvoice->create($params['orderid'],$params['comment'],$params['sendemail'])){
+    			$this->_helper->flashMessenger->addMessage('Fatura criada com sucesso!','success');
+    			echo json_encode(true);    			
+    		}else{
+    			$this->_helper->flashMessenger->addMessage('Erro na geração da fatura!','error');
+    			echo json_encode(true);
+    		}
+    		exit;
     	}
-    	catch(Exception $e){echo $e->getMessage();}
+    	catch(Exception $e){echo $e->getMessage();exit;}
     }
 }

@@ -48,7 +48,6 @@ class DB_Invoice
      * @Column(name="date_upd", type="datetime", nullable=true)
      */
     private $dateUpd;
-
     
     /**
      * @var boolean $emailSent
@@ -56,6 +55,13 @@ class DB_Invoice
      * @Column(name="email_sent", type="boolean", nullable=true)
      */
     private $emailSent;
+    
+    /**
+     * @var string $totalValue
+     *
+     * @Column(name="total_value", type="string", nullable=false)
+     */
+    private $totalValue;
 
     /**
      * @var Store
@@ -77,7 +83,7 @@ class DB_Invoice
     /**
      * @var Order
      *
-     * @ManyToOne(targetEntity="DB_Order")
+     * @ManyToOne(targetEntity="DB_Orders")
      * @JoinColumns({
      *   @JoinColumn(name="order_id", referencedColumnName="id")
      * })
@@ -231,10 +237,10 @@ class DB_Invoice
     /**
      * Set order
      *
-     * @param DB_Order $order
+     * @param DB_Orders $order
      * @return Invoice
      */
-    public function setOrder(\DB_Order $order = null)
+    public function setOrder(\DB_Orders $order = null)
     {
         $this->order = $order;
         return $this;
@@ -270,6 +276,83 @@ class DB_Invoice
     public function getComment()
     {
     	return $this->comment;
+    }
+    
+    /**
+     * Set string
+     *
+     * @param string $totalValue
+     * @return Invoice
+     */
+    public function setTotalValue($totalValue)
+    {
+    	$this->totalValue = $totalValue;
+    	return $this;
+    }
+    
+    /**
+     * Get totalValue
+     *
+     * @return string
+     */
+    public function getTotalValue()
+    {
+    	return $this->totalValue;
+    }
+    
+    
+    public function create($orderId, $comment = null, $sendEmail = false){
+    	
+    	$em = Zend_Registry::getInstance()->entitymanager;
+    	$tbOrder = new DB_Orders();
+    	$order = $em->getRepository('DB_Orders')->find($orderId);
+    	
+    	// Verifica se já existe fatura com valor total
+    	
+    	$invoice = $em->getRepository('DB_Invoice')->findByOrder($orderId);
+    	if($invoice != null){
+    		$sum = 0;
+    		
+    		// Soma o valor de todas as faturas existentes
+    		foreach($invoice as $row){
+    			$sum += $row->getTotalValue();    			
+    		}
+    		
+    		// Se o valor da soma for igual ao valor da nova fatura, gera um erro
+    		if($sum == $order->getTotalPrice()){
+    			return false;
+    		}
+    		
+    	}
+    	
+    	$random = '';
+    	for($i=0; $i <= 4; $i++){
+    		$random .= mt_rand(1,9);
+    	}
+    	$dtNow = new DateTime();
+    	$store = $em->getRepository('DB_Store')->find(1);
+    	
+    	$this->setOrder($order);
+    	$this->setInvoiceCod($order->getOrderCod() . '-' . $random);
+    	if($comment){
+    		$this->setComment($comment);
+    	}
+    	$this->setTotalValue($order->getTotalPrice());
+    	$this->setDateCreate($dtNow);
+    	$this->setDateUpd($dtNow);
+    	$this->setStore($store);
+    	if($sendEmail){
+    		$this->setEmailSent(1);
+    	}else{
+    		$this->setEmailSent(0);
+    	}
+    	$em->persist($this);
+    	$em->flush();
+    	
+    	$tbOrder->changeStatus($orderId,2);   	
+    	
+    	return true;
+    	
     }
 
     

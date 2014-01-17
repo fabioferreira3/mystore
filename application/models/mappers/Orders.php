@@ -541,12 +541,7 @@ class DB_Orders
     		}
     		$actions = '';
     		if($status === 1 || $status === 2 || $status === 4){
-    			if($status === 1 || $status === 4){
-    				$actions .= '<button value="'. $orderId . '" class="btn span12 details" style="margin-left:0;">Detalhes</button>';
-    			}
-    			if($status === 2){
-    				$actions .= '<button value="'. $orderId . '" class="btn span12 send">Enviar</button>';
-    			}
+    			$actions .= '<button value="'. $orderId . '" class="btn span12 details" style="margin-left:0;">Detalhes</button>';
     			$actions .= '<button value="'. $orderId . '" class="btn span12 cancel" id="cancelOrder" style="margin-left:0;">Cancelar</button>';
     		}
     		if($status === 3 || $status === 5){
@@ -839,6 +834,17 @@ class DB_Orders
     	$query->setMaxResults('1');
     	return $query->getQuery()->getResult();
     }   
+    
+    public function changeStatus($orderId,$newStatusId){
+    	
+    	$em = Zend_Registry::getInstance()->entitymanager;
+    	$order = $em->getRepository('DB_Orders')->find($orderId);    	
+    	$newStatus = $em->getRepository('DB_OrderStatus')->find($newStatusId);
+    	$order->setOrderStatus($newStatus);
+    	
+    	$em->persist($order);
+    	$em->flush();
+    }
     
     
 }
