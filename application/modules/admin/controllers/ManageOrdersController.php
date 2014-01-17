@@ -206,4 +206,41 @@ class Admin_ManageOrdersController extends Zend_Controller_Action
     	}
         catch(Exception $e){echo $e->getMessage();exit;}
     }
+    
+    public function invoiceAction(){
+    	
+    	try{
+    		$params = $this->getRequest()->getParams();
+    		$tbOrder = new DB_Orders();
+    		$tbProduct = new DB_Product();
+    		$data = $tbOrder->getOrderDetails($params['orderid']);
+    		$conditions['thumbnail'] = true;
+    		
+    		if($data != false){
+    			$this->view->data = $data;
+    			$this->view->client = $data['general']->getClient();
+    			$this->view->productTable = $tbProduct->generateOrderProductsTable($data,$conditions);
+    		}else{
+    			$this->getHelper('Redirector')->gotoUrl('/admin238/manage-orders');
+    		}
+    		if(isset($params['create']) && $params['create'] == 1){
+    			$title = 'Criar Fatura';
+    		}else if(isset($params['view']) && $params['view'] == 1){
+    			$title = 'Fatura';
+    		}
+    		$this->view->title = $title;
+    		
+    	}
+    	catch(Exception $e){echo $e->getMessage();exit;}
+    }
+    
+    public function saveInvoice(){
+    	
+    	try{
+    		$params = $this->getRequest()->getParams();
+    		
+    		
+    	}
+    	catch(Exception $e){echo $e->getMessage();}
+    }
 }

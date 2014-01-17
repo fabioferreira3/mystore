@@ -49,13 +49,7 @@ class DB_Invoice
      */
     private $dateUpd;
 
-    /**
-     * @var integer $status
-     *
-     * @Column(name="status", type="integer", nullable=false)
-     */
-    private $status;
-
+    
     /**
      * @var boolean $emailSent
      *
@@ -72,6 +66,13 @@ class DB_Invoice
      * })
      */
     private $store;
+    
+    /**
+     * @var string $comment
+     *
+     * @Column(name="comment", type="string", length=500, nullable=true)
+     */
+    private $comment;
 
     /**
      * @var Order
@@ -83,28 +84,7 @@ class DB_Invoice
      */
     private $order;
 
-    /**
-     * @var Address
-     *
-     * @ManyToOne(targetEntity="DB_Address")
-     * @JoinColumns({
-     *   @JoinColumn(name="billing_address_id", referencedColumnName="id")
-     * })
-     */
-    private $billingAddress;
-
-    /**
-     * @var Address
-     *
-     * @ManyToOne(targetEntity="DB_Address")
-     * @JoinColumns({
-     *   @JoinColumn(name="shipping_address_id", referencedColumnName="id")
-     * })
-     */
-    private $shippingAddress;
-
-
-
+    
     /**
      * Get id
      *
@@ -203,28 +183,7 @@ class DB_Invoice
         return $this->dateUpd;
     }
 
-    /**
-     * Set status
-     *
-     * @param integer $status
-     * @return Invoice
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
-        return $this;
-    }
-
-    /**
-     * Get status
-     *
-     * @return integer 
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
+    
     /**
      * Set emailSent
      *
@@ -290,48 +249,30 @@ class DB_Invoice
     {
         return $this->order;
     }
-
+    
     /**
-     * Set billingAddress
+     * Set comment
      *
-     * @param DB_Address $billingAddress
+     * @param string $comment
      * @return Invoice
      */
-    public function setBillingAddress(\DB_Address $billingAddress = null)
+    public function setComment($comment)
     {
-        $this->billingAddress = $billingAddress;
-        return $this;
+    	$this->comment = $comment;
+    	return $this;
+    }
+    
+    /**
+     * Get comment
+     *
+     * @return string
+     */
+    public function getComment()
+    {
+    	return $this->comment;
     }
 
-    /**
-     * Get billingAddress
-     *
-     * @return DB_Address 
-     */
-    public function getBillingAddress()
-    {
-        return $this->billingAddress;
-    }
+    
 
-    /**
-     * Set shippingAddress
-     *
-     * @param DB_Address $shippingAddress
-     * @return Invoice
-     */
-    public function setShippingAddress(\DB_Address $shippingAddress = null)
-    {
-        $this->shippingAddress = $shippingAddress;
-        return $this;
-    }
-
-    /**
-     * Get shippingAddress
-     *
-     * @return DB_Address 
-     */
-    public function getShippingAddress()
-    {
-        return $this->shippingAddress;
-    }
+    
 }
