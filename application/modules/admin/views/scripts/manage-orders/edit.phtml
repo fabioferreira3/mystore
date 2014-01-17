@@ -434,6 +434,20 @@ function validateOrder(){
 	}
 }
 
+function findClients(){
+	var name = $('input[name="searchName"]').val();
+	var email = $('input[name="searchEmail"]').val();
+	var state = $('input[name="searchState"]').val();
+	var country = $('input[name="searchCountry"]').val();
+	var dateSince = $('input[name="searchSince"]').val();
+	var lastLogin = $('input[name="searchLastLogin"]').val();
+	var status = $('select[name="searchStatus"]').val();      
+	var actions = false;	
+	var dates = false;
+	var selectType = 'radio';
+	
+	getClientTable(name,email,state,country,dateSince,lastLogin,status,actions,dates,selectType);
+}
 
 $(document).ready(function(){        
 
@@ -450,20 +464,15 @@ $(document).ready(function(){
         }
     });
     		
-	$('button#searchCustomer').on('click touchstart',function(){
+	$('button#searchCustomer').on('click',function(){
 			 
-		var name = $('input[name="searchName"]').val();
-		var email = $('input[name="searchEmail"]').val();
-		var state = $('input[name="searchState"]').val();
-		var country = $('input[name="searchCountry"]').val();
-		var dateSince = $('input[name="searchSince"]').val();
-		var lastLogin = $('input[name="searchLastLogin"]').val();
-		var status = $('select[name="searchStatus"]').val();      
-		var actions = false;	
-		var dates = false;
-		var selectType = 'radio';
+		findClients();
 		
-		getClientTable(name,email,state,country,dateSince,lastLogin,status,actions,dates,selectType);
+	});	
+
+	$('button#searchCustomer').tap(function(){
+		 
+		findClients();
 		
 	});	
 
