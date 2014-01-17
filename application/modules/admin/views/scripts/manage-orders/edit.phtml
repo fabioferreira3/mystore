@@ -464,17 +464,19 @@ $(document).ready(function(){
         }
     });
     		
-	$('button#searchCustomer').on('click',function(){
+	/*$('button#searchCustomer').on('click',function(){
 			 
 		findClients();
 		
-	});	
+	});	*/
 
-	$('button#searchCustomer').tap(function(){
-		 
+	$t2 = $('button#searchCustomer').Touchable().bind('tap', function(e, touch){
 		findClients();
-		
-	});	
+	});
+	
+	
+	
+	
 
 	$('body').on('change','.row_sel',function(){
 	    
