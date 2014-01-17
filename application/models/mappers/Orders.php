@@ -801,7 +801,7 @@ class DB_Orders
     	    
     		$order = $em->getRepository('DB_Orders')->find($id);
             $actualStatus = $order->getOrderStatus()->getId();
-            if($actualStatus != 3 && $actualStatus != 5 && $actualStatus != 6){                
+            if($actualStatus != 3 && $actualStatus != 5 && $actualStatus != 6 && $actualStatus != 7){                
             
         		$cancelStatus = $em->getRepository('DB_OrderStatus')->find(3);
         		$order->setOrderStatus($cancelStatus);

@@ -27,6 +27,13 @@ class DB_State
      * @Column(name="name", type="string", length=100, nullable=false)
      */
     private $name;
+    
+    /**
+     * @var string $uf
+     *
+     * @Column(name="uf", type="string", length=2, nullable=false)
+     */
+    private $uf;
 
     /**
      * @var Country
@@ -70,6 +77,28 @@ class DB_State
     public function getName()
     {
         return $this->name;
+    }
+    
+    /**
+     * Set uf
+     *
+     * @param string $uf
+     * @return State
+     */
+    public function setUf($uf)
+    {
+    	$this->uf = $uf;
+    	return $this;
+    }
+    
+    /**
+     * Get uf
+     *
+     * @return string
+     */
+    public function getUf()
+    {
+    	return $this->uf;
     }
 
     /**

@@ -107,9 +107,7 @@ if (isset($this->msgError)){
 	$('button.details').on('click',function(){
         window.location.replace("/admin238/manage-orders/details?orderid="+$(this).parent().parent().find('td input').val()); 
     });
-	$('button.cancel').on('click',function(){
-		
-	});
+	
 	$('button.rebuy').on('click',function(){
 		
 	});
@@ -144,23 +142,33 @@ if (isset($this->msgError)){
 	});
 	
 	function cancelOrder(){
-	    
-	    var accept = confirm('Deseja mesmo cancelar este(s) pedido(s)?');
-	    if(accept){
-	        var url = '/admin238/manage-orders/cancel?';
-    	    var orders = '';
-    	    $('input.orderid').each(function(){
-    	        if($(this).prop('checked') == true){
-    	            orders = orders + '&orderid[]=' + $(this).val();
-    	        }
-    	    });
-    	    url = url + orders;
-    	    var updatestock = confirm('Deseja retornar itens ao estoque?');
-    	    if(updatestock){
-    	        url = url + '&updatestock=1';
-    	    }
-	    }  
-	   window.location.replace(url); 
+		
+		var count = 0;
+		$('input.orderid').each(function(){
+	        if($(this).prop('checked') == true){
+	            count++;
+	        }
+	    });
+	    if(count > 0){
+		    var accept = confirm('Deseja mesmo cancelar este(s) pedido(s)?');
+		    if(accept){
+		        var url = '/admin238/manage-orders/cancel?';
+	    	    var orders = '';
+	    	    $('input.orderid').each(function(){
+	    	        if($(this).prop('checked') == true){
+	    	            orders = orders + '&orderid[]=' + $(this).val();
+	    	        }
+	    	    });
+	    	    url = url + orders;
+	    	    var updatestock = confirm('Deseja retornar itens ao estoque?');
+	    	    if(updatestock){
+	    	        url = url + '&updatestock=1';
+	    	    }
+	    	    window.location.replace(url);
+		    } 
+	    }else{
+		    alert('Selecione um pedido!'); 
+	    }
 	}
 		
 </script>

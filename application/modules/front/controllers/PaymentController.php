@@ -29,48 +29,53 @@ class Front_PaymentController extends Zend_Controller_Action{
 
     public function pagseguroAction(){
         try{
-            echo 'pagseguro';exit;
-            $items = array();
-            
-            $items[0]['itemId'] = '123';
-            $items[0]['itemDescription'] = 'Capa de iPhone 4 do Bob Esponja';
-            $items[0]['itemAmount'] = '19.90';
-            $items[0]['itemQuantity'] = '3';
-            $items[0]['itemWeight'] = '100';
-            
-            $items[1]['itemId'] = '456';
-            $items[1]['itemDescription'] = 'Capa de iPhone 5 Silicone Preto';
-            $items[1]['itemAmount'] = '24.90';
-            $items[1]['itemQuantity'] = '2';
-            $items[1]['itemWeight'] = '100';
-            
-            $items[2]['itemId'] = '64';
-            $items[2]['itemDescription'] = 'Capa do iPad Air Branco';
-            $items[2]['itemAmount'] = '49.90';
-            $items[2]['itemQuantity'] = '4';
-            $items[2]['itemWeight'] = '150';
-            
+        	$params = $this->getRequest()->getParams();
+        	if(isset($params['orderid'])){
+        		$order = $this->repo->db('Orders')->find($params['orderid']);
+        		$orderProducts = $this->repo->db('OrderProducts')->findByOrder($params['orderid']);
+        		$orderAddresses = $this->repo->db('OrderAddresses')->findByOrder($params['orderid']);     		
+        	}
+        	foreach($orderAddresses as $row){
+        		if($row->getAddressType()->getId() == 2){
+        			$address['shipping'] = $row;
+        		}else{
+        			$address['billing'] = $row;
+        		}
+        	}
+        	
+        	$items = array();
+        	$i = 0;
+        	foreach($orderProducts as $item){
+        		 $items[$i]['itemId'] = $item->getProduct()->getId();
+        		 $items[$i]['itemDescription'] = $item->getProduct()->getName();
+        		 $items[$i]['itemAmount'] = $item->getUnitPrice();
+        		 $items[$i]['itemQuantity'] = $item->getQty();
+        		 $items[$i]['itemWeight'] = $this->repo->db('Product')->find($item->getProduct()->getId())->getWeight() * 1000;
+        		 $i++;
+        	}
+        	
             $payment = new Application_Model_Pagseguro();
             
             $payment->setToken('FBF98ADDD22C4D919A7AA1F9F808D1E1');
             $payment->setEmail('financeiro@linkideias.com.br');
             $payment->setItems($items);     
             $payment->setCurrency('BRL');
-            $payment->setReference('100272134');
-            $payment->setSenderName('Fabio Ferreira');
+            $payment->setReference($order->getOrderCod());
+            $payment->setSenderName($address['shipping']->getName());
             $payment->setSenderAreaCode('11');
             $payment->setSenderPhone('953210896');
-            $payment->setSenderEmail('fabio.ferreira3@outlook.com');
-            $payment->setShippingType('3');
-            $payment->setShippingCost('9.90');
-            $payment->setShippingAddressStreet('Rua Doutor Abelardo Vergueiro Cesar');
-            $payment->setShippingAddressNumber('234');
-            $payment->setShippingAddressComplement('');
-            $payment->setShippingAddressDistrict('Vila Mascote');
-            $payment->setShippingAddressPostalCode('04635080');
-            $payment->setShippingAddressCity('Sao Paulo');
-            $payment->setShippingAddressState('SP');
-            $payment->setShippingAddressCountry('BRA');
+            $payment->setSenderEmail($order->getClient()->getEmail());
+            $payment->setShippingType($order->getShippingType()->getId());
+            $payment->setShippingCost($order->getFreightCost());
+            $payment->setShippingAddressStreet($address['shipping']->getAddress());
+            $payment->setShippingAddressNumber($address['shipping']->getNumber());
+            $payment->setShippingAddressComplement($address['shipping']->getComplement());
+            $payment->setShippingAddressDistrict($address['shipping']->getDistrict());
+            $payment->setShippingAddressPostalCode($address['shipping']->getZipcode());
+            $payment->setShippingAddressCity($address['shipping']->getCity());
+            $payment->setShippingAddressState($address['shipping']->getState()->getUf());
+            $payment->setShippingAddressCountry($address['shipping']->getCountry()->getIso3());
+           
             
             $client = new Zend_Http_Client('https://ws.pagseguro.uol.com.br/v2/checkout');
             $client->setMethod(Zend_Http_Client::POST);
@@ -84,13 +89,14 @@ class Front_PaymentController extends Zend_Controller_Action{
                     'senderEmail' => $payment->getSenderEmail(),
                     'senderAreaCode' => $payment->getSenderAreaCode(),
                     'senderPhone' => $payment->getSenderPhone(),
-                    'shippingType' => 3,
+                    'shippingType' => $payment->getShippingType(),
                     'shippingCost' => $payment->getShippingCost(),
                     'shippingAddressStreet' => $payment->getShippingAddressStreet(),
                     'shippingAddressNumber' => $payment->getShippingAddressNumber(),
                     'shippingAddressPostalCode' => $payment->getShippingAddressPostalCode(),
                     'shippingAddressDistrict' => $payment->getShippingAddressDistrict(),
                     'shippingAddressCity' => $payment->getShippingAddressCity(),
+            		'shippingAddressState' => $payment->getShippingAddressState(),
                     'shippingAddressCountry' => $payment->getShippingAddressCountry(),
                     'maxuse' => 1
                                     
@@ -109,9 +115,14 @@ class Front_PaymentController extends Zend_Controller_Action{
             $response = $client->request();
             if($response->getStatus() == '200'){
             $data = simplexml_load_string($response->getBody());
-            $code = $data->code;            
-        //  $this->getHelper('Redirector')->gotoUrl('https://pagseguro.uol.com.br/v2/checkout/payment.html?code=' . $code);
-            exit;
+            $code = $data->code; 
+            if(isset($params['redirect']) && $params['redirect'] == 1){
+            	$this->getHelper('Redirector')->gotoUrl('https://pagseguro.uol.com.br/v2/checkout/payment.html?code=' . $code);
+            }else{
+            	echo json_encode('https://pagseguro.uol.com.br/v2/checkout/payment.html?code=' . $code);
+            	exit;
+            }           
+            
             }else{
                 Zend_Debug::dump($response);exit;
             }
