@@ -37,6 +37,7 @@ if (isset($this->msgError)){
     		<?php }else if($this->type == 'view'){ ?>
     			<button class="btn pull-left" id="sendInvoice">Enviar Fatura por Email</button>
     			<button class="btn pull-left" id="printInvoice">Imprimir</button>
+    			<button class="btn pull-left pdfInvoice">Exportar PDF</button>
     		<?php }?>
     		
     		<button class="btn pull-left">Acessar Conta do Cliente</button>    		
@@ -236,14 +237,16 @@ if (isset($this->msgError)){
    			</div>
    		</div>
    		<div class="span6 pull-right">
-		    <div class="row-fluid">
-		    	<div class="pull-right">
-		    		<label>
-			    		<input type="checkbox" name="emailSent"/>
-			    		<span style="font-size:14px">Enviar Fatura por Email ao Cliente</span>
-		    		</label>
-		    	</div>    	
-		    </div>
+   			<?php if ($this->type != 'view'){?>
+			    <div class="row-fluid">
+			    	<div class="pull-right">
+			    		<label>
+				    		<input type="checkbox" name="emailSent"/>
+				    		<span style="font-size:14px">Enviar Fatura por Email ao Cliente</span>
+			    		</label>
+			    	</div>    	
+			    </div>
+		    <?php }?>
 		    <div class="row-fluid">
 		    	<div class="pull-right">
 		    		<?php if($this->type == 'create'){?>
