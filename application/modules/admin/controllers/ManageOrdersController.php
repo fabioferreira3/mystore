@@ -286,23 +286,4 @@ class Admin_ManageOrdersController extends Zend_Controller_Action
     	}
     	catch(Exception $e){echo $e->getMessage();exit;}
     }
-    
-    public function shippingAction(){
-    	try{
-    		
-    		$params = $this->getRequest()->getParams();
-    		
-    		if(isset($params['orderid'])){
-    			$data = $tbOrder->getOrderDetails($params['orderid']);
-    			if($data != false){
-    				$this->view->data = $data;
-    			}else{
-    				$this->_helper->flashMessenger->addMessage('Pedido não encontrado!','error');
-    				$this->getHelper('Redirector')->gotoUrl('/admin238/manage-orders');
-    			}
-    		}
-    		
-    	}
-    	catch(Exception $e){echo $e->getMessage();exit}
-    }
 }
