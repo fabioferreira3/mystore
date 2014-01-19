@@ -20,7 +20,6 @@ class Admin_ManageOrdersController extends Zend_Controller_Action
 		}
 		
 		$this->view->manageOrdersPage = true;
-		$this->view->teste = 'teste';
 	}
 	
 	public function indexAction(){
