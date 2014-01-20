@@ -1,7 +1,6 @@
 <?php
 
 
-
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -26,14 +25,7 @@ class DB_Shipping
      *
      * @Column(name="shipping_cod", type="string", length=50, nullable=false)
      */
-    private $shippingCod;
-
-    /**
-     * @var string $trackingNumber
-     *
-     * @Column(name="tracking_number", type="string", length=255, nullable=true)
-     */
-    private $trackingNumber;
+    private $shippingCod;    
 
     /**
      * @var boolean $emailSent
@@ -67,37 +59,16 @@ class DB_Shipping
     private $store;
 
     /**
-     * @var Order
+     * @var Orders
      *
-     * @ManyToOne(targetEntity="DB_Order")
+     * @ManyToOne(targetEntity="DB_Orders")
      * @JoinColumns({
      *   @JoinColumn(name="order_id", referencedColumnName="id")
      * })
      */
     private $order;
-
-    /**
-     * @var Invoice
-     *
-     * @ManyToOne(targetEntity="DB_Invoice")
-     * @JoinColumns({
-     *   @JoinColumn(name="invoice_id", referencedColumnName="id")
-     * })
-     */
-    private $invoice;
-
-    /**
-     * @var ShippingType
-     *
-     * @ManyToOne(targetEntity="DB_ShippingType")
-     * @JoinColumns({
-     *   @JoinColumn(name="shipping_type_id", referencedColumnName="id")
-     * })
-     */
-    private $shippingType;
-
-
-
+    
+    
     /**
      * Get id
      *
@@ -128,29 +99,7 @@ class DB_Shipping
     public function getShippingCod()
     {
         return $this->shippingCod;
-    }
-
-    /**
-     * Set trackingNumber
-     *
-     * @param string $trackingNumber
-     * @return Shipping
-     */
-    public function setTrackingNumber($trackingNumber)
-    {
-        $this->trackingNumber = $trackingNumber;
-        return $this;
-    }
-
-    /**
-     * Get trackingNumber
-     *
-     * @return string 
-     */
-    public function getTrackingNumber()
-    {
-        return $this->trackingNumber;
-    }
+    }    
 
     /**
      * Set emailSent
@@ -243,10 +192,10 @@ class DB_Shipping
     /**
      * Set order
      *
-     * @param DB_Order $order
+     * @param DB_Orders $order
      * @return Shipping
      */
-    public function setOrder(\DB_Order $order = null)
+    public function setOrder(\DB_Orders $order = null)
     {
         $this->order = $order;
         return $this;
@@ -255,54 +204,11 @@ class DB_Shipping
     /**
      * Get order
      *
-     * @return DB_Order 
+     * @return DB_Orders 
      */
     public function getOrder()
     {
         return $this->order;
     }
 
-    /**
-     * Set invoice
-     *
-     * @param DB_Invoice $invoice
-     * @return Shipping
-     */
-    public function setInvoice(\DB_Invoice $invoice = null)
-    {
-        $this->invoice = $invoice;
-        return $this;
-    }
-
-    /**
-     * Get invoice
-     *
-     * @return DB_Invoice 
-     */
-    public function getInvoice()
-    {
-        return $this->invoice;
-    }
-
-    /**
-     * Set shippingType
-     *
-     * @param DB_ShippingType $shippingType
-     * @return Shipping
-     */
-    public function setShippingType(\DB_ShippingType $shippingType = null)
-    {
-        $this->shippingType = $shippingType;
-        return $this;
-    }
-
-    /**
-     * Get shippingType
-     *
-     * @return DB_ShippingType 
-     */
-    public function getShippingType()
-    {
-        return $this->shippingType;
-    }
-}
+   }

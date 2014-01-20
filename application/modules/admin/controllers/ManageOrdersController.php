@@ -292,6 +292,9 @@ class Admin_ManageOrdersController extends Zend_Controller_Action
     		$params = $this->getRequest()->getParams();
     		
     		$tbOrder = new DB_Orders();
+    		$teste = new DB_Shipping();
+    		$teste2 = new DB_ShippingTracking();
+    		
     		$data = $tbOrder->getOrderDetails($params['orderid']);
     		
     		$tbProduct = new DB_Product();
