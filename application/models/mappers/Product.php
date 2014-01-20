@@ -894,11 +894,15 @@ class DB_Product
         $html .= '<th>Status do Item</th>';
         $html .= '<th>Qtd</th>';
         $html .= '<th>Preço Unitário</th>';
+        if(isset($conditions['qtyShipping']) && $conditions['qtyShipping'] == true){
+        	$html .= '<th>Qtd a Enviar</th>';
+        }
         
         $html .= '</tr></thead>';
         $html .= '<tbody';
         for($i = 0; $i <= count($params['products']) - 1; $i++){
             $html .= '<tr>';
+            $html .= '<td style="display:none"><input type="text" class="productid" value="'. $params['products'][$i]->getProduct()->getId() .'"/></td>';
             if(isset($conditions['thumbnail'])){
             	$image = $params['products'][$i]->getProduct()->getImages();
                 if ($image[0] !== null && $image[0]){
@@ -922,13 +926,20 @@ class DB_Product
             $html .= '<td>'. $itemStatus .'</td>';
             $html .= '<td>'. $params['products'][$i]->getQty() .'</td>';
             $html .= '<td>R$ '. $params['products'][$i]->getUnitPrice() .'</td>';
+            if(isset($conditions['qtyShipping']) && $conditions['qtyShipping'] == true){
+            	 $html .= '<td><input type="text" class="qtyShipping span2" value="'. $params['products'][$i]->getQty() .'" /></td>';
+            }
             
             $html .= '</tr>';
         }
-            $html .= '<tfoot><tr><th colspan="5"></th><th>Total do(s) Item(s): R$ '. $params['general']->getProductPrice() .'</th></tr>
-                             <tr><th colspan="5"></th><th>Frete: R$ '. $params['general']->getFreightCost() .'</th></tr>
-                             <tr><th colspan="5"></th><th>Total do Pedido: R$ '. $params['general']->getTotalPrice() .'</th></tr>
-                      </tfoot>';
+        	if(isset($conditions['orderTotal']) && $conditions['orderTotal'] == false){
+	           
+        	}else{
+        		$html .= '<tfoot><tr><th colspan="5"></th><th>Total do(s) Item(s): R$ '. $params['general']->getProductPrice() .'</th></tr>
+	                             <tr><th colspan="5"></th><th>Frete: R$ '. $params['general']->getFreightCost() .'</th></tr>
+	                             <tr><th colspan="5"></th><th>Total do Pedido: R$ '. $params['general']->getTotalPrice() .'</th></tr>
+	                      </tfoot>';
+        	}
             
             $html .= '</tbody>';
             

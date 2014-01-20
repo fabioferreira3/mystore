@@ -285,4 +285,29 @@ class Admin_ManageOrdersController extends Zend_Controller_Action
     	}
     	catch(Exception $e){echo $e->getMessage();exit;}
     }
+    
+    public function shippingAction(){
+    	
+    	try{
+    		$params = $this->getRequest()->getParams();
+    		
+    		$tbOrder = new DB_Orders();
+    		$data = $tbOrder->getOrderDetails($params['orderid']);
+    		
+    		$tbProduct = new DB_Product();
+    		$conditions['thumbnail'] = true;
+    		$conditions['orderTotal'] = false;
+    		$conditions['qtyShipping'] = true;
+    		
+    		$shippingTypes = $this->repo->db('ShippingType')->findAll();
+    		
+    		$this->view->data = $data;
+    		$this->view->client = $data['general']->getClient();
+    		$this->view->productTable = $tbProduct->generateOrderProductsTable($data,$conditions);
+    		$this->view->shippingTypes = $shippingTypes;
+    		
+    	}
+    	catch(Exception $e){echo $e->getMessage();exit;}
+    	
+    }
 }
