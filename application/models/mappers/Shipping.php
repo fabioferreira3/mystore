@@ -217,9 +217,9 @@ class DB_Shipping
     	$order = $em->getRepository('DB_Orders')->find($params['orderid']);
     	$store = $em->getRepository('DB_Store')->find(1);
     	if(isset($params['tracking']) && $params['tracking'] != ''){
-    		
+    		$tbShippingTracking = new DB_ShippingTracking();
     	}
-    	$tbShippingTracking = new DB_ShippingTracking();
+    	
     	$dtNow = new DateTime();
     	
     	$random = '';
