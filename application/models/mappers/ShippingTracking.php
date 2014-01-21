@@ -186,7 +186,39 @@ class DB_ShippingTracking
         return $this->dateUpd;
     }
     
+    public function createTracking(array $shippingType, array $trackingNumbers, $shippingId){
+            
+        $em = Zend_Registry::getInstance()->entitymanager;  
+        $i = 0;  
+        $dtNow = new DateTime();
+        
+        foreach($trackingNumbers as $tracking){
+            
+                $tbShippingTracking = new DB_ShippingTracking();
+                $shippingType = $em->getRepository('DB_ShippingType')->find($shippingType[$i]);
+                $shipping = $em->getRepository('DB_Shipping')->find($shippingId);
+                $tbShippingTracking->setShipping($shipping);
+                $tbShippingTracking->setTrackingNumber($tracking);
+                $tbShippingTracking->setShippingType($shippingType);
+                $tbShippingTracking->setDateCreate($dtNow);
+                $tbShippingTracking->setDateUpd($dtNow);
+                $em->persist($tbShippingTracking);
+                $i++;
+        }
+        $em->flush();
+    }
     
+    
+    public function removeAllTracking($shippingId){
+        
+        $em = Zend_Registry::getInstance()->entitymanager;
+        $trackings = $em->getRepository('DB_ShippingTracking')->findByShipping($shippingId);
+        
+        foreach($trackings as $tracking){
+            $em->remove($tracking);
+            $em->flush();
+        }
+    }
    
 
    

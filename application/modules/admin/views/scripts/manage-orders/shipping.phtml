@@ -173,6 +173,7 @@ if (isset($this->msgError)){
 	        			<th>Código</th>
 	        		</thead>
 	        		<tbody>
+	        		    <?php if(!isset($this->shipping)){ ?>
 		        		<tr class="tracking_row">
 		        			<td>
 		        				<select class="span12" name="carrier">
@@ -183,6 +184,21 @@ if (isset($this->msgError)){
 		        			</td>
 		        			<td><input type="text" class="trackingNumber span12" value=""/></td>		        			
 		        		</tr>
+		        		<?php }else{
+		        		    if(isset($this->trackings)){
+		        		   foreach($this->trackings as $tracking){ 
+		        		?>
+		        		<tr class="tracking_row">
+                            <td>
+                                <select class="span12" name="carrier">
+                                    <?php foreach ($this->shippingTypes as $type){ ?>
+                                    <option value="<?= $type->getId();?>" <?php if($tracking->getShippingType()->getId() == $type->getId()){echo 'selected';}?>><?= $type->getName(); ?></option>
+                                    <?php }?>
+                                </select>
+                            </td>
+                            <td><input type="text" class="trackingNumber span12" value="<?= $tracking->getTrackingNumber();?>"/></td>                            
+                        </tr>    
+		        		<?php }} }?>
 	        		</tbody>
 	        	</table>
 	        	<button class="btn" id="addtracking">Adicionar Outro Código</button>
@@ -221,6 +237,48 @@ if (isset($this->msgError)){
 		$('table#trackingnumbers tbody').append(x.html());	
 		$('p tr.tracking_row').unwrap();
 				
+	});
+	
+	$('button#saveShipping').on('click',function(){ 
+	    var accept = confirm('Deseja salvar as informações de rastreio?');
+	    if(accept){
+	        $('.wait h1').html('Salvando dados de rastreamento...');
+            $('body').addClass('loading'); 
+            
+            var shippingType = new Array();
+            var tracking = new Array();
+            $('input.trackingNumber').each(function(){
+                if($(this).val() != ''){
+                    shippingType[a] = $(this).parent().parent().find('select[name="carrier"]').val();
+                    tracking[a] = $(this).val();
+                    a++;
+                }
+            }); 
+           var orderid = $('input#orderid').val();
+           var shippingid = <?= $this->shipping->getId(); ?>;
+           
+                    $.ajax({
+                        url: "/admin238/manage-orders/shipping",
+                        type:"GET",
+                        data:{
+                            updatetracking:1, 
+                            shippingid:shippingid,
+                            shippingType:shippingType,
+                            tracking:tracking},
+                        contentType: "application/json; charset=utf-8",
+                        dataType:"json",
+                        success: function (data) {              
+                            window.location.replace('/admin238/manage-orders/shipping&orderid='+orderid+'&shippingid='+shippingid);                            
+                            $('body').removeClass('loading'); 
+                        },
+                        error: function(request,error){
+                            $('body').removeClass('loading');          
+                            console.log(arguments);
+                            $.sticky(error, {autoclose : 5000, position: "top-right", type:"st-error" });
+                        }
+                    });
+            
+	    }
 	});
 
 	$('button#createShipping').on('click',function(){

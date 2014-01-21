@@ -295,6 +295,12 @@ class Admin_ManageOrdersController extends Zend_Controller_Action
     	try{
     		$params = $this->getRequest()->getParams();
     		
+            if(isset($params['updatetracking']) && $params['updatetracking'] == 1){
+                $tbShippingTracking = new DB_ShippingTracking();
+                $tbShippingTracking->removeAllTracking($params['shippingid']);
+                $tbShippingTracking->createTracking($params['shippingType'],$params['tracking'],$params['shippingid']);
+                exit;
+            }
             
     		$tbOrder = new DB_Orders();
     		
