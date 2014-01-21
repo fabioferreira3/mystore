@@ -193,7 +193,8 @@ class Admin_ManageOrdersController extends Zend_Controller_Action
     	    $params = $this->getRequest()->getParams();
             $tbOrder = new DB_Orders();            
             $data = $tbOrder->getOrderDetails($params['orderid']); 
-            $invoices = $this->repo->db('Invoice')->findByOrder($params['orderid']);        
+            $invoices = $this->repo->db('Invoice')->findByOrder($params['orderid']); 
+            $shippings = $this->repo->db('Shipping')->findByOrder($params['orderid']);        
             $conditions['thumbnail'] = true;
       
             if($data != false){
@@ -202,6 +203,9 @@ class Admin_ManageOrdersController extends Zend_Controller_Action
                 $this->view->productTable = $tbProduct->generateOrderProductsTable($data,$conditions);
                 if($invoices != null){
                 	$this->view->invoices = $invoices;
+                }
+                if($shippings != null){
+                    $this->view->shippings = $shippings;
                 }
             }else{
                 $this->getHelper('Redirector')->gotoUrl('/admin238/manage-orders');
@@ -291,6 +295,7 @@ class Admin_ManageOrdersController extends Zend_Controller_Action
     	try{
     		$params = $this->getRequest()->getParams();
     		
+            
     		$tbOrder = new DB_Orders();
     		
     		$data = $tbOrder->getOrderDetails($params['orderid']);
@@ -302,6 +307,18 @@ class Admin_ManageOrdersController extends Zend_Controller_Action
     		
     		$shippingTypes = $this->repo->db('ShippingType')->findAll();
     		
+            
+            // Se receber ID do Envio, carrega somente tela de visualização da Entrega
+            
+            if(isset($params['shippingid'])){
+                $shipping = $this->repo->db('Shipping')->find($params['shippingid']);
+                $tracking = $this->repo->db('ShippingTracking')->findByShipping($shipping);
+                $conditions['qtyShipping'] = false;
+                if($tracking != null){
+                    $this->view->trackings = $tracking;
+                }
+                $this->view->shipping = $shipping;
+            }
     		$this->view->data = $data;
     		$this->view->client = $data['general']->getClient();
     		$this->view->productTable = $tbProduct->generateOrderProductsTable($data,$conditions);
@@ -318,13 +335,14 @@ class Admin_ManageOrdersController extends Zend_Controller_Action
     		$params = $this->getRequest()->getParams();
     		
     		$tbShipping = new DB_Shipping();
+           
     		$tbShipping->createShipping($params);
-    		
-    		echo json_encode('teste');
+    	
+    		echo json_encode(true);
     		exit;
     		
     	}
-    	catch(Exception $e){echo json_encode($e->getMessage());exit;}
+    	catch(Exception $e){echo $e->getMessage();exit;}
     	
     }
 }

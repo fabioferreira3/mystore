@@ -4,7 +4,7 @@
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Shipping
+ * ShippingTracking
  *
  * @Table(name="shipping_tracking")
  * @Entity
@@ -185,6 +185,9 @@ class DB_ShippingTracking
     {
         return $this->dateUpd;
     }
+    
+    
+   
 
    
 

@@ -54,6 +54,36 @@ if (isset($this->msgError)){
 	</div>
 </div>
 
+<div class="modal hide fade" id="viewShippings">
+    <div class="modal-header">
+        <button class="close" data-dismiss="modal">×</button>
+        <h3>Envios</h3>
+    </div>
+    <div class="modal-body">
+        <table class="table">
+            <thead>
+                <th>Código</th>
+                <th>Última Atualização</th>
+            </thead>
+            <tbody>
+                <?php if(isset($this->shippings)){ 
+                    foreach($this->shippings as $shipping){ ?>
+                    <tr>
+                        <td><a href="/admin238/manage-orders/shipping?view=1&shippingid=<?= $shipping->getId();?>&orderid=<?= $this->data['general']->getId();?>"><?= $shipping->getShippingCod();?></a></td>
+                        <td><?= $shipping->getDateUpd()->format('d/m/Y - H:i');?></td>
+                    </tr>
+                <?php }
+                ?>
+                    
+                <?php }?>
+            </tbody>            
+        </table>
+    </div>
+    <div class="modal-footer">
+        <a class="btn" data-dismiss="modal" href="#">Fechar</a>
+    </div>
+</div>
+
 
 <div class="row-fluid">
     <div class="row-fluid">    
@@ -69,11 +99,11 @@ if (isset($this->msgError)){
     		<?php }?>
     		<?php if($this->data['general']->getOrderStatus()->getId() == 2 || $this->data['general']->getOrderStatus()->getId() == 6){?>
 	    		<a data-toggle="modal" data-backdrop="static" href="#viewInvoices"><button class="btn pull-left">Visualizar Fatura(s)</button></a>
-	    		<button class="btn pull-left" id="viewShippings">Visualizar Entrega(s)</button>
+	    		<a data-toggle="modal" data-backdrop="static" href="#viewShippings"><button class="btn pull-left" id="viewShippings">Visualizar Entrega(s)</button></a>
 	    		<button class="btn pull-left" id="reimburse">Reembolsar</button>	    		
     		<?php }?>
     		<?php if($this->data['general']->getOrderStatus()->getId() == 2){ ?>
-    			<button class="btn pull-left" id="createShipping">Criar Envio</button>
+    			<button class="btn pull-left" id="createShipping">Enviar</button>
     		<?php }?>
     		
     		<button class="btn pull-left">Acessar Conta do Cliente</button>
@@ -298,5 +328,10 @@ if (isset($this->msgError)){
 		var orderid = $('input#orderid').val();
 		window.location.replace('/admin238/manage-orders/invoice?create=1&orderid='+orderid);
 	});
+	
+	$('button#createShipping').on('click',function(){
+        var orderid = $('input#orderid').val();
+        window.location.replace('/admin238/manage-orders/shipping?orderid=' + orderid);
+    });
     
 </script>

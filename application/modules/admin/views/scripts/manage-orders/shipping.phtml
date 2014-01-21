@@ -26,12 +26,17 @@ if (isset($this->msgError)){
 }?>
 
 <div class="row-fluid">
-	<div class="row-fluid">    
-        <h1 class="heading">Criar Envio - Pedido #<?= $this->data['general']->getOrderCod()?></h1>
+	<div class="row-fluid">  
+	    <?php if(!isset($this->shipping)){?>  
+            <h1 class="heading">Criar Envio - Pedido #<?= $this->data['general']->getOrderCod()?></h1>
+        <?php }else{ ?>
+             <h1 class="heading">Entrega do Pedido #<?= $this->data['general']->getOrderCod()?></h1>
+        <?php }?>
      	<input type="hidden" id="orderid" value="<?= $this->data['general']->getId();?>"/>
     </div>
     <div class="row-fluid">
         <div class="span6">
+            <?php if(!isset($this->shipping)){?>  
             <h3 class="heading">Dados do Pedido</h3>
             <table class="table table-condensed table-striped">                
                 <tbody>
@@ -40,7 +45,26 @@ if (isset($this->msgError)){
                 		<td><?= $this->data['general']->getDateCreate()->format('d/m/Y - H:i');?></td>
                 	</tr>
                 	<tr>
-                        <td>Código:</td>
+                        <td>Código do Pedido:</td>
+            <?php }else{?>
+            <h3 class="heading">Dados da Entrega</h3>
+            <table class="table table-condensed table-striped">                
+                <tbody>
+                    <tr>
+                        <td>Data do Pedido:</td>
+                        <td><?= $this->data['general']->getDateCreate()->format('d/m/Y - H:i');?></td>
+                    </tr>
+                    <tr>
+                        <td>Data do Envio:</td>
+                        <td><?= $this->shipping->getDateCreate()->format('d/m/Y - H:i');?></td>
+                    </tr>
+                    <tr>
+                        <td>Código do Envio:</td>
+                        <td><?= $this->shipping->getShippingCod();?></td>
+                    </tr>
+                    <tr>
+                        <td>Código do Pedido:</td>    
+            <?php } ?>
                         <td>#<?= $this->data['general']->getOrderCod();?></td> 
                     </tr>
                     <tr>
@@ -126,10 +150,13 @@ if (isset($this->msgError)){
         </div>
         <div class="row-fluid">
 	        <div class="span12">
+	            <?php if(!isset($this->shipping)){?>  
 	            <h3 class="heading">Itens a Enviar</h3>
+	            <?php }else{?>
+	            <h3 class="heading">Itens Enviados</h3>
+	            <?php }?>
 	            <table class="table table-condensed">
-	                <?= $this->productTable; ?>
-	               
+	                <?= $this->productTable; ?>	               
 	            </table>
 	        </div>
     	</div>
@@ -168,13 +195,19 @@ if (isset($this->msgError)){
     		</div>
     		<div class="span6">
     			<div class="row-fluid"></div>
+    			<?php if(!isset($this->shipping)){ ?>
     			<div class="row-fluid">
     				<label class="pull-right">
     					<input type="checkbox" name="send_email"/> Enviar email ao cliente
     				</label>
-    			</div>
-    			<div class="row-fluid"><button class="btn pull-right" id="createShipping">Enviar</button></div>
-    			
+    			</div>    			
+    			    <div class="row-fluid"><button class="btn pull-right" id="createShipping">Enviar</button></div>
+    			<?php }else{ ?>
+    			    <div class="row-fluid">
+    			        <button class="btn pull-right" id="saveShipping">Salvar</button>
+    			        <button class="btn pull-right" id="sendtoClient">Enviar Rastreio ao Cliente</button>
+    			    </div>
+    			<?php }?>
     		</div>
     	</div>    
 </div>
@@ -211,8 +244,8 @@ if (isset($this->msgError)){
 						emailSent = 1;
 					}
 
-					// Relaciona os itens a serem enviados
-					var itemsId = new Array();
+					// Relaciona os itens a serem enviados (pendente)
+				/*	var itemsId = new Array();
 					var itemsQty = new Array();
 					var i = 0;					
 					$('input.qtyShipping').each(function(){
@@ -221,7 +254,7 @@ if (isset($this->msgError)){
 							itemsId[i] = $(this).parent().parent().find('input.productid').val();
 							i++;
 						}						
-					});
+					});*/
 
 					// Relaciona os códigos de rastreio
 					var shippingType = new Array();
@@ -242,14 +275,14 @@ if (isset($this->msgError)){
 					        orderid:orderid, 
 					        comment:comment, 
 					        sendemail:emailSent, 
-					        itemsId:itemsId,
-					        itemsQty:itemsQty,
+					     //   itemsId:itemsId,
+					    //    itemsQty:itemsQty,
 					        shippingType:shippingType,
 					        tracking:tracking},
 				        contentType: "application/json; charset=utf-8",
 				        dataType:"json",
 				        success: function (data) {		        
-					       	//window.location.replace('/admin238/manage-orders/details?orderid='+orderid);		       		        
+					       	window.location.replace('/admin238/manage-orders/details?orderid='+orderid);		       		        
 				            $('body').removeClass('loading'); 
 				        },
 				        error: function(request,error){

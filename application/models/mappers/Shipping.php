@@ -59,7 +59,7 @@ class DB_Shipping
     private $store;
 
     /**
-     * @var Orders
+     * @var Order
      *
      * @ManyToOne(targetEntity="DB_Orders")
      * @JoinColumns({
@@ -211,14 +211,21 @@ class DB_Shipping
         return $this->order;
     }
     
+    public function getLastShipping($orderId){
+        
+        $em = Zend_Registry::getInstance()->entitymanager;
+        $query = $em->createQueryBuilder()->select('s')->from('DB_Shipping','s');
+        $query->where('s.order = :orderId');
+        $query->setParameter('orderId',$orderId);
+        $query->orderBy('s.id','DESC');
+        return $query->getQuery()->getSingleResult();
+    }
+    
     public function createShipping($params){
     	
     	$em = Zend_Registry::getInstance()->entitymanager;
     	$order = $em->getRepository('DB_Orders')->find($params['orderid']);
-    	$store = $em->getRepository('DB_Store')->find(1);
-    	if(isset($params['tracking']) && $params['tracking'] != ''){
-    		$tbShippingTracking = new DB_ShippingTracking();
-    	}
+    	$store = $em->getRepository('DB_Store')->find(1);    	
     	
     	$dtNow = new DateTime();
     	
@@ -226,16 +233,53 @@ class DB_Shipping
     	for($i=0; $i <= 10; $i++){
     		$random .= mt_rand(1,9);
     	}
-    	$this->setShippingCod($random);
-    	$this->setOrder($order);
-    	$this->setEmailSent($params['sendemail']);
-    	$this->setDateCreate($dtNow);
-    	$this->setDateUpd($dtNow);
-    	$this->setStore($store);
-    	
-    	$em->persist($this);
-    	$em->flush();
-    	
+        $tbShipping = new DB_Shipping();
+    	$tbShipping->setShippingCod($random);
+    	$tbShipping->setOrder($order);
+    	$tbShipping->setEmailSent($params['sendemail']);
+    	$tbShipping->setDateCreate($dtNow);
+    	$tbShipping->setDateUpd($dtNow);
+    	$tbShipping->setStore($store);
+        
+        $em->persist($tbShipping);
+        
+        // Grava os códigos de rastreio
+        
+        if(isset($params['tracking'])){
+            $i = 0;
+            
+            foreach($params['tracking'] as $tracking){
+                $tbShippingTracking = new DB_ShippingTracking();
+                $shippingType = $em->getRepository('DB_ShippingType')->find($params['shippingType'][$i]);
+                $tbShippingTracking->setShipping($tbShipping);
+                $tbShippingTracking->setTrackingNumber($tracking);
+                $tbShippingTracking->setShippingType($shippingType);
+                $tbShippingTracking->setDateCreate($dtNow);
+                $tbShippingTracking->setDateUpd($dtNow);
+                $em->persist($tbShippingTracking);
+                $i++;
+            }
+        }
+        
+        // Altera o status do pedido para 'Enviado'
+        
+        $sentStatus = $em->getRepository('DB_OrderStatus')->find(6);
+        $order->setOrderStatus($sentStatus);
+        $order->setDateUpd($dtNow);
+        $em->persist($order);
+        
+        
+        // Altera o status de cada item do pedido para 'Enviado'
+        
+        $orderProducts = $em->getRepository('DB_OrderProducts')->findByOrder($order);
+        foreach ($orderProducts as $product){
+            $product->setStatus(2);
+            $em->persist($product);
+        }
+        
+        $em->flush();
+        
+          	
     }
 
    }
