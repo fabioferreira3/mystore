@@ -292,8 +292,6 @@ class Admin_ManageOrdersController extends Zend_Controller_Action
     		$params = $this->getRequest()->getParams();
     		
     		$tbOrder = new DB_Orders();
-    		$teste = new DB_Shipping();
-    		$teste2 = new DB_ShippingTracking();
     		
     		$data = $tbOrder->getOrderDetails($params['orderid']);
     		
@@ -311,6 +309,22 @@ class Admin_ManageOrdersController extends Zend_Controller_Action
     		
     	}
     	catch(Exception $e){echo $e->getMessage();exit;}
+    	
+    }
+    
+    public function saveShippingAction(){
+    	
+    	try{
+    		$params = $this->getRequest()->getParams();
+    		
+    		$tbShipping = new DB_Shipping();
+    		$tbShipping->createShipping($params);
+    		
+    		echo json_encode('teste');
+    		exit;
+    		
+    	}
+    	catch(Exception $e){echo json_encode($e->getMessage());exit;}
     	
     }
 }

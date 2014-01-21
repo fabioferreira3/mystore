@@ -210,5 +210,32 @@ class DB_Shipping
     {
         return $this->order;
     }
+    
+    public function createShipping($params){
+    	
+    	$em = Zend_Registry::getInstance()->entitymanager;
+    	$order = $em->getRepository('DB_Orders')->find($params['orderid']);
+    	$store = $em->getRepository('DB_Store')->find(1);
+    	if(isset($params['tracking']) && $params['tracking'] != ''){
+    		
+    	}
+    	$tbShippingTracking = new DB_ShippingTracking();
+    	$dtNow = new DateTime();
+    	
+    	$random = '';
+    	for($i=0; $i <= 10; $i++){
+    		$random .= mt_rand(1,9);
+    	}
+    	$this->setShippingCod($random);
+    	$this->setOrder($order);
+    	$this->setEmailSent($params['sendemail']);
+    	$this->setDateCreate($dtNow);
+    	$this->setDateUpd($dtNow);
+    	$this->setStore($store);
+    	
+    	$em->persist($this);
+    	$em->flush();
+    	
+    }
 
    }
