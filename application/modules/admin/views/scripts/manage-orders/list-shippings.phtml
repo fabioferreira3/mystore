@@ -56,8 +56,8 @@ if (isset($this->msgError)){
 			</tr>
 			<?php foreach ($this->shippings as $shipping){ ?>
 				<tr>
-					<td><?= $shipping->getOrder()->getOrderCod();?></td>
-					<td><?= $shipping->getShippingCod();?></td>
+					<td><a href="/admin238/manage-orders/details?orderid=<?= $shipping->getOrder()->getId();?>"><?= $shipping->getOrder()->getOrderCod();?></a></td>
+					<td><a href="/admin238/manage-orders/shipping?orderid=<?= $shipping->getOrder()->getId();?>&shippingid=<?= $shipping->getId();?>"><?= $shipping->getShippingCod();?></a></td>
 					<td><?= $shipping->getOrder()->getShippingType()->getName();?></td>
 					<td><?= $shipping->getDateCreate()->format('d/m/Y - H:i');?></td>
 				</tr>
