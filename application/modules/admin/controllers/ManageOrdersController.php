@@ -361,7 +361,7 @@ class Admin_ManageOrdersController extends Zend_Controller_Action
     		if(isset($params['page'])){$curPage = $params['page'];}
     		else{$curPage = 1;}
     		
-    		$maxItemsPerPage = 1;
+    		$maxItemsPerPage = 50;
     		
     		$tbShipping = new DB_Shipping();
     		$shippings = $tbShipping->getAllShippings(null,$maxItemsPerPage,$curPage);
