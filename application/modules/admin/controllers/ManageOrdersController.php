@@ -299,6 +299,7 @@ class Admin_ManageOrdersController extends Zend_Controller_Action
                 $tbShippingTracking = new DB_ShippingTracking();
                 $tbShippingTracking->removeAllTracking($params['shippingid']);
                 $tbShippingTracking->createTracking($params['shippingType'],$params['tracking'],$params['shippingid']);
+                echo json_encode($params);
                 exit;
             }
             

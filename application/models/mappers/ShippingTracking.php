@@ -195,17 +195,19 @@ class DB_ShippingTracking
         foreach($trackingNumbers as $tracking){
             
                 $tbShippingTracking = new DB_ShippingTracking();
-                $shippingType = $em->getRepository('DB_ShippingType')->find($shippingType[$i]);
+                $typeShipping = $em->getRepository('DB_ShippingType')->find($shippingType[$i]);
                 $shipping = $em->getRepository('DB_Shipping')->find($shippingId);
                 $tbShippingTracking->setShipping($shipping);
                 $tbShippingTracking->setTrackingNumber($tracking);
-                $tbShippingTracking->setShippingType($shippingType);
+                $tbShippingTracking->setShippingType($typeShipping);
                 $tbShippingTracking->setDateCreate($dtNow);
                 $tbShippingTracking->setDateUpd($dtNow);
-                $em->persist($tbShippingTracking);
+                $em->persist($tbShippingTracking);                
                 $i++;
         }
+        
         $em->flush();
+        
     }
     
     
