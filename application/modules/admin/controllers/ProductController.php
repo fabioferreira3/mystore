@@ -35,7 +35,7 @@ class Admin_ProductController extends Zend_Controller_Action
 			else{$curPage = 1;}
 			
 			$tbProduct = new DB_Product();
-			$maxItemsPerPage = 20;
+			$maxItemsPerPage = 30;
 			$produtos = $tbProduct->getProducts(false,$maxItemsPerPage,$curPage);			
 			$totalItems = $produtos->getTotalItemCount();
 			$maxPages = ceil($totalItems / $maxItemsPerPage);

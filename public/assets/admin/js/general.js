@@ -107,6 +107,7 @@ function getProductTable(
 	
 }
 
+
 $(document).ready(function(){ 
 $('body').on('click','button#cancelOrder',function(){
     var url = '/admin238/manage-orders/cancel?';
@@ -121,4 +122,6 @@ $('body').on('click','button#cancelOrder',function(){
     } 
 });
 });
+
+
     

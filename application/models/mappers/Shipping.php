@@ -2,6 +2,7 @@
 
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Tools\Pagination\Paginator as Paginator;
 
 /**
  * Shipping
@@ -26,6 +27,14 @@ class DB_Shipping
      * @Column(name="shipping_cod", type="string", length=50, nullable=false)
      */
     private $shippingCod;    
+    
+    /**
+     * @var Tracking
+     *
+     * @OneToMany(targetEntity="DB_ShippingTracking", mappedBy="shipping")
+      
+     */
+    private $tracking;
 
     /**
      * @var boolean $emailSent
@@ -121,6 +130,16 @@ class DB_Shipping
     public function getEmailSent()
     {
         return $this->emailSent;
+    }
+    
+    /**
+     * Get trackingNumber
+     *
+     * @return string
+     */
+    public function getTracking()
+    {
+    	return $this->tracking;
     }
 
     /**
@@ -277,9 +296,31 @@ class DB_Shipping
             $em->persist($product);
         }
         
-        $em->flush();
-        
+        $em->flush();        
           	
+    }
+    
+    public function getAllShippings($params = null,$perPage = null, $curPage = null){
+    	
+    	if(!$perPage){
+    		$perPage = 1000;
+    	}
+    	if(!$curPage){
+    		$curPage = 1;
+    	}
+    	$em = Zend_Registry::getInstance()->entitymanager;
+    	$query = $em->createQueryBuilder();
+    	$query->select('s')->from('DB_Shipping','s');
+    //	$query->innerjoin('s.tracking','tk','WITH','tk.shipping = s.id');
+    	
+    	$paginator = new Paginator($query);
+    	$paginator_iter = $paginator->getIterator();
+    	$adapter =  new \Zend_Paginator_Adapter_Iterator($paginator_iter);
+    	$data = new \Zend_Paginator($adapter);
+    	$data->setItemCountPerPage($perPage)->setCurrentPageNumber($curPage);
+    	
+    	return $data;
+    	
     }
 
    }

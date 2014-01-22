@@ -544,6 +544,9 @@ class DB_Orders
     			$actions .= '<button value="'. $orderId . '" class="btn span12 details" style="margin-left:0;">Detalhes</button>';
     			$actions .= '<button value="'. $orderId . '" class="btn span12 cancel" id="cancelOrder" style="margin-left:0;">Cancelar</button>';
     		}
+    		if($status === 6){
+    			$actions .= '<button value="'. $orderId . '" class="btn span12 details" style="margin-left:0;">Detalhes</button>';
+    		}
     		if($status === 3 || $status === 5){
     			$actions .= '<button value="'. $orderId . '" class="btn span12 rebuy">Recomprar</button>';
     		}

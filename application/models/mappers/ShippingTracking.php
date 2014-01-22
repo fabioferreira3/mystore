@@ -42,7 +42,7 @@ class DB_ShippingTracking
     
     /**
      * @var string $trackingNumber
-     *
+     * @ManyToOne(targetEntity="DB_Shipping", inversedBy="tracking")
      * @Column(name="tracking_number", type="string", nullable=true)
      */
     private $trackingNumber;

@@ -352,4 +352,30 @@ class Admin_ManageOrdersController extends Zend_Controller_Action
     	catch(Exception $e){echo $e->getMessage();exit;}
     	
     }
+    
+    public function listShippingsAction(){
+    	try{
+    		
+    		$params = $this->getRequest()->getParams();
+    		
+    		if(isset($params['page'])){$curPage = $params['page'];}
+    		else{$curPage = 1;}
+    		
+    		$maxItemsPerPage = 1;
+    		
+    		$tbShipping = new DB_Shipping();
+    		$shippings = $tbShipping->getAllShippings(null,$maxItemsPerPage,$curPage);
+    		$shippingTypes = $this->repo->db('ShippingType')->findAll();
+    		
+    		
+    		$totalItems = $shippings->getTotalItemCount();
+    		$maxPages = ceil($totalItems / $maxItemsPerPage);
+    		$this->view->pagination = $this->_helper->Paginator->generate($curPage,$maxPages,$totalItems);
+    		$this->view->shippings = $shippings;
+    		$this->view->shippingTypes = $shippingTypes;
+    		
+    	}
+    	catch(Exception $e){echo $e->getMessage();}
+    	
+    }
 }

@@ -114,7 +114,13 @@
             <script src="<?php echo $this->baseUrl();?>/assets/admin/js/touchable.js"></script>
             <script src="<?php echo $this->baseUrl();?>/assets/admin/js/hoverable.js"></script>
             <script type="text/javascript">
+            
             $(document).ready(function(){
+            	$('body').removeClass('loading'); 
+            	$('body').on('click','div.pagination ul li a',function(){
+            		$('.wait h1').html('Um momento...');
+            		$('body').addClass('loading'); 
+                });
             	
             	gebo_datepicker = {
 	        			init: function() {	        
@@ -127,5 +133,7 @@
 	
 	        	gebo_datepicker.init();
             });
+
+           
             </script>
            
