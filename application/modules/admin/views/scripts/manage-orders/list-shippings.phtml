@@ -51,7 +51,7 @@ if (isset($this->msgError)){
 						<?php }?>
 					</select>				
 				</td>
-				<td><input type="text" name="search_date" value="" class="span12"/></td>
+				<td><input type="text" name="search_date" value="" class="span12 date"/></td>
 				<td><button class="btn search">Buscar</button></td>
 			</tr>
 			<?php foreach ($this->shippings as $shipping){ ?>
@@ -68,3 +68,55 @@ if (isset($this->msgError)){
         <?php echo $this->pagination;?>
     </div>
 </div>
+
+<script type="text/javascript">
+    
+    $('button.search').on('click',function(){
+        
+        var ordercod = '';
+        var shippingcod = '';
+        var shippingtype = '';
+        var dateship = '';
+        
+        if($('input[name="search_order"]').val() != ''){
+            ordercod = $('input[name="search_order"]').val();
+        }
+        if($('input[name="search_shipping"]').val() != ''){
+            shippingcod = $('input[name="search_shipping"]').val();
+        }
+        if($('select[name="search_shipping"]').val() != ''){
+            shippingtype = $('select[name="search_type"]').val();
+        }
+        if($('input[name="search_date"]').val() != ''){
+            dateship = $('input[name="search_date"]').val();
+        }
+        
+        $.ajax({
+            url: "/admin238/manage-orders/filter-orders",
+            type:"GET",
+            data:{
+                json:1,
+                client:name,                            
+                ordercod:cod,
+                orderstatus:status,
+                value:value,
+                datecreate:datecreate                          
+            },
+            contentType: "application/json; charset=utf-8",
+            dataType:"json",
+            success: function (data) {              
+                             $('table.order-results tbody').remove();
+                             $('div.paginator').empty();
+                             $('table.order-results').append(data.results);
+                             $('div.paginator').append(data.pagination);
+                             $('body').removeClass('loading');
+                        },
+            error: function(request,error){
+                console.log(arguments);
+                $.sticky(error, {autoclose : 5000, position: "top-right", type:"st-error" });
+            }
+         });
+        
+    });
+    
+</script>

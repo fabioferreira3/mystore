@@ -300,7 +300,7 @@ class DB_Shipping
           	
     }
     
-    public function getAllShippings($params = null,$perPage = null, $curPage = null){
+    public function getShippings($params = null,$perPage = null, $curPage = null){
     	
     	if(!$perPage){
     		$perPage = 1000;
@@ -311,7 +311,26 @@ class DB_Shipping
     	$em = Zend_Registry::getInstance()->entitymanager;
     	$query = $em->createQueryBuilder();
     	$query->select('s')->from('DB_Shipping','s');
-    //	$query->innerjoin('s.tracking','tk','WITH','tk.shipping = s.id');
+        $query->where('s.id > 0');
+       
+        if(isset($params['ordercod']) && $params['ordercod'] != ''){           
+            $query->innerjoin('s.order','ord','WITH','ord.orderCod LIKE :orderCod');            
+            $query->setParameter(':orderCod','%'.$params['ordercod'].'%');            
+        } 
+        if(isset($params['shippingcod']) && $params['shippingcod'] != ''){           
+            $query->andWhere('s.shippingCod LIKE :shippingcod');        
+            $query->setParameter(':shippingcod','%'.$params['shippingcod'].'%');            
+        } 
+        if(isset($params['shippingtype']) && $params['shippingtype'] != ''){           
+            $query->innerjoin('s.order','frg','WITH','frg.shippingType = :shippingtype');       
+            $query->setParameter(':shippingtype',$params['shippingtype']);            
+        }
+        if(isset($params['dateship']) && $params['dateship'] != ''){
+            $dateShip = new DateTime(str_replace('/', '-',$params['dateship']));           
+            $query->andWhere('s.dateCreate >= :dateship1 AND s.dateCreate <= :dateship2');
+            $query->setParameter(':dateship1',$dateShip->format('Y-m-d') .' 00:00:00');
+            $query->setParameter(':dateship2',$dateShip->format('Y-m-d') .' 23:59:59');
+        } 
     	
     	$paginator = new Paginator($query);
     	$paginator_iter = $paginator->getIterator();

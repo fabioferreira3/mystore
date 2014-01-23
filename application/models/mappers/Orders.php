@@ -485,6 +485,7 @@ class DB_Orders
     	$query->select('o')->from('DB_Orders','o');   	
     	$query->where('o.id > 0');
         
+                
     	if(isset($params['orderId']) && $params['orderId'] != ''){
     		$query->andWhere('o.id = :orderid');
             $query->setParameter('orderid',$params['orderId']);
@@ -502,9 +503,10 @@ class DB_Orders
             $query->setParameter(':clientName','%'.$params['client'].'%');
         }
         if(isset($params['datecreate']) && $params['datecreate'] != ''){
+            $dateCreate = new DateTime(str_replace('/', '-',$params['datecreate']));
             $query->andWhere('o.dateCreate >= :dateCreate1 AND o.dateCreate <= :dateCreate2');
-            $query->setParameter(':dateCreate1',$params['datecreate'] . ' 00:00:00');
-            $query->setParameter(':dateCreate2',$params['datecreate'] . ' 23:59:59');
+            $query->setParameter(':dateCreate1',$dateCreate->format('Y-m-d') . ' 00:00:00');
+            $query->setParameter(':dateCreate2',$dateCreate->format('Y-m-d') . ' 23:59:59');
         }
         if(isset($params['value']) && $params['value'] != ''){
             $query->andWhere('o.totalPrice LIKE :value');

@@ -367,16 +367,19 @@ class Admin_ManageOrdersController extends Zend_Controller_Action
     		}else{
     			$maxItemsPerPage = 50;
     		}
-    		
+                        
+                		
     		$tbShipping = new DB_Shipping();
-    		$shippings = $tbShipping->getAllShippings(null,$maxItemsPerPage,$curPage);
-    		$shippingTypes = $this->repo->db('ShippingType')->findAll();
-    		
+    		$shippings = $tbShipping->getShippings($params,$maxItemsPerPage,$curPage);            
+    		$shippingTypes = $this->repo->db('ShippingType')->findAll();    		
     		
     		$totalItems = $shippings->getTotalItemCount();
     		$maxPages = ceil($totalItems / $maxItemsPerPage);
-    		$this->view->pagination = $this->_helper->Paginator->generate($curPage,$maxPages,$totalItems);
-    		$this->view->shippings = $shippings;
+            $table = array();
+            $table['results'] = $shippings;
+            $table['pagination'] = $this->_helper->Paginator->generate($curPage,$maxPages,$totalItems);
+    		$this->view->pagination = $table['pagination'];
+    		$this->view->shippings = $table['results'];
     		$this->view->shippingTypes = $shippingTypes;
     		
     	}
@@ -405,8 +408,13 @@ class Admin_ManageOrdersController extends Zend_Controller_Action
             $table = array();
             $table['results'] = $tbOrders->generateTable($data);
             $table['pagination'] = $this->_helper->Paginator->generate($curPage,$maxPages,$totalItems);
-          
-            echo json_encode($table);
+            
+            if(isset($params['json'])){
+                 echo json_encode($table);
+            }else{
+                 echo $table;
+            }
+           
             exit;
             
         }
