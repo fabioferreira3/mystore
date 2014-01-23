@@ -92,15 +92,14 @@ if (isset($this->msgError)){
         }
         
         $.ajax({
-            url: "/admin238/manage-orders/filter-orders",
+            url: "/admin238/manage-orders/list-shippings",
             type:"GET",
             data:{
                 json:1,
-                client:name,                            
-                ordercod:cod,
-                orderstatus:status,
-                value:value,
-                datecreate:datecreate                          
+                ordercod:ordercod,
+                shippingcod:shippingcod,
+                shippingtype:shippingtype,
+                dateship:                         
             },
             contentType: "application/json; charset=utf-8",
             dataType:"json",
