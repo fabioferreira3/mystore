@@ -94,7 +94,10 @@ if (isset($this->msgError)){
 </div>
 
 <script type="text/javascript">
-
+    $('a, button').bind('touchend', function(e) {
+        $(this).trigger('click');
+        e.preventDefault();
+    });
     $('button.add-new').on('click',function(){
 		 var accept = confirm('Deseja criar um novo pedido?');
 		 if(accept){
