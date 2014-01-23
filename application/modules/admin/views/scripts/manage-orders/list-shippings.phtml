@@ -32,28 +32,31 @@ if (isset($this->msgError)){
 	<div class="row-fluid paginator">
         <?php echo $this->pagination;?>
     </div>
-    <table class="table">
+    <table class="table" id="shipping-results">
     	<thead>
-    		<th>Pedido</th>
-    		<th>Cód. Envio</th>
-    		<th>Frete Adquirido</th>
-    		<th>Data do Envio</th>
-    		<th></th>
-    	</thead>
-    	<tbody>
+    		<tr>
+	    		<th>Pedido</th>
+	    		<th>Cód. Envio</th>
+	    		<th>Frete Adquirido</th>
+	    		<th>Data do Envio</th>
+	    		<th></th>	    		
+    		</tr>
     		<tr>				
-				<td><input type="text" name="search_order" value="" class="span12"/></td>
-				<td><input type="text" name="search_shipping" value="" class="span12"/></td>
-				<td>
+				<th><input type="text" name="search_order" value="" class="span12"/></th>
+				<th><input type="text" name="search_shipping" value="" class="span12"/></th>
+				<th>
 					<select name="search_type">
 						<?php foreach($this->shippingTypes as $shippingType){?>
 							<option value="<?= $shippingType->getId();?>"><?= $shippingType->getName();?></option>
 						<?php }?>
 					</select>				
-				</td>
-				<td><input type="text" name="search_date" value="" class="span12 date"/></td>
-				<td><button class="btn search">Buscar</button></td>
+				</th>
+				<th><input type="text" name="search_date" value="" class="span12 date"/></th>
+				<th><button class="btn search">Buscar</button></th>
 			</tr>
+    	</thead>
+    <!-- 	<tbody>
+    		
 			<?php foreach ($this->shippings as $shipping){ ?>
 				<tr>
 					<td><a href="/admin238/manage-orders/details?orderid=<?= $shipping->getOrder()->getId();?>"><?= $shipping->getOrder()->getOrderCod();?></a></td>
@@ -62,7 +65,8 @@ if (isset($this->msgError)){
 					<td><?= $shipping->getDateCreate()->format('d/m/Y - H:i');?></td>
 				</tr>
 			<?php }?>
-    	</tbody>
+    	</tbody>-->
+    	<?= $this->shippings;?>
     </table>
 	<div class="row-fluid paginator">
         <?php echo $this->pagination;?>
@@ -99,14 +103,14 @@ if (isset($this->msgError)){
                 ordercod:ordercod,
                 shippingcod:shippingcod,
                 shippingtype:shippingtype,
-                dateship:                         
+                dateship:dateship                         
             },
             contentType: "application/json; charset=utf-8",
             dataType:"json",
             success: function (data) {              
-                             $('table.order-results tbody').remove();
+                             $('table#shipping-results tbody').remove();
                              $('div.paginator').empty();
-                             $('table.order-results').append(data.results);
+                             $('table#shipping-results').append(data.results);
                              $('div.paginator').append(data.pagination);
                              $('body').removeClass('loading');
                         },

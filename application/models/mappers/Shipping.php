@@ -341,5 +341,24 @@ class DB_Shipping
     	return $data;
     	
     }
+    
+    public function generateTable($data){
+    	 
+    	$html = '';
+    	$html .='<tbody>';
+    	foreach($data as $shipping){
+    		
+    		
+    		$html.=			'<tr class="record"><td><a href="/admin238/manage-orders/details?orderid='. $shipping->getOrder()->getId() .'">' . $shipping->getOrder()->getOrderCod().'</a></td>';
+    		$html.=			'<td><a href="/admin238/manage-orders/shipping?orderid='. $shipping->getOrder()->getId() .'&shippingid='. $shipping->getId() . '">' . $shipping->getShippingCod().'</a></td>';
+    		$html.=			'<td>'. $shipping->getOrder()->getShippingType()->getName() .'</td>';
+    		$html.=			'<td>'. $shipping->getDateCreate()->format('d/m/Y') .'</td>';    		
+    		$html.=			'</tr>';
+    		$html.=			'</tbody>';
+    	}
+    	 
+    	return $html;
+    
+    }
 
    }

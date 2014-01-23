@@ -376,8 +376,12 @@ class Admin_ManageOrdersController extends Zend_Controller_Action
     		$totalItems = $shippings->getTotalItemCount();
     		$maxPages = ceil($totalItems / $maxItemsPerPage);
             $table = array();
-            $table['results'] = $shippings;
+            $table['results'] = $tbShipping->generateTable($shippings);
             $table['pagination'] = $this->_helper->Paginator->generate($curPage,$maxPages,$totalItems);
+            if(isset($params['json'])){
+            	echo json_encode($table);
+            	exit;
+            }
     		$this->view->pagination = $table['pagination'];
     		$this->view->shippings = $table['results'];
     		$this->view->shippingTypes = $shippingTypes;
