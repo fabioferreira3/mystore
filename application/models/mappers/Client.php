@@ -37,6 +37,13 @@ class DB_Client
     private $lastName;
     
     /**
+     * @var string $fullName
+     *
+     * @Column(name="full_name", type="string", length=255, nullable=true)
+     */
+    private $fullName;
+    
+    /**
      * @var string $email
      *
      * @Column(name="email", type="string", length=150, nullable=false)
@@ -135,7 +142,9 @@ class DB_Client
      *   @JoinColumn(name="store_id", referencedColumnName="id")
      * })
      */
-    private $store;
+    private $store;  
+    
+    
 
 
 
@@ -194,15 +203,25 @@ class DB_Client
     }
     
     /**
+     * Set fullName
+     *
+    * @param string $fullName
+     * @return Client
+     */
+    public function setFullName($fullName){        
+        
+        $this->fullName = $fullName;
+        return $this;
+    }
+    
+    /**
      * Get fullName
      *
      * @return string
      */
-    public function getFullName()
-    {
-        $fullName = $this->getFirstName() . ' ' . $this->getLastName();
+    public function getFullName(){        
         
-        return $fullName;
+        return $this->fullName;
     }
     
     
@@ -536,6 +555,7 @@ class DB_Client
                 $tbClient = $em->getRepository('DB_Client')->find($clientId);
                 $tbClient->setFirstName($params['name']);
                 $tbClient->setLastName($params['lastname']);
+                $tbClient->setFullName($params['name'] . ' ' . $params['lastname']);
                 $tbClient->setCpf($params['cpf']);
                 $birth = new DateTime(str_replace('/', '-',$params['birth']));
                 $tbClient->setDateBirth($birth);
@@ -565,6 +585,7 @@ class DB_Client
                     $tbClient = new DB_Client();
                     $tbClient->setFirstName($params['name']);
                     $tbClient->setLastName($params['lastname']);
+                    $tbClient->setFullName($params['name'] . ' ' . $params['lastname']);
                     $tbClient->setCpf($params['cpf']);
                     $birth = new DateTime(str_replace('/', '-',$params['birth']));
                     $dtNow = new DateTime();

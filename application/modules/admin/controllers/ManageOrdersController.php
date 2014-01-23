@@ -354,6 +354,7 @@ class Admin_ManageOrdersController extends Zend_Controller_Action
     }
     
     public function listShippingsAction(){
+    	    
     	try{
     		
     		$params = $this->getRequest()->getParams();
@@ -381,5 +382,34 @@ class Admin_ManageOrdersController extends Zend_Controller_Action
     	}
     	catch(Exception $e){echo $e->getMessage();}
     	
+    }
+    
+    public function filterOrdersAction(){
+            
+        try{            
+            $params = $this->getRequest()->getParams();  
+            
+            if(isset($params['page'])){$curPage = $params['page'];}
+            else{$curPage = 1;}
+            
+            if(isset($params['maxpages'])){
+                $maxItemsPerPage = $params['maxpages'];
+            }else{
+                $maxItemsPerPage = 50;
+            }  
+            
+            $tbOrders = new DB_Orders();
+            $data = $tbOrders->getOrders($params,$maxItemsPerPage,$curPage);
+            $totalItems = $data->getTotalItemCount();
+            $maxPages = ceil($totalItems / $maxItemsPerPage);
+            $table = array();
+            $table['results'] = $tbOrders->generateTable($data);
+            $table['pagination'] = $this->_helper->Paginator->generate($curPage,$maxPages,$totalItems);
+          
+            echo json_encode($table);
+            exit;
+            
+        }
+        catch(Exception $e){echo json_encode($e->getMessage());exit;}
     }
 }

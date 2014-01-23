@@ -478,31 +478,53 @@ class DB_Orders
     }
     
     
-    public function getOrders(array $params = null){
+    public function getOrders(array $params = null, $perPage = null, $curPage = null){
     	
     	$em = Zend_Registry::getInstance()->entitymanager;
     	$query = $em->createQueryBuilder();
-    	$query->select('o')->from('DB_Orders','o')->orderBy('o.id', 'DESC');
-    	
+    	$query->select('o')->from('DB_Orders','o');   	
+    	$query->where('o.id > 0');
+        
     	if(isset($params['orderId']) && $params['orderId'] != ''){
-    		$query->where('o.id > 0');
+    		$query->andWhere('o.id = :orderid');
+            $query->setParameter('orderid',$params['orderId']);
     	}
-    	if(isset($params['perPage'])){
-    		$perPage = $params['perPage'];
-    	}else{
+        if(isset($params['orderstatus']) && $params['orderstatus'] != ''){
+            $query->andWhere('o.orderStatus = :orderStatus');
+            $query->setParameter(':orderStatus',$params['orderstatus']);
+        }
+        if(isset($params['ordercod']) && $params['ordercod'] != ''){
+            $query->andWhere('o.orderCod LIKE :orderCod');
+            $query->setParameter(':orderCod','%'.$params['ordercod'].'%');
+        }
+        if(isset($params['client']) && $params['client'] != ''){
+            $query->innerjoin('o.client','cl','WITH','cl.fullName LIKE :clientName');
+            $query->setParameter(':clientName','%'.$params['client'].'%');
+        }
+        if(isset($params['datecreate']) && $params['datecreate'] != ''){
+            $query->andWhere('o.dateCreate >= :dateCreate1 AND o.dateCreate <= :dateCreate2');
+            $query->setParameter(':dateCreate1',$params['datecreate'] . ' 00:00:00');
+            $query->setParameter(':dateCreate2',$params['datecreate'] . ' 23:59:59');
+        }
+        if(isset($params['value']) && $params['value'] != ''){
+            $query->andWhere('o.totalPrice LIKE :value');
+            $query->setParameter(':value','%'.$params['value'].'%');
+        }
+        
+        $query->orderBy('o.id', 'DESC');
+        
+    	if(!isset($perPage)){
     		$perPage = 100;
     	}
-    	if(isset($params['currentPage'])){
-    		$currentPage = $params['currentPage'];
-    	}else{
-    		$currentPage = 1;
+    	if(!isset($curPage)){
+    		$curPage = 1;
     	}
     	
     	$paginator = new Paginator($query);
     	$paginator_iter = $paginator->getIterator();
     	$adapter =  new \Zend_Paginator_Adapter_Iterator($paginator_iter);
     	$data = new \Zend_Paginator($adapter);
-    	$data->setItemCountPerPage($perPage)->setCurrentPageNumber($currentPage);
+    	$data->setItemCountPerPage($perPage)->setCurrentPageNumber($curPage);
     	
     	return $data;
     	

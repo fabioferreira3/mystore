@@ -68,14 +68,15 @@ if (isset($this->msgError)){
 					<th></th>
 					<th></th>
 					<th><input type="text" class="span12" name="searchOrder" placeholder="Pedido..."/></th>
+					<th><input type="text" class="span12" name="searchClient" placeholder="Cliente..."/></th>
 					<th><input type="text" class="span12 date" name="searchDate" placeholder="Data..."/></th>
 					<th><input type="text" class="span12 date" name="searchLastUpd" placeholder="Atualizado em"/></th>
-					<th><input type="text" class="span12" name="searchCustomer" placeholder="Cliente..."/></th>
 					<th>						
-						<input type="text" class="span12" name="searchValueTo" placeholder="Para..."/>
+						<input type="text" class="span12" name="searchValue" placeholder="Valor..."/>
 					</th>
 					<th>
 						<select class="span12" name="searchStatus">
+						    <option value="" selected>Escolha...</option>
 							<?php foreach($this->status as $status){ ?>
 								<option value="<?= $status->getId();?>"><?= $status->getName(); ?></option>
 							<?php }?>
@@ -94,6 +95,7 @@ if (isset($this->msgError)){
 </div>
 
 <script type="text/javascript">
+
     $('a, button').bind('touchend', function(e) {
         $(this).trigger('click');
         e.preventDefault();
@@ -107,6 +109,60 @@ if (isset($this->msgError)){
 			 return false;
 		 }
 	});	
+	
+	$('button#search').on('click',function(){
+	    
+	    $('.wait h1').html('Buscando pedidos...');
+        $('body').addClass('loading');
+        
+        var name = '';
+        var cod = '';
+        var status = '';
+        var datecreate = '';
+        var value = '';
+        
+        if($('input[name="searchOrder"]').val() != ''){
+            cod = $('input[name="searchOrder"]').val();
+        }
+        if($('input[name="searchClient"]').val() != ''){
+            name = $('input[name="searchClient"]').val();
+        }
+        if($('input[name="searchDate"]').val() != ''){
+            datecreate = $('input[name="searchDate"]').val();
+        }
+        if($('input[name="searchValue"]').val() != ''){
+            value = $('input[name="searchValue"]').val();
+        }
+        if($('select[name="searchStatus"]').val() != ''){
+            status = $('select[name="searchStatus"]').val();
+        }
+        $.ajax({
+                        url: "/admin238/manage-orders/filter-orders",
+                        type:"GET",
+                        data:{
+                            client:name,                            
+                            ordercod:cod,
+                            orderstatus:status,
+                            value:value,
+                            datecreate:datecreate                          
+                        },
+                        contentType: "application/json; charset=utf-8",
+                        dataType:"json",
+                        success: function (data) {              
+                             $('table.order-results tbody').remove();
+                             $('div.paginator').empty();
+                             $('table.order-results').append(data.results);
+                             $('div.paginator').append(data.pagination);
+                             $('body').removeClass('loading');
+                        },
+                        error: function(request,error){
+                            console.log(arguments);
+                            $.sticky(error, {autoclose : 5000, position: "top-right", type:"st-error" });
+                        }
+                });
+        
+    });
+    
 	$('button.details').on('click',function(){
         window.location.replace("/admin238/manage-orders/details?orderid="+$(this).parent().parent().find('td input').val()); 
     });
@@ -129,6 +185,57 @@ if (isset($this->msgError)){
 		 }
 	});
 	$('button.send').on('click',function(){
+		
+		$.ajax({
+                        url: "/admin238/manage-orders/save",
+                        type:"GET",
+                        data:{
+                            orderId:orderId,
+                            clientId:clientId,
+                            productsId:productsId, 
+                            productsQtd:productsQtd,
+                            unitsPrice:unitsPrice,
+                            updateAddress: 1,
+                            shippingName : shippingName,
+                            shippingAddress : shippingAddress,
+                            shippingNumber : shippingNumber,
+                            shippingComplement : shippingComplement,
+                            shippingZipcode : shippingZipcode,
+                            shippingDistrict : shippingDistrict,
+                            shippingCity : shippingCity,
+                            shippingState : shippingState,
+                            shippingCountry : shippingCountry,
+                            billingName : billingName,
+                            billingAddress : billingAddress,
+                            billingNumber : billingNumber,
+                            billingComplement : billingComplement,
+                            billingZipcode : billingZipcode,
+                            billingDistrict : billingDistrict,
+                            billingCity : billingCity,
+                            billingState : billingState,
+                            billingCountry : billingCountry,
+                            freightType: shippingType,
+                            freightCost: freightCost,
+                            productPrice: parseFloat(productTotalPrice[1]),
+                            totalPrice: totalPrice,
+                            shippingType: shippingType,
+                            paymentType: paymentType,
+                            gift: gift,
+                            giftMsg: giftMsg,
+                            orderStatus: 1                          
+                        },
+                        contentType: "application/json; charset=utf-8",
+                        dataType:"json",
+                        success: function (data) {              
+                             if(data == true){                               
+                                 window.location.replace('/admin238/manage-orders'); 
+                             }
+                        },
+                        error: function(request,error){
+                            console.log(arguments);
+                            $.sticky(error, {autoclose : 5000, position: "top-right", type:"st-error" });
+                        }
+                });
 		
 	});
 	
