@@ -806,10 +806,13 @@ class DB_Product
     		foreach($params as $row){
     			$image = $row->getImages();
     			// Define o url path do thumbnail do produto 
-    			if ($image[0] !== null && $image[0]){
-    				$imagePath = '/images/catalog/' . $row->getId() . '/' . $image[0]->getName();
-    				$thumbPath = '/images/catalog/' . $row->getId() . '/thumbnail/' . $image[0]->getName();
-    			};
+    			
+    			foreach ($image as $img){
+	    			if ($img !== null && $img->getOrdenation() == '1'){
+	    				$imagePath = '/images/catalog/' . $row->getId() . '/' . $img->getName();
+	    				$thumbPath = '/images/catalog/' . $row->getId() . '/thumbnail/' . $img->getName();
+	    			};	    			
+    			}
     			
     			// Se existir preço cadastrado, mostra-o
     			if($row->getPrice() !== null && $row->getPrice()){

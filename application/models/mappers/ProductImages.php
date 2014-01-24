@@ -29,11 +29,11 @@ class DB_ProductImages
     private $name;
     
     /**
-     * @var integer $order
+     * @var integer $ordenation
      *
      * @Column(name="ordenation", type="integer", length=2, nullable=true)
      */
-    private $order;
+    private $ordenation;
     
    /**
      * @var Product
@@ -91,25 +91,25 @@ class DB_ProductImages
     }
     
     /**
-     * Set order
+     * Set ordenation
      *
-     * @param integer $order
+     * @param integer $ordenation
      * @return ProductImages
      */
-    public function setOrdenation($order)
+    public function setOrdenation($ordenation)
     {
-        $this->order = $order;
+        $this->ordenation = $ordenation;
         return $this;
     }
 
     /**
-     * Get order
+     * Get ordenation
      *
      * @return integer 
      */
     public function getOrdenation()
     {
-        return $this->order;
+        return $this->ordenation;
     }
     
     /**

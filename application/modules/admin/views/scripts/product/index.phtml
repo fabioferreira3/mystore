@@ -93,15 +93,24 @@ if (isset($this->msgError)){
 					</tr>
 				<?php foreach($this->products as $product){ 
 					$images = $product->getImages();
+				//	Zend_Debug::dump($images[3]);exit;
 				?>
 					 	
 					<tr class="result">
 		    			<td><input type="checkbox" name="row_sel" class="row_sel" value="<?= $product->getId();?>"/></td>
-		    			<td><?php echo $product->getId();?></td>
-		    			<td style="width: 60px"><a href="<?php if ($images[0]){echo '/images/catalog/' . $product->getId() . '/' . $images[0]->getName();};?>"
-		    				title="" class="cbox_single thumbnail"> <img alt="" src="<?php if ($images[0]){echo '/images/catalog/' . $product->getId() . '/thumbnail/' . $images[0]->getName();};?>" style="height: 50px; width: 50px">
-		    			</a>
-		    			</td>
+		    			<td><?= $product->getId();?></td>
+		    			<?php $i = 0; foreach ($images as $image){
+		    				if ($images[$i]){
+								if($images[$i]->getOrdenation() == '1'){	?>
+					    			<td style="width: 60px">
+					    				<a href="<?= '/images/catalog/' . $product->getId() . '/' . $images[$i]->getName();?>"
+					    					title="" class="cbox_single thumbnail"> <img alt="" src="<?= '/images/catalog/' . $product->getId() . '/thumbnail/' . $images[$i]->getName();?>" style="height: 50px; width: 50px">
+					    				</a>
+					    			</td>
+		    			<?php } ?>
+		    				
+		    			<?php }else{echo '<td></td>';}$i++;}?>
+		    			
 		    			<td><?php echo $product->getName();?></td>
 		    			<td><?php echo $product->getSku();?></td>
 		    			<td><?php if($product->getPrice()){ echo 'R$' . $product->getPrice();}?></td>
