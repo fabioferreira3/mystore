@@ -572,11 +572,12 @@ class DB_Orders
     			$actions .= '<button value="'. $orderId . '" class="btn span12 details" style="margin-left:0;">Detalhes</button>';
     		}
     		if($status === 3 || $status === 5){
-    			$actions .= '<button value="'. $orderId . '" class="btn span12 rebuy">Recomprar</button>';
+    			$actions .= '<button value="'. $orderId . '" class="btn span12 details" style="margin-left:0;">Detalhes</button>';
+    			$actions .= '<button value="'. $orderId . '" class="btn span12 rebuy" style="margin-left:0;">Recomprar</button>';
     		}
     		if($status === 7){
-    			$actions .= '<button value="'. $orderId . '" class="btn span12 edit">Editar</button>';
-    			$actions .= '<button value="'. $orderId . '" class="btn span12 remove">Excluir</button>';
+    			$actions .= '<button value="'. $orderId . '" class="btn span12 edit" style="margin-left:0;">Editar</button>';
+    			$actions .= '<button value="'. $orderId . '" class="btn span12 remove" style="margin-left:0;">Excluir</button>';
     		}
     		$html.=			'<tr class="record">
     						<td><input type="checkbox" class="orderid" value="'. $order->getId() .'"/></td>';

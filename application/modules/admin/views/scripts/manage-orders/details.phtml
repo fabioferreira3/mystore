@@ -100,7 +100,7 @@ if (isset($this->msgError)){
     		<?php if($this->data['general']->getOrderStatus()->getId() == 2 || $this->data['general']->getOrderStatus()->getId() == 6){?>
 	    		<a data-toggle="modal" data-backdrop="static" href="#viewInvoices"><button class="btn pull-left">Visualizar Fatura(s)</button></a>
 	    		<a data-toggle="modal" data-backdrop="static" href="#viewShippings"><button class="btn pull-left" id="viewShippings">Visualizar Entrega(s)</button></a>
-	    		<button class="btn pull-left" id="reimburse">Reembolsar</button>	    		
+	    		<button class="btn pull-left" id="refund">Reembolsar</button>	    		
     		<?php }?>
     		<?php if($this->data['general']->getOrderStatus()->getId() == 2){ ?>
     			<button class="btn pull-left" id="createShipping">Enviar</button>
@@ -327,6 +327,11 @@ if (isset($this->msgError)){
 	$('button#createInvoice').on('click',function(){
 		var orderid = $('input#orderid').val();
 		window.location.replace('/admin238/manage-orders/invoice?create=1&orderid='+orderid);
+	});
+
+	$('button#refund').on('click',function(){
+	    var orderid = $('input#orderid').val();
+		window.location.replace('/admin238/manage-orders/refund?orderid='+orderid);
 	});
 	
 	$('button#createShipping').on('click',function(){

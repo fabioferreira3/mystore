@@ -440,4 +440,21 @@ class Admin_ManageOrdersController extends Zend_Controller_Action
     	catch(Exception $e){echo $e->getMessage();}
     	
     }
+    
+    public function refundAction(){
+    	
+    	try{    		
+    		$params = $this->getRequest()->getParams();
+    		$order = $this->repo->db('Orders')->find($params['orderid']);
+    		$refundStatus = $this->repo->db('OrderStatus')->find(5);
+    		$order->setOrderStatus($refundStatus);
+    		$this->em->persist($order);
+    		$this->em->flush();
+    		$this->_helper->flashMessenger->addMessage('Reembolso realizado com sucesso!','success');
+    		$this->getHelper('Redirector')->gotoUrl('/admin238/manage-orders/details?orderid=' . $params['orderid']);
+    		exit;
+    	}
+    	catch(Exception $e){echo $e->getMessage();}
+    	
+    }
 }
