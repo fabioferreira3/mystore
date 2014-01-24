@@ -12,6 +12,8 @@ if (isset($this->msgSuccess)){
     
 }?>
 
+
+
 <?php 
 
 if (isset($this->msgError)){
@@ -107,10 +109,10 @@ if (isset($this->msgError)){
                 shippingcod:shippingcod,
                 shippingtype:shippingtype,
                 dateship:dateship                         
-            },
+            },            
             contentType: "application/json; charset=utf-8",
             dataType:"json",
-            success: function (data) {              
+            success: function (data) {                           
                              $('table#shipping-results tbody').remove();
                              $('div.paginator').empty();
                              $('table#shipping-results').append(data.results);
