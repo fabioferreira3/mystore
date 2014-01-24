@@ -1,0 +1,32 @@
+<?php 
+
+if (isset($this->msgSuccess)){
+   
+    foreach ($this->msgSuccess as $message){?>
+        <div class="alert alert-success">
+            <a class="close" data-dismiss="alert">×</a>
+            <?php echo $message; ?>
+        </div>
+         
+<?php }
+    
+}?>
+
+<?php 
+
+if (isset($this->msgError)){
+   
+      foreach ($this->msgError as $message){?>
+        <div class="alert alert-error">
+            <a class="close" data-dismiss="alert">×</a>
+            <?php echo $message; ?>
+        </div>         
+<?php }
+    
+}?>
+
+<div class="row-fluid">
+	<div class="row-fluid">
+		<h1 class="heading">Criar Reembolso</h1>
+	</div>
+</div>
