@@ -424,4 +424,20 @@ class Admin_ManageOrdersController extends Zend_Controller_Action
         }
         catch(Exception $e){echo json_encode($e->getMessage());exit;}
     }
+    
+    public function massShippingAction(){
+    	
+    	try{
+    		
+    		$params = $this->getRequest()->getParams();
+    		$orders = $this->repo->db('Orders')->findByOrderStatus(2);
+    		$shippingTypes = $this->repo->db('ShippingType')->findAll();
+    		$this->view->orders = $orders;
+    		$this->view->shippingTypes = $shippingTypes;
+    		
+    		
+    	}
+    	catch(Exception $e){echo $e->getMessage();}
+    	
+    }
 }

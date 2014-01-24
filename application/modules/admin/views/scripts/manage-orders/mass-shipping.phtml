@@ -1,0 +1,138 @@
+<?php 
+
+if (isset($this->msgSuccess)){
+   
+    foreach ($this->msgSuccess as $message){?>
+        <div class="alert alert-success">
+            <a class="close" data-dismiss="alert">×</a>
+            <?php echo $message; ?>
+        </div>
+         
+<?php }
+    
+}?>
+
+<?php 
+
+if (isset($this->msgError)){
+   
+      foreach ($this->msgError as $message){?>
+        <div class="alert alert-error">
+            <a class="close" data-dismiss="alert">×</a>
+            <?php echo $message; ?>
+        </div>         
+<?php }
+    
+}?>
+
+<div class="row-fluid">
+	<div class="row-fluid">
+		<h1 class="heading">Criar Envio em Massa</h1>
+	</div>
+	<div class="row-fluid">
+		<div class="row-fluid">
+			<button class="btn save-shipping">Salvar Entregas</button>
+		</div>
+		<div class="row-fluid">				
+			<table class="table shipping-results">
+				<thead>
+					<tr>
+						<th>Data</th>
+						<th># Pedido</th>
+						<th>Cliente</th>
+						<th>Status</th>
+						<th>Tipo de Frete</th>
+						<th>Código de Rastreio</th>
+						<th>Enviar Email</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php 
+					if($this->orders != null){
+					foreach ($this->orders as $order){ ?>
+					<tr>
+						<td style="display:none"><input type="hidden" name="orderid" value="<?= $order->getId();?>"/></td>
+						<td><?= $order->getDateCreate()->format('d/m/Y');?></td>
+						<td><?= $order->getOrderCod();?></td>
+						<td><?= $order->getClient()->getFullName();?></td>
+						<td><?= $order->getOrderStatus()->getName();?></td>
+						<td>
+							<select name="shippingtype">
+							<?php  foreach($this->shippingTypes as $shippingType){ ?>
+								<option value="<?= $shippingType->getId();?>"><?= $shippingType->getName();?></option>
+							<?php }?>
+							</select>
+						</td>
+						<td><input type="text" name="trackingNumber"/></td>
+						<td><input type="checkbox" name="sendemail"/></td>
+					</tr>
+					<?php }}else{?>
+					<tr>
+						<td colspan="7">Nenhum pedido a ser enviado no momento!</td>
+					</tr>
+					<?php }?>
+				</tbody>
+			</table>
+		</div>
+		<div class="row-fluid">
+			<button class="btn save-shipping">Salvar Entregas</button>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+
+	$('button.save-shipping').on('click',function(){
+
+		$('.wait h1').html('Gerando entregas...');
+    	$('body').addClass('loading');
+		var orderid = '';
+		var shippingType = '';
+		var trackingNumber = new Array();
+		var sendemail = 0;
+		var countsuccess = 0;
+
+		$('input[name="trackingNumber"]').each(function(){
+			
+			if($(this).val() != ''){
+				 orderid = $(this).parent().parent().find('input[name="orderid"]').val();
+				 shippingType = $(this).parent().parent().find('select[name="shippingtype"]').val();
+				 trackingNumber[0] = $(this).parent().parent().find('input[name="trackingNumber"]').val();
+				 if($(this).parent().parent().find('input[name="sendemail"]').prop('checked') == true){
+					 sendemail = 1;
+				 }
+				
+				 $.ajax({
+			            url: "/admin238/manage-orders/save-shipping",
+			            type:"GET",
+			            data:{
+			                json:1,
+			                orderid:orderid,
+			                shippingType:shippingType,
+			                tracking:trackingNumber,
+			                sendemail:sendemail                      
+			            },
+			            async:false,
+			            contentType: "application/json; charset=utf-8",
+			            dataType:"json",
+			            success: function (data) {              
+			                   console.log(data);   
+			                   countsuccess++;   
+			            },
+			            error: function(request,error){
+			                console.log(arguments);
+			                $.sticky(error, {autoclose : 5000, position: "top-right", type:"st-error" });
+			                return false;
+			            }
+			         });
+		         
+			}
+		});
+		$('body').removeClass('loading');
+		var msg = countsuccess + ' pedido(s) foram enviado(s) com sucesso!';
+		$.sticky(msg, {autoclose : 5000, position: "top-right", type:"st-success" });
+		window.location.replace('/admin238/manage-orders/mass-shipping');
+		
+	});
+
+</script>

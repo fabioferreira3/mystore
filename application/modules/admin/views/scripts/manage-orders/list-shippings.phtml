@@ -46,6 +46,7 @@ if (isset($this->msgError)){
 				<th><input type="text" name="search_shipping" value="" class="span12"/></th>
 				<th>
 					<select name="search_type">
+						<option value="" selected>Escolha...</option>
 						<?php foreach($this->shippingTypes as $shippingType){?>
 							<option value="<?= $shippingType->getId();?>"><?= $shippingType->getName();?></option>
 						<?php }?>
@@ -76,7 +77,9 @@ if (isset($this->msgError)){
 <script type="text/javascript">
     
     $('button.search').on('click',function(){
-        
+
+		$('.wait h1').html('Buscando entregas...');
+    	$('body').addClass('loading');
         var ordercod = '';
         var shippingcod = '';
         var shippingtype = '';
