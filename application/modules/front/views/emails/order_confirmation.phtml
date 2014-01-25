@@ -1,0 +1,149 @@
+<table width="100%" cellspacing="0" cellpadding="0" border="0">
+<tbody><tr>
+    <td valign="top" align="center" style="padding:20px 0 20px 0;">
+        <table width="650" cellspacing="0" cellpadding="10" border="0" bgcolor="#FFFFFF" style="border:1px solid #E0E0E0;">
+            <tbody>
+	            <tr>
+	                <td valign="top">
+	                	<a target="_blank" href="http://www.applemax.com.br/">
+	                		<img border="0" style="" alt="AppleMax" src="">
+	                	</a>
+	                </td>
+	            </tr>            
+	            <tr>
+	                <td valign="top">
+	                    <h1 style="font-size:22px;font-weight:normal;line-height:22px; font-weight:normal;">Olá, <?= $this->fullName;?>!</h1>
+	                    <p style="font-size:16px;line-height:16px; margin-top:20px; font-weight:normal;">
+	                    	Este é um email de confirmação de seu pedido em nossa loja.
+	                    </p>
+	                    <p style="font-size:14px;line-height:16px; font-weight:normal;">
+	                    	Logo após confirmarmos o pagamento enviaremos um outro email para lhe avisar.
+	                    </p>
+	                    <p style="font-size:14px;line-height:16px; font-weight:normal;">
+	                    	Poderá também acompanhar o andamento do seu pedido acessando o link 'Meus Pedidos' em nosso website <a href="http://www.applemax.com.br">www.applemax.com.br</a>.
+	                    </p>
+	                    <p style="font-size:14px;line-height:16px; font-weight:normal;">
+	                    	Se tiver alguma dúvida referente ao seu pedido entre em contato conosco pelo email <a style="color:#1E7EC8;" href="mailto:atendimento@applemax.com.br">atendimento@applemax.com.br</a>
+	                    </p>
+	                    <p style="font-size:14px;line-height:16px; margin-top:50px;">Segue abaixo os dados do seu pedido:</p>                   
+	                </td>
+	            </tr>
+	            <tr>
+	                <td>
+	                    <h2 style="font-size:18px;font-weight:normal;">Número do Pedido: <strong>#<?= $this->orderCod;?></strong></h2>
+	                    <p style="font-size:12px;">Data: <?= $this->orderDate;?> - Horário de Brasilia</p>
+	                </td>
+	            </tr>
+	            <tr>
+	                <td><table width="650" cellspacing="0" cellpadding="0" border="0" style="border:1px solid #EAEAEA;">
+						    <thead>
+						        <tr>
+						            <th bgcolor="#EAEAEA" align="left" style="font-size:13px;padding:3px 9px;">Item</th>
+						            <th bgcolor="#EAEAEA" align="left" style="font-size:13px;padding:3px 9px;">Sku</th>
+						            <th bgcolor="#EAEAEA" align="center" style="font-size:13px;padding:3px 9px;">Qtd</th>
+						            <th bgcolor="#EAEAEA" align="right" style="font-size:13px;padding:3px 9px;">Subtotal</th>
+						        </tr>
+						    </thead>
+	            			<tbody>
+	        					
+								<?php foreach($this->orderProducts as $item){ ?>
+									<tr>
+	    							<td valign="top" align="left" style="font-size:11px;padding:3px 9px;border-bottom:1px dotted #CCCCCC;">
+	        							<strong style="font-size:11px;"><?= $item->getProduct()->getName();?></strong>
+	    							</td>
+	    							<td valign="top" align="left" style="font-size:11px;padding:3px 9px;border-bottom:1px dotted #CCCCCC;"><?= $item->getProduct()->getSku();?></td>
+	    							<td valign="top" align="center" style="font-size:11px;padding:3px 9px;border-bottom:1px dotted #CCCCCC;"><?= $item->getQty()?></td>
+	    							<td valign="top" align="right" style="font-size:11px;padding:3px 9px;border-bottom:1px dotted #CCCCCC;">
+	                                	<span class="ecxprice"><?= $item->getUnitPrice();?></span> 
+	            					</td>
+								</tr>
+								<?php }?>
+	    					</tbody>    
+	    					<tbody>
+	                			<tr class="ecxsubtotal">
+	        						<td align="right" style="padding:3px 9px;" colspan="3">Subtotal</td>
+	        						<td align="right" style="padding:3px 9px;">
+	                        			<span class="ecxprice">R$29,90</span>
+	                        		</td>
+	    						</tr>
+	            				<tr class="ecxshipping">
+	        						<td align="right" style="padding:3px 9px;" colspan="3">Frete</td>
+	        						<td align="right" style="padding:3px 9px;">
+	                        			<span class="ecxprice">R$13,30</span>
+	                        		</td>
+	    						</tr>
+	            				<tr class="ecxgrand_total">
+	        						<td align="right" style="padding:3px 9px;" colspan="3">
+	                        			<strong>Total Geral</strong>
+	                    			</td>
+	        						<td align="right" style="padding:3px 9px;">
+	                        			<strong><span class="ecxprice">R$43,20</span></strong>
+	                    			</td>
+	    						</tr>
+	        				</tbody>
+						</table> 
+	                    <table width="650" cellspacing="0" cellpadding="0" border="0">
+	                        <thead>
+	                        <tr>
+	                            <th width="325" bgcolor="#EAEAEA" align="left" style="font-size:13px;padding:5px 9px 6px 9px;line-height:1em;">Informações de Cobrança:</th>
+	                            <th width="10"></th>
+	                            <th width="325" bgcolor="#EAEAEA" align="left" style="font-size:13px;padding:5px 9px 6px 9px;line-height:1em;">Forma de Pagamento:</th>
+	                        </tr>
+	                        </thead>
+	                        <tbody>
+	                        <tr>
+	                            <td valign="top" style="font-size:12px;padding:7px 9px 9px 9px;border-left:1px solid #EAEAEA;border-bottom:1px solid #EAEAEA;border-right:1px solid #EAEAEA;">
+	                                Fabio Ferreira<br>
+									Av do Taboão 2319 apt 102<br>
+									SBC,  São Paulo, 09655000<br>
+									Brasil<br>
+									T: 11953210896
+	                            </td>
+	                            <td>&nbsp;</td>
+	                            <td valign="top" style="font-size:12px;padding:7px 9px 9px 9px;border-left:1px solid #EAEAEA;border-bottom:1px solid #EAEAEA;border-right:1px solid #EAEAEA;">
+	                                <p>
+	    								<strong>PagSeguro (Boleto ou Cartão de Crédito)</strong>        
+	        							(<a target="_blank" href="http://www.applemax.com.br/pagseguro/pay/redirect/order_id/3505/">pagar</a>)
+									</p>
+	                            </td>
+	                        </tr>
+	                        </tbody>
+	                    </table>
+	                    <br>
+	                    
+	                    <table width="650" cellspacing="0" cellpadding="0" border="0">
+	                        <thead>
+	                        <tr>
+	                            <th width="325" bgcolor="#EAEAEA" align="left" style="font-size:13px;padding:5px 9px 6px 9px;line-height:1em;">Informações de Envio:</th>
+	                            <th width="10"></th>
+	                            <th width="325" bgcolor="#EAEAEA" align="left" style="font-size:13px;padding:5px 9px 6px 9px;line-height:1em;">Forma de Envio:</th>
+	                        </tr>
+	                        </thead>
+	                        <tbody>
+	                        <tr>
+	                            <td valign="top" style="font-size:12px;padding:7px 9px 9px 9px;border-left:1px solid #EAEAEA;border-bottom:1px solid #EAEAEA;border-right:1px solid #EAEAEA;">
+	                                Fabio Ferreira<br>
+									Av do Taboão 2319 apt 102<br>
+									SBC,  São Paulo, 09655000<br>
+									Brasil<br>
+									T: 11953210896
+	                            </td>
+	                            <td>&nbsp;</td>
+	                            <td valign="top" style="font-size:12px;padding:7px 9px 9px 9px;border-left:1px solid #EAEAEA;border-bottom:1px solid #EAEAEA;border-right:1px solid #EAEAEA;">
+	                                Correios - PAC - Em média 11 dia(s)
+	                                &nbsp;
+	                            </td>
+	                        </tr>
+	                        </tbody>
+	                    </table>
+	                    <br>                                      
+	                </td>
+	            </tr>
+	            <tr>
+	                <td bgcolor="#EAEAEA" align="center" style="background:#EAEAEA;text-align:center;"><center><p style="font-size:12px;">Atenciosamente, <strong>AppleMax</strong></p></center></td>
+	            </tr>
+        </tbody>
+        </table>
+    </td>
+</tr>
+</tbody></table>

@@ -14,7 +14,7 @@ class Application_Model_Email{
     	$this->lang = Zend_Registry::get('Zend_Translate');
 	}
 	
-	public function emailSend($body, $to, $from, $subject){
+	public function sendEmail($body, $to, $from, $subject){
 		
 		$this->to = $to;
 		$this->from = $from;
@@ -46,11 +46,22 @@ class Application_Model_Email{
 	
 	public function sendOrderConfirmation($orderid){
 		
-		try{
+		try{			
+			$view = $this->prepareTemplate();
 			
-			$html = '';
+			Zend_Debug::dump($view->render('order_confirmation.phtml'));
+			exit;
+			
 		}
 		catch(Exception $e){echo $e->getMessage();exit;}
+	}
+	
+	protected function prepareTemplate(){
+		
+		$view = new Zend_View();
+		$view->setScriptPath(APPLICATION_PATH . '/modules/front/views/emails/');
+		
+		return $view;
 	}
 	
 }
