@@ -20,6 +20,14 @@ class Admin_IndexController extends Zend_Controller_Action
 			$this->view->msgError = $this->_helper->FlashMessenger->getMessages('error');
 		}
 		
+		$auth = Zend_Auth::getInstance();
+		
+		if($auth->hasIdentity()){
+			$storage = $auth->getStorage()->read();
+			$this->view->username = $storage->username;
+			$this->view->lastLogin = $storage->last_login;
+		}
+		
 	}
 	
 	public function indexAction(){

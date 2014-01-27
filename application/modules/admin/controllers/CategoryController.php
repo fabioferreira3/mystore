@@ -7,19 +7,29 @@ class Admin_CategoryController extends Zend_Controller_Action
 	private $repo;
 	
 	public function init(){
-		$this->layout = Zend_Layout::getMvcInstance();
-		$this->layout->setLayout('adminLayout');
-		$this->em = $this->_helper->EM->em();
-		$this->repo = $this->_helper->EM;
 		
-		if ($this->_helper->FlashMessenger->hasMessages('success')) {
-			$this->view->msgSuccess = $this->_helper->FlashMessenger->getMessages('success');
-		}
-		if ($this->_helper->FlashMessenger->hasMessages('error')) {
-			$this->view->msgError = $this->_helper->FlashMessenger->getMessages('error');
-		}
+		$auth = Zend_Auth::getInstance();
+			
+		if (!$auth->hasIdentity()) {
+				
+			$this->getHelper('Redirector')->gotoUrl('/admin238/index/login');
+			
+		}else{
 		
-		$this->view->categoryPage = true;
+			$this->layout = Zend_Layout::getMvcInstance();
+			$this->layout->setLayout('adminLayout');
+			$this->em = $this->_helper->EM->em();
+			$this->repo = $this->_helper->EM;
+			
+			if ($this->_helper->FlashMessenger->hasMessages('success')) {
+				$this->view->msgSuccess = $this->_helper->FlashMessenger->getMessages('success');
+			}
+			if ($this->_helper->FlashMessenger->hasMessages('error')) {
+				$this->view->msgError = $this->_helper->FlashMessenger->getMessages('error');
+			}
+			
+			$this->view->categoryPage = true;
+		}
 	}
 	
 	public function indexAction(){
