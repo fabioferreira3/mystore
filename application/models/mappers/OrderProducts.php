@@ -49,7 +49,7 @@ class DB_OrderProducts
     /**
      * @var Order
      *
-     * @ManyToOne(targetEntity="DB_Orders")
+     * @ManyToOne(targetEntity="DB_Orders", inversedBy="products")
      * @JoinColumns({
      *   @JoinColumn(name="order_id", referencedColumnName="id")
      * })

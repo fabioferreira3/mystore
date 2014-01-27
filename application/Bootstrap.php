@@ -26,6 +26,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 	}
 	
 	
+	
+	
 	public function _initRoute(){
 		$ctrl = Zend_Controller_Front::getInstance();
 		$router = $ctrl->getRouter();

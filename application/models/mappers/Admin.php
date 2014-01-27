@@ -64,18 +64,13 @@ class DB_Admin
     private $dateUpd;
 
     /**
-     * @var string $firstName
+     * @var string $name
      *
-     * @Column(name="first_name", type="string", length=50, nullable=true)
+     * @Column(name="name", type="string", length=150, nullable=true)
      */
-    private $firstName;
+    private $name;
 
-    /**
-     * @var string $lastName
-     *
-     * @Column(name="last_name", type="string", length=50, nullable=true)
-     */
-    private $lastName;
+   
 
 
 
@@ -221,47 +216,26 @@ class DB_Admin
         return $this->dateUpd;
     }
 
+
     /**
-     * Set firstName
+     * Set name
      *
-     * @param string $firstName
+     * @param string $name
      * @return Admin
      */
-    public function setFirstName($firstName)
+    public function setName($name)
     {
-        $this->firstName = $firstName;
+        $this->name = $name;
         return $this;
     }
 
     /**
-     * Get firstName
+     * Get name
      *
      * @return string 
      */
-    public function getFirstName()
+    public function getName()
     {
-        return $this->firstName;
-    }
-
-    /**
-     * Set lastName
-     *
-     * @param string $lastName
-     * @return Admin
-     */
-    public function setLastName($lastName)
-    {
-        $this->lastName = $lastName;
-        return $this;
-    }
-
-    /**
-     * Get lastName
-     *
-     * @return string 
-     */
-    public function getLastName()
-    {
-        return $this->lastName;
+        return $this->name;
     }
 }

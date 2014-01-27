@@ -81,18 +81,19 @@ class DB_Orders
     private $client;
     
     /**
-     * @var $shippingAddress
+     * @var $addresses
      *
-     * @OneToMany(targetEntity="DB_OrderAddresses", mappedBy="orders")
+     * @OneToMany(targetEntity="DB_OrderAddresses", mappedBy="order")
      */
-    private $shippingAddress;
+    private $addresses;    
+   
     
     /**
-     * @var $billingAddress
+     * @var $products
      *
-     * @OneToMany(targetEntity="DB_OrderAddresses", mappedBy="orders")
+     * @OneToMany(targetEntity="DB_OrderProducts", mappedBy="order")
      */
-    private $billingAddress;
+    private $products;
     
     /**
      * @var string $productPrice
@@ -314,14 +315,24 @@ class DB_Orders
     }
     
     /**
-     * Get shippingAddress
+     * Get addresses
      *
      * @return string
      */
-    public function getShippingAddress()
+    public function getAddresses()
     {
-        return $this->shippingAddress;
-    } 
+    	return $this->addresses;
+    }  
+    
+    /**
+     * Get products
+     *
+     * @return array
+     */
+    public function getProducts()
+    {
+    	return $this->products;
+    }
     
     /**
      * Set productPrice

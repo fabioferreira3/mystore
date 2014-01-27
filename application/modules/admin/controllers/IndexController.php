@@ -25,19 +25,85 @@ class Admin_IndexController extends Zend_Controller_Action
 	public function indexAction(){
 		
 		try{
+			$auth = Zend_Auth::getInstance();
 			
+			if (!$auth->hasIdentity()) {
+					
+				$this->getHelper('Redirector')->gotoUrl('/admin238/index/login');
+			}
 		}
 		catch(Exception $e){echo $e->getMessage();exit;}
 	}
 	
 	public function testeAction(){
+		
 		try{
+			$order = $this->repo->db('Orders')->find(21);
+		//	Zend_Debug::dump($order->getProducts());
+		//	exit;
 			$email = new Application_Model_Email();
-			$email->sendOrderConfirmation(21);
+			$email->sendOrderConfirmation($order);
 			
 				
 		}
 		catch(Exception $e){echo $e->getMessage();exit;}
+	}
+	
+	public function loginAction(){
+		
+		$this->layout->setLayout('adminBlank');
+		
+		try{
+			if($this->getRequest()->isPost()){				
+			    
+				$params = $this->getRequest()->getPost();
+				$password = hash('sha256',$params['password']);
+				
+				$db = Zend_Db_Table::getDefaultAdapter();
+				$authAdapter = new Zend_Auth_Adapter_DbTable($db);
+				 
+				$authAdapter->setTableName('admin');
+				$authAdapter->setIdentityColumn('username');
+				$authAdapter->setCredentialColumn('password');
+				$authAdapter->setCredentialTreatment('status = 1');
+				$authAdapter->setIdentity($params['username']);
+				$authAdapter->setCredential($password);
+				
+				$auth = Zend_Auth::getInstance();
+				$result = $auth->authenticate($authAdapter);
+				
+				if ($result->isValid()) {
+				
+					$storage = $auth->getStorage();
+						
+					$info = $authAdapter->getResultRowObject(array(
+							'id',
+							'username',
+							'last_login'
+					));			
+						
+					$storage->write($info);
+				
+					$this->getHelper('Redirector')->gotoUrl('/admin238/');
+						
+				}else{
+					$this->_helper->flashMessenger->addMessage('Acesso Negado','error');
+					$this->getHelper('Redirector')->gotoUrl('/admin238/index/login');
+				}
+			}
+		}
+		catch(Exception $e){echo $e->getMessage();exit;}
+		
+	}
+	
+	public function logoutAction(){
+		
+		$session = new Zend_Auth_Storage_Session();
+		$session->clear();
+		Zend_Registry::_unsetInstance();
+		$this->getHelper('Redirector')->gotoUrl('/admin238/index/login');
+		exit;
+		
 	}
 	
 	

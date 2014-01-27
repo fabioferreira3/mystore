@@ -44,14 +44,15 @@ class Application_Model_Email{
 		
 	}
 	
-	public function sendOrderConfirmation($orderid){
+	public function sendOrderConfirmation($orderObject){
 		
-		try{			
+		try{		
+		//	Zend_Debug::dump($orderObject->getAddresses()[0]->getName());
+		//	exit;	
 			$view = $this->prepareTemplate();
-			
-			Zend_Debug::dump($view->render('order_confirmation.phtml'));
-			exit;
-			
+			$view->assign('order',$orderObject);
+			$body = $view->render('order_confirmation.phtml');
+			$this->sendEmail($body,'fabio.ferreira3@outlook.com',false,'confirmação de seu pedido');		
 		}
 		catch(Exception $e){echo $e->getMessage();exit;}
 	}
