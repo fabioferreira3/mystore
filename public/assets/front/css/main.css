@@ -1,4 +1,5 @@
 div.navmain {
-  min-height: 70px !important; }
+  min-height: 70px !important;
+  background: white; }
   div.navmain a.navbar-brand {
     line-height: 40px !important; }
