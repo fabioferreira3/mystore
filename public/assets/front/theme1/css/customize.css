@@ -422,6 +422,7 @@ input[type="color"]:focus,
   -moz-border-radius:0 0 4px 4px;
   border-radius:0 0 4px 4px;
   display: none;
+  width:300%;
 }
 .navbar .nav div ul {
   list-style: none;

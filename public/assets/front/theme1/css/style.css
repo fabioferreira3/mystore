@@ -87,7 +87,6 @@ header {
 /* middleHeader */
 	.middleHeader .middleContainer {
 		padding:30px 0;
-		background: url('../img/map.png') no-repeat 12% 22%;
 	}
 /* logo */
 	.middleHeader .siteLogo {
