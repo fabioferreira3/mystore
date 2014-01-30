@@ -33,6 +33,9 @@ if (isset($this->msgError)){
 }?>
 <div class="row-fluid">
     <h1 class="heading">Editar Categoria : <?php echo $this->category->getName();?> </h1>
+    <div class="row-fluid">
+    	<button class="btn back pull-right">Voltar a Listagem</button>
+    </div>
     <div class="span6">
         <h2 class="heading">Dados da Categoria</h2>
 		<form method="post" action="/admin238/category/edit/id/<?php echo $this->category->getId();?>" id="addCategory">
@@ -157,4 +160,8 @@ gebo_dynatree = {
                 }
             });
         }};
+
+$('button.back').on('click',function(){
+	window.location.replace('/admin238/category');
+});
 </script>

@@ -36,7 +36,7 @@ class Admin_IndexController extends Zend_Controller_Action
 			$auth = Zend_Auth::getInstance();
 			
 			if (!$auth->hasIdentity()) {
-					
+									
 				$this->getHelper('Redirector')->gotoUrl('/admin238/index/login');
 			}
 		}

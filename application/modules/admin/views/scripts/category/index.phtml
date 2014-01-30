@@ -26,34 +26,47 @@ if (isset($this->msgError)){
     
 }?>
 <div class="row-fluid">
-    <div class="span8">
-        <h1 class="heading">Categorias</h1>                  
-
-            <?php foreach($this->categories as $category){
-            	if(count($category) > 2){?>
-            	
-				<?php 	echo '<div class="catMain">' . $category['name']?> <span><a href="/admin238/category/edit/id/<?php echo $category['id'];?>"><i class="splashy-application_windows_edit"></i></a></span><span><a href="#"><i class="splashy-application_windows_remove"></i></a></span>
-				<?php 	foreach ($category as $sub1){
-						
-						if(isset($sub1['name'])){
-							echo '<div class="catSubMain">'; 
-							echo $sub1['name']; ?> <span><a href="/admin238/category/edit/id/<?php echo $sub1['id'];?>"><i class="splashy-application_windows_edit"></i></a></span><span><a href="#"><i class="splashy-application_windows_remove"></i></a></span>
-							<?php if(count($sub1) > 2){
-								foreach($sub1 as $sub2){
-									if(isset($sub2['name'])){
-										echo '<div class="catSubSub">';
-										echo $sub2['name']; ?> <span><a href="/admin238/category/edit/id/<?php echo $sub2['id'];?>"><i class="splashy-application_windows_edit"></i></a></span><span><a href="#"><i class="splashy-application_windows_remove"></i></a></span>
-										<?php echo '</div>';
-									}
-								}
-							}
-							echo '</div>';
-						}												
-					} echo '</div>';
-				}else{
-					echo '<div class="catMain">' . $category['name'] . '</br>';
-				}                 
-             }?>            
+    <div class="span12">
+        <h1 class="heading">Categorias</h1>
+        <div class="row-fluid">
+        	<button class="btn addCategory">Adicionar Nova</button>       
+        </div>
+        <div class="row-fluid">
+			<table class="table table-bordered table-condensed categories" data-provides="rowlink">
+				<tbody>
+					<?php foreach($this->categories as $category){ ?>
+					<tr class="primary">
+						<td style="display:none"><input type="hidden" class="categoryid" value="<?= $category['id']?>"/></td>
+						<td class="primary"><a href="/admin238/category/edit/id/<?php echo $category['id']?>"><?php echo $category['name'];?></a></td>
+						<td colspan="2"></td>						
+						<td><button class="btn remove">Excluir</button></td>
+					</tr>
+					<?php if(count($category) > 2){?>
+						<?php foreach ($category as $sub1){ 
+							if (is_array($sub1)){?>
+					<tr class="secondary">
+						<td style="display:none"><input type="hidden" class="categoryid" value="<?= $sub1['id']?>"/></td>
+						<td></td>
+						<td class="secondary"><a href="/admin238/category/edit/id/<?php echo $sub1['id']?>"><?php echo $sub1['name']?></a></td>
+						<td></td>
+						<td><button class="btn remove">Excluir</button></td>
+					</tr>
+								<?php if(count($sub1 > 2)){?>
+								<?php foreach($sub1 as $sub2){
+									      if (is_array($sub2)){?>
+											<tr class="tertiary">
+												<td style="display:none"><input type="hidden" class="categoryid" value="<?= $sub2['id']?>"/></td>
+												<td colspan="2"></td>						
+												<td class="tertiary"><a href="/admin238/category/edit/id/<?php echo $sub2['id']?>"><?php echo $sub2['name']?></a></td>
+												<td><button class="btn remove">Excluir</button></td>
+											</tr>	
+							    <?php   
+                                        }
+							          }}}}}?>
+					<?php }?>
+				</tbody>
+			</table>           
+	   </div>       
                                
 
     </div>
@@ -61,3 +74,17 @@ if (isset($this->msgError)){
        
     </div>
 </div>
+
+<script type="text/javascript">
+
+	$('button.addCategory').on('click',function(){
+		window.location.replace('/admin238/category/add');
+	});
+
+	$('button.remove').on('click',function(){
+		var categoryid = $(this).parent().parent().find('input.categoryid').val();
+		window.location.replace('/admin238/category/remove?categoryid='+categoryid);
+		return false;
+	});
+
+</script>

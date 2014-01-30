@@ -220,24 +220,39 @@ class DB_Category
     	}
     }
     
+    public function findAllOrderBy($column,$type){
+    
+    	$em = Zend_Registry::getInstance()->entitymanager;
+    	$query = $em->createQueryBuilder();
+    	$query->select('cat')->from('DB_Category','cat')->orderBy('cat.'.$column,$type);
+    	$result = $query->getQuery()->getResult();
+    	
+    	return $result;
+    
+    }
+    
     public function getAllDependencies(){
     	
     	$em = Zend_Registry::getInstance()->entitymanager;
-    	$tbCategory = $em->getRepository('DB_Category');
-    	$categories = $tbCategory->findAll();
+    	$tbCategory = new DB_Category;
+    	$categoryObject = $em->getRepository('DB_Category');
+    	$categories = $tbCategory->findAllOrderBy('name','DESC');
     	$a = 0; $b = 0; $c = 0;
     	foreach ($categories as $category){
     		if ($category->getParent() == '0' || $category->getParent() == null){
     			$rootNodes[$a]['id'] = $category->getId();
     			$rootNodes[$a]['name'] = $category->getName();
-    			if ($childNodes = $tbCategory->findByParentId($rootNodes[$a]['id'])){
+    			$rootNodes[$a]['slug'] = $category->getSlug();
+    			if ($childNodes = $categoryObject->findByParentId($rootNodes[$a]['id'])){
     				foreach($childNodes as $childNode){
     					$rootNodes[$a][$b]['id'] = $childNode->getId();
-    					$rootNodes[$a][$b]['name'] = $childNode->getName();    	
-    					if($grandNodes = $tbCategory->findByParentId($rootNodes[$a][$b]['id'])){
+    					$rootNodes[$a][$b]['name'] = $childNode->getName();   
+    					$rootNodes[$a][$b]['slug'] = $childNode->getSlug();
+    					if($grandNodes = $categoryObject->findByParentId($rootNodes[$a][$b]['id'])){
     						foreach($grandNodes as $grandNode){
     							$rootNodes[$a][$b][$c]['id'] = $grandNode->getId();
     							$rootNodes[$a][$b][$c]['name'] = $grandNode->getName();
+    							$rootNodes[$a][$b][$c]['slug'] = $grandNode->getSlug();
     							$c++;
     						}
     					}

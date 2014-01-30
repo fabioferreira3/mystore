@@ -58,7 +58,8 @@ header {
 	width:100%;
 }
 	header p {
-		line-height: 14px;
+		margin:0;
+		padding-bottom:5px;
 	}
 /* upperHeader */
 	.upperHeader {
@@ -69,7 +70,7 @@ header {
 		display: none;
 	}
 	.upperHeader .inline {
-		margin:-2px 0 0 0;
+		margin:0;
 		padding:0;
 	}
 	.upperHeader .inline li {
@@ -77,12 +78,12 @@ header {
 		padding:0;
 	}
 	.upperHeader .inline li a {
-		font-size:11px;
+		font-size:14px;
 		font-weight:600;
 		line-height: 12px;
 	}
 	.upperHeader > p, header p {
-		font-size:11px; 
+		font-size:14px; 
 	}
 /* middleHeader */
 	.middleHeader .middleContainer {

@@ -23,6 +23,12 @@ class Front_IndexController extends Zend_Controller_Action
 	
 	public function indexAction(){
 		
+		try{
+			$getParams = $this->getRequest()->getParams();
+			$tbCategory = new DB_Category();
+			$this->view->categories = $tbCategory->getAllDependencies();
+		}
+		catch(Exception $e){echo $e->getMessage();exit;}
 		
 	}
 	

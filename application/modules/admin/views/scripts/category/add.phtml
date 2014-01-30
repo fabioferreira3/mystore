@@ -77,19 +77,19 @@ if (isset($this->msgError)){
 			<ul>			
 				<?php foreach($this->categories as $category){ ?>
 				<li class="folder expanded">					
-					<?php echo $category['name'];?>					
+					<a href="/admin238/category/edit/id/<?php echo $category['id']?>"><?php echo $category['name'];?></a>					
 					<?php if(count($category) > 2){?>
 					<ul class="">
 					<?php foreach ($category as $sub1){					
 							if (is_array($sub1)){?>				
 								<li class="folder expanded">
-									<?php echo $sub1['name']?>									
-								<?php if(count($sub1 > 2)){?>
+									<a href="/admin238/category/edit/id/<?php echo $sub1['id']?>"><?php echo $sub1['name']?></a>
+									<?php if(count($sub1 > 2)){?>
 									<ul class="">
 									<?php foreach($sub1 as $sub2){
 									if (is_array($sub2)){?>
 										<li class="folded expanded">
-											<?php echo $sub2['name']?>
+											<a href="/admin238/category/edit/id/<?php echo $sub2['id']?>"><?php echo $sub2['name']?></a>
 									<?php }}?>
 									    </li>
 									</ul>
@@ -111,7 +111,6 @@ $(document).ready(function(){
 
 	gebo_dynatree.tree_a();
 	gebo_dynatree.tree_b();
-
 	
 	$('[name=name]').keyup(function(event){
 		var stt;		

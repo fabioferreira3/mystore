@@ -628,3 +628,32 @@ body.loading {
 
 body.loading .wait {
   display: block; }
+
+table.categories td {
+  color: #333333 !important;
+  text-align: center; }
+
+table.categories td:hover {
+  color: #6B6A6A !important;
+  text-decoration: none; }
+
+table.categories tr.primary {
+  background: #B5D2E2; }
+
+table.categories tr.secondary {
+  background: #EDEB8E; }
+
+table.categories tr.tertiary {
+  background: #70F99B; }
+
+table.categories td.primary {
+  font-size: 18px !important;
+  line-height: 30px !important; }
+
+table.categories td.secondary {
+  font-size: 14px !important;
+  line-height: 30px !important; }
+
+table.categories td.tertiary {
+  font-size: 12px !important;
+  line-height: 30px !important; }

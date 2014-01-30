@@ -94,30 +94,56 @@ class Admin_CategoryController extends Zend_Controller_Action
 	
 	public function editAction(){
 		
-       	$params = $this->getRequest()->getParams();	
-		$category = $this->repo->db('Category')->find($params['value']);
-        
-        if($this->getRequest()->isPost()){
-            $postvars = $this->getRequest()->getPost();
-            $category->setName($postvars['name']);
-            $category->setSlug($postvars['slug']);
-            $category->setParent($postvars['parent']);
-            $store = $this->repo->db('Store')->find($postvars['store']);
-            $category->setStore($store);
-            $this->em->persist($category);
-            $this->em->flush();
-            $this->_helper->flashMessenger->addMessage('Categoria atualizada com sucesso!','success');
-            $this->getHelper('Redirector')->gotoUrl('/admin238/category/edit/id/' . $category->getId());
-        }
-         
-		$tbCategory = new DB_Category();
-		$categories = $tbCategory->getAllDependencies();
-		
-		$this->view->category = $category;
-		$this->view->categories = $categories;
-		
-		$stores = $this->repo->db('Store')->findAll();
-		$this->view->stores = $stores;        
+		try{
+	       	$params = $this->getRequest()->getParams();	
+			$category = $this->repo->db('Category')->find($params['value']);
+	        
+	        if($this->getRequest()->isPost()){
+	        	
+	            $postvars = $this->getRequest()->getPost();
+	            $category->setName($postvars['name']);
+	            $category->setSlug($postvars['slug']);
+	            if($postvars['parent'] != ''){
+	            	$category->setParent($postvars['parent']);
+	            }
+	            $store = $this->repo->db('Store')->find($postvars['store']);
+	            $category->setStore($store);
+	            $this->em->persist($category);
+	            $this->em->flush();
+	            $this->_helper->flashMessenger->addMessage('Categoria atualizada com sucesso!','success');
+	            $this->getHelper('Redirector')->gotoUrl('/admin238/category/edit/id/' . $category->getId());
+	        }
+	         
+			$tbCategory = new DB_Category();
+			$categories = $tbCategory->getAllDependencies();
+			
+			$this->view->category = $category;
+			$this->view->categories = $categories;
+			
+			$stores = $this->repo->db('Store')->findAll();
+			$this->view->stores = $stores;    
+		}    
+		catch(Exception $e){
+			echo $e->getMessage();
+		}
 		
 	}
+	
+	public function removeAction(){
+		
+		try{
+			$params = $this->getRequest()->getParams();
+			$category = $this->repo->db('Category')->find($params['categoryid']);
+			$this->em->remove($category);
+			$this->em->flush();
+			$this->_helper->flashMessenger->addMessage('Categoria removida com sucesso!','success');
+			$this->getHelper('Redirector')->gotoUrl('/admin238/category');
+		}
+		catch(Exception $e){
+			$this->_helper->flashMessenger->addMessage($e->getMessage(),'error');
+			$this->getHelper('Redirector')->gotoUrl('/admin238/category');
+		}
+	}
+	
+	
 }
